@@ -1,0 +1,428 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "42C Bank API",
+        "version": "0.1"
+    },
+    "servers": [
+        {
+            "url": "https://api.server.test/apis/banking/v0.1/"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "bill": {
+                "type": "object",
+                "properties": {
+                    "paymentType": {
+                        "type": "string",
+                        "enum": ["bill", "transfer"]
+                    },
+                    "name":{
+                        "type": "string"
+                    },
+                    "utility":{
+                        "type": "string",
+                        "enum": ["electric", "gas", "mobile"]
+                    },
+                    "accountNumber":{
+                        "type": "string"
+                    }
+                }
+            },
+            "transfer": {
+                "type": "object",
+                "properties": {
+                    "paymentType": {
+                        "type": "string",
+                        "enum": ["bill", "transfer"]
+                    },
+                    "name":{
+                        "type": "string"
+                    },
+                    "iban":{
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "AccountId": {
+                "name": "AccountId",
+                "in": "path",
+                "required": true,
+                "description": "AccountId",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "CardApplicationId":{
+                "name": "CardApplicationId",
+                "in": "path",
+                "required": true,
+                "description": "Card Application Id",
+                "schema":{
+                    "type": "string"
+                }
+            }
+        },
+        "securitySchemes": {
+            "AccessToken": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "paths": {
+        "/token/new":{
+            "post": {
+                "description": "",
+                "parameters": [],
+                "security": [],
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "secret_id":{
+                                        "type": "string"
+                                    },
+                                    "secret_key":{
+                                        "type": "string"
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "properties": {
+                                        "access":{
+                                            "type": "string"
+                                        },
+                                        "access_expires":{
+                                            "type": "integer"
+                                        },
+                                        "refresh":{
+                                            "type": "string"
+                                        },
+                                        "refresh_expires":{
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        },
+        "/token/refresh":{
+            "post": {
+                "description": "",
+                "parameters": [],
+                "security": [],
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "refresh":{
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "access":{
+                                            "type": "string"
+                                        },
+                                        "access_expires":{
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        },
+        "/accounts": {
+            "post": {
+                "description": "Create an account",
+                "operationId": "CreateAccount",
+                "parameters": [],
+                "security": [],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}": {
+            "get": {
+                "description": "Get an Account",
+                "operationId": "GetAccount",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete an Account",
+                "operationId": "DeleteAccount",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}/balances": {
+            "get": {
+                "description": "Get Account balances",
+                "operationId": "GetAccountBalances",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}/direct-debits": {
+            "get": {
+                "description": "Get Account Direct Debits",
+                "operationId": "GetAccountDD",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}/payments": {
+            "post": {
+                "description": "Create new payment",
+                "operationId": "CreatePayment",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    },
+                    {
+                        "name": "Idempotency-Key",
+                        "in": "header",
+                        "required": true,
+                        "schema":{
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "fromAccount":{
+                                        "type": "string"
+                                    },
+                                    "amount":{
+                                        "type": "number"
+                                    },
+                                    "currency":{
+                                        "type": "string"
+                                    },
+                                    "toAccount":{
+                                        "type": "string"
+                                    },
+                                    "message":{
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}/transactions": {
+            "get": {
+                "description": "Get Account Transactions",
+                "operationId": "GetAccountTransactions",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}/products/cards": {
+            "post": {
+                "description": "",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}/products/cards/{CardApplicationId}": {
+            "get": {
+                "description": "",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CardApplicationId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "put": {
+                "description": "",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CardApplicationId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "description": "",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CardApplicationId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}/payees": {
+            "get": {
+                "description": "Get list of payees",
+                "operationId": "GetAccountPayees",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "description": "Add new payee",
+                "operationId": "CreatePayee",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AccountId"
+                    }
+                ],
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema": {
+                                "oneOf": [
+                                    {"$ref": "#/components/schemas/bill" },
+                                    {"$ref": "#/components/schemas/transfer" }
+                                ],
+                                "discriminator": {
+                                    "propertyName": "paymentType"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        {
+            "AccessToken": []
+        }
+    ]
+}
