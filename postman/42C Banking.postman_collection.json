@@ -1,0 +1,338 @@
+{
+	"info": {
+		"_postman_id": "1e70f93c-4a35-4e63-9c6c-e2f7e7cd55e2",
+		"name": "42C Banking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17844295"
+	},
+	"item": [
+		{
+			"name": "Create Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"AccountId\", response.AccountId);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Joe Smith\",\n  \"email\": \"{{email}}\",\n  \"postcode\": \"A65F4E2\",\n  \"pin\": \"{{pin}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/accounts",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"access-token\", response.access);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{email}}\",\n  \"pin\": \"{{pin}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/tokens/new",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"tokens",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Accounts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"AccountId\", response.accountId);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/accounts",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Account",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Balances",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/balances",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"balances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Payee (utility)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"payeeType\": \"utility\",\n    \"name\": \"Gas Bill\",\n    \"utility\": \"gas\",\n    \"accountNumber\": \"2008348\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"payees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Payee (contact)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"Jim Jones\",\n    \"iban\": \"IE12BOFI90000112345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"payees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Payees",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"payees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Payee",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees/660d0c49cf57bfeeaf840e8e",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"payees",
+						"660d0c49cf57bfeeaf840e8e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Payment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"payeeId\": \"660d083dcf57bfeeaf840e7d\",\n    \"amount\": 35,\n    \"currency\": \"EUR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/payments",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Transactions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/transactions",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access-token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
