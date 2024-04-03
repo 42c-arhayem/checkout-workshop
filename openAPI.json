@@ -6,42 +6,86 @@
     },
     "servers": [
         {
-            "url": "https://api.server.test/apis/banking/v0.1/"
+            "url": "http://localhost:3000/apis"
+        },
+        {
+            "url": "https://api.server.test/apis/banking/v0.1"
         }
     ],
     "components": {
         "schemas": {
-            "bill": {
+            "Utility": {
                 "type": "object",
                 "properties": {
-                    "paymentType": {
+                    "payeeType": {
                         "type": "string",
-                        "enum": ["bill", "transfer"]
+                        "enum": [
+                            "utility",
+                            "contact"
+                        ]
                     },
-                    "name":{
+                    "name": {
                         "type": "string"
                     },
-                    "utility":{
+                    "utility": {
                         "type": "string",
-                        "enum": ["electric", "gas", "mobile"]
+                        "enum": [
+                            "electric",
+                            "gas",
+                            "mobile"
+                        ]
                     },
-                    "accountNumber":{
+                    "accountNumber": {
                         "type": "string"
                     }
                 }
             },
-            "transfer": {
+            "Contact": {
                 "type": "object",
                 "properties": {
-                    "paymentType": {
+                    "payeeType": {
                         "type": "string",
-                        "enum": ["bill", "transfer"]
+                        "enum": [
+                            "utility",
+                            "contact"
+                        ]
                     },
-                    "name":{
+                    "name": {
                         "type": "string"
                     },
-                    "iban":{
+                    "iban": {
                         "type": "string"
+                    }
+                }
+            },
+            "AccountId": {
+                "description": "A unique and immutable identifier used to identify the account resource. This identifier has no meaning to the account owner.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+            },
+            "Account": {
+                "type": "object",
+                "properties": {
+                    "AccountId": {
+                        "$ref": "#/components/schemas/AccountId"
+                    },
+                    "Currency": {
+                        "type": "string",
+                        "pattern": "^[A-Z]{3,3}$"
+                    },
+                    "AccountType": {
+                        "type": "string",
+                        "enum": [
+                            "Business",
+                            "Personal"
+                        ]
+                    },
+                    "Nickname": {
+                        "description": "The nickname of the account, assigned by the account owner in order to provide an additional means of identification of the account.",
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 70
                     }
                 }
             }
@@ -56,12 +100,12 @@
                     "type": "string"
                 }
             },
-            "CardApplicationId":{
+            "CardApplicationId": {
                 "name": "CardApplicationId",
                 "in": "path",
                 "required": true,
                 "description": "Card Application Id",
-                "schema":{
+                "schema": {
                     "type": "string"
                 }
             }
@@ -75,24 +119,25 @@
         }
     },
     "paths": {
-        "/token/new":{
+        "/tokens/new": {
             "post": {
                 "description": "",
                 "parameters": [],
                 "security": [],
-                "requestBody":{
+                "requestBody": {
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "secret_id":{
-                                        "type": "string"
+                                    "email": {
+                                        "type": "string",
+                                        "example": "jsmith@email.com"
                                     },
-                                    "secret_key":{
-                                        "type": "string"
+                                    "pin": {
+                                        "type": "string",
+                                        "example": "12345"
                                     }
-
                                 }
                             }
                         }
@@ -102,19 +147,19 @@
                     "200": {
                         "description": "OK",
                         "content": {
-                            "application/json":{
-                                "schema":{
+                            "application/json": {
+                                "schema": {
                                     "properties": {
-                                        "access":{
+                                        "access": {
                                             "type": "string"
                                         },
-                                        "access_expires":{
+                                        "access_expires": {
                                             "type": "integer"
                                         },
-                                        "refresh":{
+                                        "refresh": {
                                             "type": "string"
                                         },
-                                        "refresh_expires":{
+                                        "refresh_expires": {
                                             "type": "integer"
                                         }
                                     }
@@ -124,20 +169,19 @@
                     }
                 }
             }
-
         },
-        "/token/refresh":{
+        "/tokens/refresh": {
             "post": {
                 "description": "",
                 "parameters": [],
                 "security": [],
-                "requestBody":{
+                "requestBody": {
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "refresh":{
+                                    "refresh": {
                                         "type": "string"
                                     }
                                 }
@@ -149,14 +193,14 @@
                     "200": {
                         "description": "OK",
                         "content": {
-                            "application/json":{
-                                "schema":{
+                            "application/json": {
+                                "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "access":{
+                                        "access": {
                                             "type": "string"
                                         },
-                                        "access_expires":{
+                                        "access_expires": {
                                             "type": "integer"
                                         }
                                     }
@@ -166,14 +210,50 @@
                     }
                 }
             }
-
         },
         "/accounts": {
             "post": {
                 "description": "Create an account",
                 "operationId": "CreateAccount",
                 "parameters": [],
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "properties": {
+                                    "name":{
+                                        "type": "string",
+                                        "description": "your name",
+                                        "example": "Joe Smith"
+                                    },
+                                    "email":{
+                                        "type": "string",
+                                        "example": "jsmith@email.com"
+                                    },
+                                    "postcode": {
+                                        "type": "string",
+                                        "example": "A65F4E2"
+                                    },
+                                    "pin": {
+                                        "type": "number",
+                                        "description": "default secret pin number",
+                                        "pattern": "^[0-9]{5,5}$"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "security": [],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "get": {
+                "description": "",
+                "parameters": [],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -236,56 +316,6 @@
                         "$ref": "#/components/parameters/AccountId"
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/accounts/{AccountId}/payments": {
-            "post": {
-                "description": "Create new payment",
-                "operationId": "CreatePayment",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/AccountId"
-                    },
-                    {
-                        "name": "Idempotency-Key",
-                        "in": "header",
-                        "required": true,
-                        "schema":{
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody":{
-                    "content": {
-                        "application/json":{
-                            "schema":{
-                                "type": "object",
-                                "properties": {
-                                    "fromAccount":{
-                                        "type": "string"
-                                    },
-                                    "amount":{
-                                        "type": "number"
-                                    },
-                                    "currency":{
-                                        "type": "string"
-                                    },
-                                    "toAccount":{
-                                        "type": "string"
-                                    },
-                                    "message":{
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -397,16 +427,20 @@
                         "$ref": "#/components/parameters/AccountId"
                     }
                 ],
-                "requestBody":{
+                "requestBody": {
                     "content": {
-                        "application/json":{
+                        "application/json": {
                             "schema": {
                                 "oneOf": [
-                                    {"$ref": "#/components/schemas/bill" },
-                                    {"$ref": "#/components/schemas/transfer" }
+                                    {
+                                        "$ref": "#/components/schemas/Utility"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/Contact"
+                                    }
                                 ],
                                 "discriminator": {
-                                    "propertyName": "paymentType"
+                                    "propertyName": "payeeType"
                                 }
                             }
                         }
@@ -415,6 +449,63 @@
                 "responses": {
                     "200": {
                         "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}/payees/{PayeeId}": {
+            "delete": {
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/accounts/{AccountId}/payments": {
+            "post": {
+                "description": "Create a payment to make a transfer or pay a bill.",
+                "parameters": [],
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "payeeId":{
+                                        "type": "string"
+                                    },
+                                    "amount":{
+                                        "type": "number"
+                                    },
+                                    "currency":{
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "transactionId":{
+                                            "type": "string"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
