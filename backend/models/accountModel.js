@@ -3,11 +3,29 @@ import bcrypt from 'bcryptjs';
 import payeeSchema from './payeeModel.js';
 import transactionSchema from './transactionModel.js';
 
+const addressSchema = mongoose.Schema(
+    {
+        addressLine: [String],
+        postCode: String,
+        country: String
+    },
+    { _id : false }
+)
+
+const productSchema = mongoose.Schema(
+    {
+        productType: String,
+        applicationId: Number
+    }
+)
+
 const accountSchema = mongoose.Schema(
     {
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
-        postcode: { type: String, required: true },
+        postalAddress: {
+            type: addressSchema
+        },
         pin: { type: String, required: true },
         balance: {
             amount: { type: Number, default: 1000 },
@@ -18,6 +36,9 @@ const accountSchema = mongoose.Schema(
         },
         transactions: {
             type: [transactionSchema]
+        },
+        products: {
+            type: [productSchema]
         }
     },
     {

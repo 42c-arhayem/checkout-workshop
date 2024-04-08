@@ -15,4 +15,8 @@ SERVER.use(express.json());
 SERVER.use('/apis/accounts', accountRoutes);
 SERVER.use('/apis/tokens', tokenRoutes);
 
+SERVER.use(function(req, res) {
+    res.status(404).json({"message": "Not Found"});
+});
+
 SERVER.listen(PORT, () => console.log('Server started.'));
