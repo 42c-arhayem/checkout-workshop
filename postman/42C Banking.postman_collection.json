@@ -30,7 +30,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"name\": \"Joe Smith\",\n  \"email\": \"{{email}}\",\n  \"postcode\": \"A65F4E2\",\n  \"pin\": \"{{pin}}\"\n}",
+					"raw": "{\n  \"name\": \"{{user1}}\",\n  \"email\": \"{{user1-email}}\",\n  \"postalAddress\": {\n    \"addressLine\": [\n        \"1 Leafy Lane\",\n        \"Hazelbrook\",\n        \"Windy City\"\n    ],\n    \"postCode\": \"AAA111\",\n    \"country\": \"UK\"\n  },\n  \"pin\": \"{{pin}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -73,7 +73,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"email\": \"{{email}}\",\n  \"pin\": \"{{pin}}\"\n}",
+					"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pin\": \"{{pin}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -195,7 +195,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"Jim Jones\",\n    \"iban\": \"IE12BOFI90000112345678\"\n}",
+					"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"Jane Jones\",\n    \"iban\": \"IE12BOFI90000112777777\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -241,7 +241,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees/660d0c49cf57bfeeaf840e8e",
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees/{{payeeId}}",
 					"host": [
 						"{{baseURL}}"
 					],
@@ -249,7 +249,7 @@
 						"accounts",
 						"{{AccountId}}",
 						"payees",
-						"660d0c49cf57bfeeaf840e8e"
+						"{{payeeId}}"
 					]
 				}
 			},
@@ -262,7 +262,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"payeeId\": \"660d083dcf57bfeeaf840e7d\",\n    \"amount\": 35,\n    \"currency\": \"EUR\"\n}",
+					"raw": "{\n    \"payeeId\": \"661384823bb89db7c5a95260\",\n    \"amount\": 98,\n    \"currency\": \"EUR\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -297,6 +297,106 @@
 						"accounts",
 						"{{AccountId}}",
 						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Credit Card Application",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"deliveryMethod\": \"post\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"products",
+						"cards"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Credit Card Application",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"products",
+						"cards"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Credit Card Application",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards/{{ApplicationId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"products",
+						"cards",
+						"{{ApplicationId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Credit Card Application",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"deliveryMethod\": \"collect\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards/{{ApplicationId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"{{AccountId}}",
+						"products",
+						"cards",
+						"{{ApplicationId}}"
 					]
 				}
 			},

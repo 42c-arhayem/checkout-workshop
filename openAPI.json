@@ -216,27 +216,54 @@
                 "description": "Create an account",
                 "operationId": "CreateAccount",
                 "parameters": [],
-                "requestBody":{
+                "requestBody": {
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "properties": {
-                                    "name":{
+                                    "name": {
                                         "type": "string",
                                         "description": "your name",
                                         "example": "Joe Smith"
                                     },
-                                    "email":{
+                                    "email": {
                                         "type": "string",
                                         "example": "jsmith@email.com"
                                     },
-                                    "postcode": {
-                                        "type": "string",
-                                        "example": "A65F4E2"
+                                    "postalAddress": {
+                                        "description": "Postal address of a party.",
+                                        "type": "object",
+                                        "properties": {
+                                            "addressLine": {
+                                                "items": {
+                                                    "type": "string",
+                                                    "minLength": 1,
+                                                    "maxLength": 70
+                                                },
+                                                "type": "array",
+                                                "description": "Information that locates and identifies a specific address, as defined by postal services, that is presented in free format text.",
+                                                "minItems": 0,
+                                                "maxItems": 5
+                                            },
+                                            "postCode": {
+                                                "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 16
+                                            },
+                                            "country": {
+                                                "description": "Nation with its own government, occupying a particular territory.",
+                                                "type": "string",
+                                                "pattern": "^[A-Z]{2,2}$"
+                                            }
+                                        },
+                                        "required": [
+                                            "country"
+                                        ]
                                     },
                                     "pin": {
                                         "type": "number",
-                                        "description": "default secret pin number",
+                                        "description": "secret pin number",
                                         "pattern": "^[0-9]{5,5}$"
                                     }
                                 }
@@ -341,12 +368,27 @@
         },
         "/accounts/{AccountId}/products/cards": {
             "post": {
-                "description": "",
+                "description": "Create a credit card application",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/AccountId"
                     }
                 ],
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "deliveryMethod":{
+                                        "type": "string",
+                                        "enum": ["post", "collect"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -356,7 +398,7 @@
         },
         "/accounts/{AccountId}/products/cards/{CardApplicationId}": {
             "get": {
-                "description": "",
+                "description": "Get a credit card application",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/AccountId"
@@ -468,19 +510,19 @@
             "post": {
                 "description": "Create a payment to make a transfer or pay a bill.",
                 "parameters": [],
-                "requestBody":{
+                "requestBody": {
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "payeeId":{
+                                    "payeeId": {
                                         "type": "string"
                                     },
-                                    "amount":{
+                                    "amount": {
                                         "type": "number"
                                     },
-                                    "currency":{
+                                    "currency": {
                                         "type": "string"
                                     }
                                 }
@@ -492,14 +534,14 @@
                     "200": {
                         "description": "OK",
                         "content": {
-                            "application/json":{
-                                "schema":{
+                            "application/json": {
+                                "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "transactionId":{
+                                        "transactionId": {
                                             "type": "string"
                                         },
-                                        "message":{
+                                        "message": {
                                             "type": "string"
                                         }
                                     }
