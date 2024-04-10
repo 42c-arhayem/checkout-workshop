@@ -1,18 +1,17 @@
 name: '42c-bank'
 services:
+
+  database:
+    image: anthony42crunch/test42c:database
+    container_name: mongo-db
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_DATABASE: 42c-bank-db
+      
   app:
     image: anthony42crunch/test42c
     ports:
       - '3000:3000'
     depends_on:
       - database
-
-  database:
-    image: mongo
-    container_name: mongo-db
-    ports:
-      - '27017:27017'
-    environment:
-      MONGO_INITDB_DATABASE: 42c-bank-db
-    volumes:
-      - ./backend/setup:/docker-entrypoint-initdb.d

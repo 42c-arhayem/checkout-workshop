@@ -1,6 +1,7 @@
 FROM node:21-alpine
-WORKDIR /api
-COPY . .
+WORKDIR /home/42c-bank
+COPY package*.json ./
 RUN npm install
-CMD ["npm", "start"]
+COPY . .
 EXPOSE 3000
+CMD ["npm", "start"]
