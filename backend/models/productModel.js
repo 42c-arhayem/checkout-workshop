@@ -11,10 +11,10 @@ const addressSchema = mongoose.Schema(
 
 const creditCardSchema = mongoose.Schema(
     {
-        applicationId: { type: Number, required: true, unique: true},
-        deliveryMethod: { type: String, required: true },
-        postalAddress: { type: addressSchema},
-        applicationStatus: {type: String, default: 'pending'}
+        referenceId: { type: Number, required: true, unique: true},
+        delivery: { type: String, required: true },
+        address: { type: addressSchema},
+        status: {type: String, default: 'pending'}
     }
 );
 

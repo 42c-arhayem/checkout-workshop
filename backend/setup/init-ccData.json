@@ -1,0 +1,16 @@
+[
+    {
+        "referenceId": 1000,
+        "delivery": "post",
+        "address": {
+            "addressLine": [
+                "1 Leafy Lane",
+                "Hazelbrook",
+                "Windy City"
+            ],
+            "postCode": "AAA111",
+            "country": "UK"
+        },
+        "status": "pending"
+    }
+]

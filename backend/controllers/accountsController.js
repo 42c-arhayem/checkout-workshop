@@ -169,7 +169,7 @@ const getTransactionList = (req, res) => {
 
 const createCardApplication = async (req, res) => {
 
-    const { deliveryMethod } = req.body;
+    const { delivery } = req.body;
 
     const account = await AccountModel.findById(req.account._id);
 
@@ -177,37 +177,39 @@ const createCardApplication = async (req, res) => {
     const findCreditCard = await account.products.find(product => product.productType === "creditCard")
 
     if (findCreditCard) {
-        return res.status(409).json({ "message": "credit card application already exists." })
+        return res.status(409).json(
+            { "message": "credit card application already exists." })
     }
 
     let ccApplication = {};
 
-    if (deliveryMethod === "post") {
+    if (delivery === "post") {
         // retrieve the users postal address from their registered account
-        ccApplication.postalAddress = account.postalAddress;
+        ccApplication.address = account.postalAddress;
     }
 
-    ccApplication.deliveryMethod = deliveryMethod
+    ccApplication.delivery = delivery
 
     let applicationIndex = await CreditCardModel.countDocuments();
 
-    ccApplication.applicationId = applicationIndex + 1000;
+    ccApplication.referenceId = applicationIndex + 1000;
 
     // create a credit card application record 
-    ccApplication = await CreditCardModel.create(ccApplication)
+    let newCard = await CreditCardModel.create(ccApplication)
 
-    if (ccApplication) {
+    if (newCard) {
 
         account.products.push({
             productType: "creditCard",
-            applicationId: ccApplication.applicationId
+            referenceId: ccApplication.referenceId
         })
 
         await account.save();
 
         return res.status(200).json({
             "message": "credit card application received.",
-            "applicationId": ccApplication.applicationId
+            "referenceId": ccApplication.referenceId,
+            "status": ccApplication.status
         })
     }
     else {
@@ -220,10 +222,10 @@ const getCardApplication = async (req, res) => {
     const findCreditCard = await req.account.products.find(product => product.productType === "creditCard")
 
     if (!findCreditCard) {
-        return res.status(404).json({ "message": "product not found" })
+        return res.status(404).json({ "message": "no credit card application found" })
     }
 
-    const ccApplication = await CreditCardModel.find({ applicationId: findCreditCard.applicationId }).select("-_id -__v");
+    const ccApplication = await CreditCardModel.findOne({ referenceId: findCreditCard.referenceId }).select("-_id -__v");
 
     if (ccApplication) {
         res.status(200).json(ccApplication);
@@ -235,32 +237,56 @@ const getCardApplication = async (req, res) => {
 
 const modifyCardApplication = async (req, res) => {
 
-    const { ApplicationId } = req.params;
+    const { referenceId } = req.params;
 
-    const findRecord = await CreditCardModel.findOne({ applicationId: ApplicationId })
+    const findRecord = await CreditCardModel.findOne({ referenceId: referenceId })
 
     if (!findRecord) {
         return res.status(404).json({ "message": "not found" })
     }
-    else if (findRecord.applicationStatus !== "pending") {
-        return res.status(409).json({ "message": "cannot update this product application." })
+    else if (findRecord.status !== "pending") {
+        return res.status(409).json({ "message": "this credit card applicaton was cancelled or completed." })
     }
 
     let updateRecord;
 
+    switch (req.body.delivery) {
+        case 'collect':
+            req.body.postalAddress = {};
+            break;
+        case 'post':
+            if (!req.body.postalAddress) {
+                req.body.postAddress = findRecord.address;
+            }
+            break;
+        case undefined:
+            if (req.body.postalAddress) {
+                if (findRecord.delivery === 'collect') {
+                    return res.status(409).json({ "message": "Cannot set postal address. Card is marked for collection." })
+                }
+            }
+            else {
+                return res.status(400).json({"message": "invalid request"})
+            }
+            break;
+        default:
+            return res.status(400).json({ "message": "invalid request" })
+            break;
+    }
+
     try {
         updateRecord = await CreditCardModel.findOneAndUpdate(
-            { applicationId: ApplicationId },
+            { referenceId: referenceId },
             {
                 $set: {
-                    deliveryMethod: req.body.deliveryMethod,
-                    postalAddress: req.body.postalAddress
+                    delivery: req.body.delivery,
+                    address: req.body.postalAddress
                 }
             },
             {
                 "returnDocument": "after"
             },
-            
+
         ).select("-_id -__v");
         return res.status(200).json(updateRecord)
 
@@ -272,23 +298,23 @@ const modifyCardApplication = async (req, res) => {
 
 const deleteCardApplication = async (req, res) => {
 
-    const { ApplicationId } = req.params;
+    const { referenceId } = req.params;
 
-    const findCreditCard = await req.account.products.find(product => product.applicationId == ApplicationId)
+    const findCreditCard = await req.account.products.find(product => product.referenceId == referenceId)
 
     if (!findCreditCard) {
-        return res.status(404).json({ "message": "product not found" })
+        return res.status(404).json({ "message": "credit card application not found" })
     }
 
     try {
         await AccountModel.findOneAndUpdate(
             { _id: req.account._id },
-            { $pull: { products: { applicationId: ApplicationId } } },
+            { $pull: { products: { referenceId: referenceId } } },
         )
 
         await CreditCardModel.findOneAndUpdate(
-            { applicationId: ApplicationId },
-            { $set: { applicationStatus: "cancelled" } },
+            { referenceId: referenceId },
+            { $set: { status: "cancelled" } },
         )
 
 
@@ -297,7 +323,7 @@ const deleteCardApplication = async (req, res) => {
         return res.status(500).json({ "message": "unexpected error" })
     }
 
-    return res.status(200).json({ "message": "credit card request cancelled." })
+    return res.status(200).json({ "message": "credit card application cancelled." })
 }
 
 export {

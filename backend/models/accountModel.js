@@ -15,7 +15,7 @@ const addressSchema = mongoose.Schema(
 const productSchema = mongoose.Schema(
     {
         productType: String,
-        applicationId: Number
+        referenceId: Number
     }
 )
 

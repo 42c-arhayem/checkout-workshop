@@ -28,8 +28,8 @@ router.post('/:AccountId/payments', authenticateToken, createPayment );
 router.get('/:AccountId/transactions', authenticateToken, getTransactionList);
 router.post('/:AccountId/products/cards', authenticateToken, createCardApplication );
 router.get('/:AccountId/products/cards', authenticateToken, getCardApplication);
-router.put('/:AccountId/products/cards/:ApplicationId', authenticateToken, modifyCardApplication);
-router.delete('/:AccountId/products/cards/:ApplicationId', authenticateToken, deleteCardApplication );
+router.put('/:AccountId/products/cards/:referenceId', authenticateToken, modifyCardApplication);
+router.delete('/:AccountId/products/cards/:referenceId', authenticateToken, deleteCardApplication );
 
 
 export default router;

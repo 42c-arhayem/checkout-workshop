@@ -1,0 +1,190 @@
+[
+    {
+        "name": "Jane Doe",
+        "email": "janedoe@email.com",
+        "postalAddress": {
+            "addressLine": [
+                "1 Leafy Lane",
+                "Hazelbrook",
+                "Windy City"
+            ],
+            "postCode": "AAA111",
+            "country": "UK"
+        },
+        "pin": "$2a$08$vgtjVLotYDhbCTj0HbZBteuUiL/fD5FL8HQ6EViizORyUSjNO.Edq",
+        "balance": {
+            "amount": 358,
+            "currency": "EUR"
+        },
+        "payees": [
+            {
+                "name": "Gas Bill",
+                "utility": "gas",
+                "account": "2008348",
+                "_id": {
+                    "$oid": "6614ed9a2644fd215f65f492"
+                }
+            },
+            {
+                "name": "Elec Bill",
+                "utility": "electricity",
+                "account": "AH800919",
+                "_id": {
+                    "$oid": "6614edb82644fd215f65f498"
+                }
+            },
+            {
+                "name": "Kevin Kerns",
+                "iban": "IE12BOFI90000112777777",
+                "_id": {
+                    "$oid": "6614edc92644fd215f65f4a0"
+                }
+            }
+        ],
+        "products": [
+            {
+                "productType": "creditCard",
+                "referenceId": 1000,
+                "_id": {
+                    "$oid": "6614ee5d2644fd215f65f5c1"
+                }
+            }
+        ],
+        "transactions": [
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614ed9a2644fd215f65f492",
+                "amount": 43,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614edf12644fd215f65f4ae"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:27:45.384Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614ed9a2644fd215f65f492",
+                "amount": 48,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614edf62644fd215f65f4ba"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:27:50.459Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614ed9a2644fd215f65f492",
+                "amount": 25,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614edfd2644fd215f65f4c8"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:27:57.847Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614ed9a2644fd215f65f492",
+                "amount": 59,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614ee022644fd215f65f4d8"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:28:02.682Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614edb82644fd215f65f498",
+                "amount": 80,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614ee1a2644fd215f65f4ea"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:28:26.829Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614edb82644fd215f65f498",
+                "amount": 68,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614ee1f2644fd215f65f4fe"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:28:31.785Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614edb82644fd215f65f498",
+                "amount": 76,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614ee262644fd215f65f514"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:28:38.313Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614edb82644fd215f65f498",
+                "amount": 14,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614ee2b2644fd215f65f52c"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:28:43.112Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614edc92644fd215f65f4a0",
+                "amount": 25,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614ee422644fd215f65f546"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:29:06.659Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614edc92644fd215f65f4a0",
+                "amount": 25,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614ee432644fd215f65f562"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:29:07.847Z"
+                }
+            },
+            {
+                "payer": "6614e6b5e088561458403e99",
+                "payee": "6614edc92644fd215f65f4a0",
+                "amount": 25,
+                "currency": "EUR",
+                "_id": {
+                    "$oid": "6614ee442644fd215f65f580"
+                },
+                "createdAt": {
+                    "$date": "2024-04-09T07:29:08.978Z"
+                }
+            }
+        ]
+    }
+]
+
+
