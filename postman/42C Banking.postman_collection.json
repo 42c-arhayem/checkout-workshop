@@ -167,7 +167,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"payeeType\": \"utility\",\n    \"name\": \"Gas Bill\",\n    \"utility\": \"gas\",\n    \"accountNumber\": \"2008348\"\n}",
+					"raw": "{\n    \"payeeType\": \"utility\",\n    \"name\": \"Elec Bill\",\n    \"utility\": \"electricity\",\n    \"accountNumber\": \"AH800919\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -195,7 +195,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"Jane Jones\",\n    \"iban\": \"IE12BOFI90000112777777\"\n}",
+					"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"Kevin Kerns\",\n    \"iban\": \"IE12BOFI90000112777777\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -241,7 +241,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees/{{payeeId}}",
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees/6614edc92644fd215f65f4a0",
 					"host": [
 						"{{baseURL}}"
 					],
@@ -249,7 +249,7 @@
 						"accounts",
 						"{{AccountId}}",
 						"payees",
-						"{{payeeId}}"
+						"6614edc92644fd215f65f4a0"
 					]
 				}
 			},
@@ -262,7 +262,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"payeeId\": \"661384823bb89db7c5a95260\",\n    \"amount\": 98,\n    \"currency\": \"EUR\"\n}",
+					"raw": "{\n    \"payeeId\": \"6614edc92644fd215f65f4a0\",\n    \"amount\": 25,\n    \"currency\": \"EUR\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -309,7 +309,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"deliveryMethod\": \"post\"\n}",
+					"raw": "{\n    \"delivery\": \"collect\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -357,7 +357,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards/{{ApplicationId}}",
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards/1000",
 					"host": [
 						"{{baseURL}}"
 					],
@@ -366,7 +366,7 @@
 						"{{AccountId}}",
 						"products",
 						"cards",
-						"{{ApplicationId}}"
+						"1000"
 					]
 				}
 			},
@@ -379,7 +379,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"deliveryMethod\": \"collect\"\n}",
+					"raw": "{\n    \"postalAddress\": {\n        \"addressLine\": [\n            \"1 Leafy Lane\",\n            \"Hazelbrook\",\n            \"Windy City\"\n        ],\n        \"postCode\": \"AAA111\",\n        \"country\": \"UK\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -387,7 +387,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards/{{ApplicationId}}",
+					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards/1002",
 					"host": [
 						"{{baseURL}}"
 					],
@@ -396,7 +396,7 @@
 						"{{AccountId}}",
 						"products",
 						"cards",
-						"{{ApplicationId}}"
+						"1002"
 					]
 				}
 			},
