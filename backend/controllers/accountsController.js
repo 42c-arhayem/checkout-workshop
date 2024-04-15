@@ -1,29 +1,8 @@
 import AccountModel from "../models/accountModel.js";
-import { CreditCardModel } from "../models/productModel.js";
-import mongoose, { Types } from "mongoose";
+import CreditCardModel from "../models/productModel.js";
 
-// Create a new User Account
-const createAccount = async (req, res) => {
 
-    const { name, email, postalAddress, pin } = req.body;
-
-    let account = await AccountModel.findOne({ email });
-
-    if (account) {
-        return res.status(400).json({ "message": "User already exists." })
-    }
-
-    account = await AccountModel.create({ name, email, postalAddress, pin })
-
-    if (account) {
-        res.status(201).json({ "AccountId": account._id });
-    }
-    else {
-        res.status(400).json({ "message": "invalid request" })
-    }
-}
-
-// Return a list of accounts for the requesting user
+// Return the basic account details
 const getAccounts = (req, res) => {
 
     return res.status(200).json({
@@ -35,6 +14,7 @@ const getAccounts = (req, res) => {
 
 }
 
+// Delete the account
 const deleteAccount = async (req, res) => {
 
     try {
@@ -54,6 +34,7 @@ const deleteAccount = async (req, res) => {
     }
 }
 
+// Get the current bank balance
 const getBalance = (req, res) => {
     return res.status(200).json({
         "account ID": req.account._id,
@@ -62,13 +43,14 @@ const getBalance = (req, res) => {
     })
 }
 
+// Get the list of registered payee's for the account
 const getPayeeList = (req, res) => {
 
     return res.status(200).json(req.account.payees);
 }
 
+// Register a payee for the account
 const createPayee = async (req, res) => {
-
 
     const { payeeType } = req.body;
 
@@ -102,6 +84,7 @@ const createPayee = async (req, res) => {
     }
 }
 
+// Remove a registered payee from the account
 const deletePayee = async (req, res) => {
 
     const payeeId = req.params.PayeeId;
@@ -121,6 +104,7 @@ const deletePayee = async (req, res) => {
     return res.status(200).json({ "message": "payee removed." })
 }
 
+// initiate a payment to a payee
 const createPayment = async (req, res) => {
 
     const { payeeId, amount, currency } = req.body;
@@ -162,11 +146,13 @@ const createPayment = async (req, res) => {
 
 }
 
+// Get a list of payment transactions
 const getTransactionList = (req, res) => {
 
     return res.status(200).json(req.account.transactions);
 }
 
+// 
 const createCardApplication = async (req, res) => {
 
     const { delivery } = req.body;
@@ -174,7 +160,7 @@ const createCardApplication = async (req, res) => {
     const account = await AccountModel.findById(req.account._id);
 
     // check if the user has already requested a credit card
-    const findCreditCard = await account.products.find(product => product.productType === "creditCard")
+    const findCreditCard = await account.products.find(product => product.type === "creditCard")
 
     if (findCreditCard) {
         return res.status(409).json(
@@ -183,69 +169,83 @@ const createCardApplication = async (req, res) => {
 
     let ccApplication = {};
 
+    let applicationIndex = await CreditCardModel.countDocuments();
+
+    ccApplication._id = applicationIndex + 1000;
+    ccApplication.name = account.name;
+    ccApplication.delivery = delivery;
+
     if (delivery === "post") {
-        // retrieve the users postal address from their registered account
         ccApplication.address = account.postalAddress;
     }
 
-    ccApplication.delivery = delivery
+    try {
+        // create a credit card application record 
+        let newCard = await CreditCardModel.create(ccApplication)
 
-    let applicationIndex = await CreditCardModel.countDocuments();
+        if (newCard) {
 
-    ccApplication.referenceId = applicationIndex + 1000;
+            account.products.push({
+                type: "creditCard",
+                referenceId: ccApplication._id
+            })
 
-    // create a credit card application record 
-    let newCard = await CreditCardModel.create(ccApplication)
+            await account.save();
 
-    if (newCard) {
-
-        account.products.push({
-            productType: "creditCard",
-            referenceId: ccApplication.referenceId
-        })
-
-        await account.save();
-
-        return res.status(200).json({
-            "message": "credit card application received.",
-            "referenceId": ccApplication.referenceId,
-            "status": ccApplication.status
-        })
+            return res.status(200).json({
+                "message": "application received.",
+                "referenceId": ccApplication._id,
+                "status": ccApplication.status
+            })
+        }
+        else {
+            res.status(400).json({ "message": "invalid request" })
+        }
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({ "message": "unexpected error" })
     }
-    else {
-        res.status(400).json({ "message": "invalid request" })
-    }
+    
 }
 
 const getCardApplication = async (req, res) => {
 
-    const findCreditCard = await req.account.products.find(product => product.productType === "creditCard")
-
+    // SAFE: checks for credit card application associated with the users account.
+    const findCreditCard = req.account.products.find(product => product.type === "creditCard")
+    
     if (!findCreditCard) {
-        return res.status(404).json({ "message": "no credit card application found" })
+        return res.status(404).json({ "message": "no card application found" })
     }
 
-    const ccApplication = await CreditCardModel.findOne({ referenceId: findCreditCard.referenceId }).select("-_id -__v");
+    try {
+        const ccApplication = await CreditCardModel.findOne({ _id: findCreditCard.referenceId }).select("-__v");
 
-    if (ccApplication) {
-        res.status(200).json(ccApplication);
+        if (ccApplication) {
+            res.status(200).json(ccApplication);
+        }
+        else {
+            res.status(500).json({ "message": "unexpected error" })
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ "message": "unexpected error" }) 
     }
-    else {
-        res.status(500).json({ "message": "unexpected error" })
-    }
+
+    
 }
 
 const modifyCardApplication = async (req, res) => {
 
     const { referenceId } = req.params;
 
-    const findRecord = await CreditCardModel.findOne({ referenceId: referenceId })
+    // UNSAFE!: checks global credit card application record by referenceId, instead of checking users account.
+    const findRecord = await CreditCardModel.findOne({ _id: referenceId })
 
     if (!findRecord) {
         return res.status(404).json({ "message": "not found" })
     }
     else if (findRecord.status !== "pending") {
-        return res.status(409).json({ "message": "this credit card applicaton was cancelled or completed." })
+        return res.status(409).json({ "message": `card status is: ${findRecord.status}` })
     }
 
     let updateRecord;
@@ -262,11 +262,11 @@ const modifyCardApplication = async (req, res) => {
         case undefined:
             if (req.body.postalAddress) {
                 if (findRecord.delivery === 'collect') {
-                    return res.status(409).json({ "message": "Cannot set postal address. Card is marked for collection." })
+                    return res.status(409).json({ "message": "card delivey is: collect" })
                 }
             }
             else {
-                return res.status(400).json({"message": "invalid request"})
+                return res.status(400).json({ "message": "invalid request" })
             }
             break;
         default:
@@ -276,7 +276,7 @@ const modifyCardApplication = async (req, res) => {
 
     try {
         updateRecord = await CreditCardModel.findOneAndUpdate(
-            { referenceId: referenceId },
+            { _id: referenceId },
             {
                 $set: {
                     delivery: req.body.delivery,
@@ -287,7 +287,7 @@ const modifyCardApplication = async (req, res) => {
                 "returnDocument": "after"
             },
 
-        ).select("-_id -__v");
+        ).select("-__v");
         return res.status(200).json(updateRecord)
 
     } catch (err) {
@@ -300,7 +300,7 @@ const deleteCardApplication = async (req, res) => {
 
     const { referenceId } = req.params;
 
-    const findCreditCard = await req.account.products.find(product => product.referenceId == referenceId)
+    const findCreditCard = await req.account.products.find(product => product._id == referenceId)
 
     if (!findCreditCard) {
         return res.status(404).json({ "message": "credit card application not found" })
@@ -313,7 +313,7 @@ const deleteCardApplication = async (req, res) => {
         )
 
         await CreditCardModel.findOneAndUpdate(
-            { referenceId: referenceId },
+            { _id: referenceId },
             { $set: { status: "cancelled" } },
         )
 
@@ -327,7 +327,6 @@ const deleteCardApplication = async (req, res) => {
 }
 
 export {
-    createAccount,
     getAccounts,
     deleteAccount,
     getBalance,

@@ -14,7 +14,7 @@ const addressSchema = mongoose.Schema(
 
 const productSchema = mongoose.Schema(
     {
-        productType: String,
+        type: String,
         referenceId: Number
     }
 )
@@ -26,7 +26,7 @@ const accountSchema = mongoose.Schema(
         postalAddress: {
             type: addressSchema
         },
-        pin: { type: String, required: true },
+        pan: { type: String, required: true },
         balance: {
             amount: { type: Number, default: 1000 },
             currency: { type: String, default: "EUR" }
@@ -46,20 +46,20 @@ const accountSchema = mongoose.Schema(
     }
 );
 
-// Store the account PIN as a hash
+// Store the account PAN as a hash
 accountSchema.pre('save', async function(next) {
     
-    if(!this.isModified('pin')) {
+    if(!this.isModified('pan')) {
         next();
     }
     const salt = await bcrypt.genSalt(8);
-    this.pin = await bcrypt.hash(this.pin, salt);
+    this.pan = await bcrypt.hash(this.pan, salt);
 });
 
-// Validate the received PIN against the stored PIN
-accountSchema.methods.validatePin = async function(pin) {
+// Validate the received PAN against the stored PAN
+accountSchema.methods.validatePan = async function(pan) {
 
-    return await bcrypt.compare(pin, this.pin)
+    return await bcrypt.compare(pan, this.pan)
 }
 
 const AccountModel = mongoose.model('Account', accountSchema);

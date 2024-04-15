@@ -8,6 +8,7 @@ services:
       - '27017:27017'
     environment:
       MONGO_INITDB_DATABASE: 42c-bank-db
+    restart: always
       
   app:
     image: anthony42crunch/test42c
@@ -15,3 +16,4 @@ services:
       - '3000:3000'
     depends_on:
       - database
+    restart: always

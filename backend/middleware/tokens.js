@@ -11,7 +11,6 @@ const createToken = ( accountId ) => {
 }
 
 // Middleware function to authenticate a request
-
 const authenticateToken = async (req, res, next) => {
 
     const authHeader = req.headers['authorization'];

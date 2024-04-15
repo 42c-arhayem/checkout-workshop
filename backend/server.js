@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import accountRoutes from './routes/accountsRoutes.js';
-import tokenRoutes from './routes/tokenRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 import connectDB from './config/db.js';
 
 dotenv.config();
@@ -12,8 +12,8 @@ const SERVER = express();
 
 SERVER.use(express.json());
 
-SERVER.use('/apis/accounts', accountRoutes);
-SERVER.use('/apis/tokens', tokenRoutes);
+SERVER.use('/apis/banking/account', accountRoutes);
+SERVER.use('/apis/banking/auth', authRoutes);
 
 SERVER.use(function(req, res) {
     res.status(404).json({"message": "Not Found"});

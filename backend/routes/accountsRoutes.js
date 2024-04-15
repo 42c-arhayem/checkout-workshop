@@ -1,6 +1,6 @@
 import express from 'express';
+import { authenticateToken } from "../middleware/tokens.js";
 import {     
-    createAccount,
     getAccounts,
     deleteAccount,
     getBalance,
@@ -12,24 +12,23 @@ import {
     createCardApplication,
     getCardApplication,
     modifyCardApplication,
-    deleteCardApplication } from '../controllers/accountsController.js';
-import { authenticateToken } from "../auth/tokens.js";
+    deleteCardApplication
+ } from '../controllers/accountsController.js';
 
 const router  = express.Router();
 
-router.post('/', createAccount );
 router.get('/', authenticateToken, getAccounts);
-router.delete('/:AccountId', authenticateToken, deleteAccount );
-router.get('/:AccountId/balances', authenticateToken, getBalance);
-router.get('/:AccountId/payees', authenticateToken, getPayeeList );
-router.post('/:AccountId/payees', authenticateToken, createPayee );
-router.delete('/:AccountId/payees/:PayeeId', authenticateToken, deletePayee );
-router.post('/:AccountId/payments', authenticateToken, createPayment );
-router.get('/:AccountId/transactions', authenticateToken, getTransactionList);
-router.post('/:AccountId/products/cards', authenticateToken, createCardApplication );
-router.get('/:AccountId/products/cards', authenticateToken, getCardApplication);
-router.put('/:AccountId/products/cards/:referenceId', authenticateToken, modifyCardApplication);
-router.delete('/:AccountId/products/cards/:referenceId', authenticateToken, deleteCardApplication );
+router.delete('/', authenticateToken, deleteAccount );
+router.get('/balances', authenticateToken, getBalance);
+router.get('/payees', authenticateToken, getPayeeList );
+router.post('/payees', authenticateToken, createPayee );
+router.delete('/payees/:PayeeId', authenticateToken, deletePayee );
+router.post('/payments', authenticateToken, createPayment );
+router.get('/transactions', authenticateToken, getTransactionList);
+router.post('/products/cards', authenticateToken, createCardApplication );
+router.get('/products/cards', authenticateToken, getCardApplication);
+router.put('/products/cards/:referenceId', authenticateToken, modifyCardApplication);
+router.delete('/products/cards/:referenceId', authenticateToken, deleteCardApplication );
 
 
 export default router;

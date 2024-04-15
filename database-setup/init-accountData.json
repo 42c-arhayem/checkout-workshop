@@ -11,7 +11,7 @@
             "postCode": "AAA111",
             "country": "UK"
         },
-        "pin": "$2a$08$vgtjVLotYDhbCTj0HbZBteuUiL/fD5FL8HQ6EViizORyUSjNO.Edq",
+        "pan": "$2a$08$vgtjVLotYDhbCTj0HbZBteuUiL/fD5FL8HQ6EViizORyUSjNO.Edq",
         "balance": {
             "amount": 358,
             "currency": "EUR"
@@ -43,7 +43,7 @@
         ],
         "products": [
             {
-                "productType": "creditCard",
+                "type": "creditCard",
                 "referenceId": 1000,
                 "_id": {
                     "$oid": "6614ee5d2644fd215f65f5c1"

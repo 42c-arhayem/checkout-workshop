@@ -1,25 +1,19 @@
 import mongoose from 'mongoose';
 
-const addressSchema = mongoose.Schema(
-    {
-        addressLine: [String],
-        postCode: String,
-        country: String
-    },
-    { _id : false }
-)
-
 const creditCardSchema = mongoose.Schema(
     {
-        referenceId: { type: Number, required: true, unique: true},
+        _id: { type: Number },
+        name: { type: String, required: true},
         delivery: { type: String, required: true },
-        address: { type: addressSchema},
-        status: {type: String, default: 'pending'}
+        address: {
+            addressLine: [String],
+            postCode: String,
+            country: String
+        },
+        status: { type: String, default: 'pending' }
     }
 );
 
 const CreditCardModel = mongoose.model('CreditCard', creditCardSchema);
 
-export {
-    CreditCardModel
-} ;
+export default CreditCardModel;
