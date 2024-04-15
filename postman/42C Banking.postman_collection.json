@@ -7,400 +7,581 @@
 	},
 	"item": [
 		{
-			"name": "Create Account",
-			"event": [
+			"name": "standard API requests",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"let response = pm.response.json();",
-							"pm.environment.set(\"AccountId\", response.AccountId);",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"name\": \"{{user1}}\",\n  \"email\": \"{{user1-email}}\",\n  \"postalAddress\": {\n    \"addressLine\": [\n        \"1 Leafy Lane\",\n        \"Hazelbrook\",\n        \"Windy City\"\n    ],\n    \"postCode\": \"AAA111\",\n    \"country\": \"UK\"\n  },\n  \"pin\": \"{{pin}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Register Account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.environment.set(\"AccountId\", response.AccountId);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "{{baseURL}}/accounts",
-					"host": [
-						"{{baseURL}}"
 					],
-					"path": [
-						"accounts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Token",
-			"event": [
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{user1}}\",\n  \"email\": \"{{user1-email}}\",\n  \"postalAddress\": {\n    \"addressLine\": [\n        \"1 Leafy Lane\",\n        \"Hazelbrook\",\n        \"Windy City\"\n    ],\n    \"postCode\": \"AAA111\",\n    \"country\": \"UK\"\n  },\n  \"pan\": \"{{pan}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"let response = pm.response.json();",
-							"pm.environment.set(\"access-token\", response.access);",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pin\": \"{{pin}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.environment.set(\"access-token\", response.access);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "{{baseURL}}/tokens/new",
-					"host": [
-						"{{baseURL}}"
 					],
-					"path": [
-						"tokens",
-						"new"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Accounts",
-			"event": [
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{pan}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"let response = pm.response.json();",
-							"pm.environment.set(\"AccountId\", response.accountId);"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/accounts",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Account",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Balances",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/balances",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"balances"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Payee (utility)",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"payeeType\": \"utility\",\n    \"name\": \"Elec Bill\",\n    \"utility\": \"electricity\",\n    \"accountNumber\": \"AH800919\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Get Accounts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.environment.set(\"AccountId\", response.accountId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees",
-					"host": [
-						"{{baseURL}}"
 					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"payees"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Payee (contact)",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"Kevin Kerns\",\n    \"iban\": \"IE12BOFI90000112777777\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"payees"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Payees",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"payees"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Payee",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/payees/6614edc92644fd215f65f4a0",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"payees",
-						"6614edc92644fd215f65f4a0"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Payment",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"payeeId\": \"6614edc92644fd215f65f4a0\",\n    \"amount\": 25,\n    \"currency\": \"EUR\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Delete Account",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/payments",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"payments"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Transactions",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/transactions",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"transactions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Credit Card Application",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"delivery\": \"collect\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Get Balances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/balances",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"balances"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"products",
-						"cards"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Credit Card Application",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"products",
-						"cards"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Credit Card Application",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards/1000",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"products",
-						"cards",
-						"1000"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Credit Card Application",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"postalAddress\": {\n        \"addressLine\": [\n            \"1 Leafy Lane\",\n            \"Hazelbrook\",\n            \"Windy City\"\n        ],\n        \"postCode\": \"AAA111\",\n        \"country\": \"UK\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Add Payee (utility)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payeeType\": \"utility\",\n    \"name\": \"Elec Bill\",\n    \"utility\": \"electricity\",\n    \"accountNumber\": \"AH800919\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/payees",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payees"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{baseURL}}/accounts/{{AccountId}}/products/cards/1002",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"accounts",
-						"{{AccountId}}",
-						"products",
-						"cards",
-						"1002"
-					]
+				{
+					"name": "Add Payee (contact)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"Kevin Kerns\",\n    \"iban\": \"IE12BOFI90000112777777\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/payees",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payees",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/payees",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Payee",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/payees/6614edc92644fd215f65f4a0",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payees",
+								"6614edc92644fd215f65f4a0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payeeId\": \"6614edc92644fd215f65f4a0\",\n    \"amount\": 25,\n    \"currency\": \"EUR\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/payments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/transactions",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Credit Card Application",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"delivery\": \"collect\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/products/cards",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"products",
+								"cards"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Credit Card Application",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/products/cards/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"products",
+								"cards",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Credit Card Application",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/products/cards/1000",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"products",
+								"cards",
+								"1000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Credit Card Application",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"delivery\": \"post\",\n    \"postalAddress\": {\n        \"addressLine\": [\n            \"8 Elm Grove\",\n            \"Rocky District\",\n            \"Main town\"\n        ],\n        \"postCode\": \"BBB123\",\n        \"country\": \"UK\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/products/cards/1000",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"products",
+								"cards",
+								"1000"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "API vulnerabilities",
+			"item": [
+				{
+					"name": "BOLA",
+					"item": [
+						{
+							"name": "Register Account",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"AccountId\", response.AccountId);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"{{user2}}\",\n  \"email\": \"{{user2-email}}\",\n  \"postalAddress\": {\n    \"addressLine\": [\n        \"88 Elm Park\",\n        \"Beechwood Grove\",\n        \"Newtown\"\n    ],\n    \"postCode\": \"BBB222\",\n    \"country\": \"US\"\n  },\n  \"pan\": \"{{pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/register",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"access-token\", response.access);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user2-email}}\",\n  \"pan\": \"{{pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Accounts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"AccountId\", response.accountId);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/account",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Credit Card Application",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"delivery\": \"post\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/products/cards",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"products",
+										"cards"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Credit Card Application",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"delivery\": \"post\",\n    \"postalAddress\": {\n        \"addressLine\": [\n            \"88 Elm Park\",\n            \"Beechwood Grove\",\n            \"Newtown\"\n        ],\n        \"postCode\": \"BBB222\",\n        \"country\": \"US\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/products/cards/1000",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"products",
+										"cards",
+										"1000"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Credit card applications for all users are stored in a separate database collection, and indexed with a simple incrementing number (1000, 1001, 1002...). User2 notices he can UPDATE another users credit card application, by changing the referenceID to another users credit card application, and changing their postal address to his own address."
+				}
+			]
 		}
 	],
 	"auth": {
