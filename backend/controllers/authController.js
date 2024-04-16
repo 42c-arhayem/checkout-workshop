@@ -15,7 +15,7 @@ const accountRegistration = async (req, res) => {
     account = await AccountModel.create({ name, email, postalAddress, pan })
 
     if (account) {
-        res.status(201).json({ "AccountId": account._id });
+        res.status(201).json({ "message": "registration success. You can now login to your account." });
     }
     else {
         res.status(400).json({ "message": "invalid request" })
