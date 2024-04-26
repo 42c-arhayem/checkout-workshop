@@ -19,7 +19,7 @@
                         "http",
                         "https"
                     ],
-                    "default": "http"
+                    "default": "https"
                 },
                 "domain": {
                     "default": "localhost:3000",
@@ -64,14 +64,15 @@
                                     "pan": {
                                         "$ref": "#/components/schemas/PersonalAccountNumber"
                                     }
-                                }
+                                },
+                                "additionalProperties": false
                             }
                         }
                     }
                 },
                 "security": [],
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "OK",
                         "content": {
                             "application/json": {
@@ -89,6 +90,15 @@
                                 }
                             }
                         }
+                    },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
                     },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
@@ -129,17 +139,27 @@
                                     "properties": {
                                         "access": {
                                             "type": "string",
-                                            "pattern": "^/eyJ[A-Za-z0-9-_]+.eyJ[A-Za-z0-9-_]+.[A-Za-z0-9-_.+/]*$",
+                                            "pattern": "^eyJ[A-Za-z0-9\\-_]+.eyJ[A-Za-z0-9\\-_]+.[A-Za-z0-9\\-_+]*$",
                                             "maxLength": 500
                                         },
-                                        "access_expires": {
-                                            "type": "integer"
+                                        "access-expires": {
+                                            "type": "number",
+                                            "maximum": 3600
                                         }
                                     },
                                     "additionalProperties": false
                                 }
                             }
                         }
+                    },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
                     },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
@@ -177,6 +197,15 @@
                             }
                         }
                     },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
+                    },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
                     }
@@ -195,6 +224,15 @@
                                 }
                             }
                         }
+                    },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
                     },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
@@ -229,6 +267,15 @@
                             }
                         }
                     },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
+                    },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
                     }
@@ -246,6 +293,7 @@
                             "application/json": {
                                 "schema": {
                                     "type": "array",
+                                    "maxItems": 5,
                                     "items": {
                                         "type": "object",
                                         "properties": {
@@ -267,6 +315,15 @@
                                 }
                             }
                         }
+                    },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
                     },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
@@ -326,9 +383,23 @@
                         },
                         "headers": {
                             "X-Rate-Limit-Limit": {
-                                "description": "The number of allowed requests in the current period"
+                                "description": "The number of allowed requests in the current period",
+                                "schema": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 100,
+                                    "format": "int32"                                }
                             }
                         }
+                    },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
                     },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
@@ -366,6 +437,15 @@
                                 }
                             }
                         }
+                    },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
                     },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
@@ -429,6 +509,15 @@
                             }
                         }
                     },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
+                    },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
                     }
@@ -458,6 +547,15 @@
                                 }
                             }
                         }
+                    },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
                     },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
@@ -494,6 +592,15 @@
                             }
                         }
                     },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
+                    },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
                     }
@@ -502,11 +609,6 @@
             "post": {
                 "description": "Add new payee",
                 "operationId": "CreatePayee",
-                "security": [
-                    {
-                        "APIKey": []
-                    }
-                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -546,6 +648,15 @@
                             }
                         }
                     },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
+                    },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
                     }
@@ -574,6 +685,18 @@
                     },
                     "401": {
                         "$ref": "#/components/responses/401ErrorResponse"
+                    },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/DefaultErrorResponse"
                     }
                 }
             }
@@ -623,13 +746,21 @@
                             }
                         }
                     },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
+                    },
                     "default": {
                         "$ref": "#/components/responses/DefaultErrorResponse"
                     }
                 }
             }
-        },
-        "/test": {}
+        }
     },
     "components": {
         "schemas": {
@@ -730,7 +861,8 @@
                     "SGD",
                     "TWD",
                     "USD"
-                ]
+                ],
+                "example": "EUR"
             },
             "DeliveryType": {
                 "type": "string",
@@ -764,6 +896,9 @@
                         "$ref": "#/components/schemas/Name"
                     }
                 },
+                "required": [
+                    "payeeType"
+                ],
                 "discriminator": {
                     "propertyName": "payeeType"
                 }
@@ -778,6 +913,7 @@
             "PersonalAccountNumber": {
                 "type": "string",
                 "description": "personal account number",
+                "pattern": "^[0-9]{5,5}$",
                 "example": "33333"
             },
             "ResponseMessage": {
@@ -832,7 +968,12 @@
             "TransactionId": {
                 "description": "A unique and immutable identifier used to identify a payment transaction.",
                 "type": "string",
-                "pattern": ".*"
+                "format": "uuid",
+                "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                "minLength": 36,
+                "maxLength": 36,
+                "x-42c-format": "o:uuid"
             },
             "TransferAmount": {
                 "type": "number",
@@ -845,6 +986,36 @@
         "responses": {
             "401ErrorResponse": {
                 "description": "Unauthorized",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/MessageObject"
+                        }
+                    }
+                }
+            },
+            "406ErrorResponse": {
+                "description": "Not Acceptable",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/MessageObject"
+                        }
+                    }
+                }
+            },
+            "415ErrorResponse": {
+                "description": "Unsupported Media Type",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/MessageObject"
+                        }
+                    }
+                }
+            },
+            "429ErrorResponse": {
+                "description": "Too Many Requests",
                 "content": {
                     "application/json": {
                         "schema": {
@@ -886,6 +1057,7 @@
                     "type": "integer",
                     "format": "int32",
                     "minimum": 0,
+                    "maximum": 10000,
                     "example": 1000
                 }
             }
@@ -895,11 +1067,6 @@
                 "type": "http",
                 "scheme": "bearer",
                 "bearerFormat": "JWT"
-            },
-            "APIKey": {
-                "type": "apiKey",
-                "name": "api_key",
-                "in": "header"
             }
         }
     }

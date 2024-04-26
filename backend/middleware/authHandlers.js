@@ -32,6 +32,7 @@ const authenticateToken = async (req, res, next) => {
             return res.status(200).json({"message": "invalid account"});
         }
 
+        // add the account information to the request for later processing
         req.account = findAccount;
 
         next();
@@ -42,7 +43,7 @@ const authenticateToken = async (req, res, next) => {
         }
 
         console.log(err)
-        return res.status(401).json({"message": "invalid access token TEST"})
+        return res.status(401).json({"message": "invalid access token"})
     }
 }
 

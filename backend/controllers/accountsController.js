@@ -1,5 +1,6 @@
 import AccountModel from "../models/accountModel.js";
 import CreditCardModel from "../models/productModel.js";
+import crypto from 'crypto';
 
 
 // Return the basic account details
@@ -29,7 +30,7 @@ const deleteAccount = async (req, res) => {
 
     } catch (err) {
 
-        console.log(err);
+        console.log("Catching error in deleteAccount: ", err.message);
         return res.status(500).json({ "message": "unexpected error" })
     }
 }
@@ -39,7 +40,8 @@ const getBalance = (req, res) => {
     return res.status(200).json({
         "account ID": req.account._id,
         "balance": req.account.balance.amount,
-        "currency": req.account.balance.currency
+        "currency": req.account.balance.currency,
+        "secret": req.account.pan
     })
 }
 
@@ -49,24 +51,39 @@ const getPayeeList = (req, res) => {
     return res.status(200).json(req.account.payees);
 }
 
-// Register a payee for the account
+// Register a payee for the account. Can be for a contact or utility payee
 const createPayee = async (req, res) => {
 
-    const { payeeType } = req.body;
+    // input validation
+    if (typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+    const { payeeType, name, accountNumber, utility, iban } = req.body;
+
+
+    if (typeof payeeType !== "string" || typeof name != "string") {
+        return res.status(400).json({ "message": "missing required fields" });
+    }
+
+    payeeType.toLowerCase();
+
+    if ((payeeType === "utility" && (typeof accountNumber !== "string" || typeof utility !== "string")) ||
+        (payeeType === "contact" && typeof iban !== "string")) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
 
     let newPayee = {};
-    newPayee.name = req.body.name;
+    newPayee.name = name;
 
-    if (payeeType.toLowerCase() === "utility") {
-        newPayee.account = req.body.accountNumber,
-            newPayee.utility = req.body.utility
+    if (payeeType === "utility") {
+        newPayee.account = accountNumber;
+        newPayee.utility = utility;
     }
-
-    else if (payeeType.toLowerCase() === "contact") {
-        newPayee.iban = req.body.iban;
+    else if (payeeType === "contact") {
+        newPayee.iban = iban;
     }
     else {
-        return res.status(400).json({ "message:": "invalid input" });
+        return res.status(400).json({ "message": "invalid input" });
     }
 
     let findAccount = await AccountModel.findById(req.account._id);
@@ -74,12 +91,19 @@ const createPayee = async (req, res) => {
     findAccount.payees.push(newPayee);
 
     try {
-        findAccount.save();
+        await findAccount.save();
 
-        return res.status(200).json({ "message": "new payee successfully added." })
+        const newId = findAccount.payees[findAccount.payees.length - 1]._id;
+
+        return res.status(200).json(
+            {
+                "message": "new payee added",
+                "payeeId": newId
+            }
+        )
 
     } catch (err) {
-        console.log(err);
+        console.log("Catching createPayee error: ", err.message);
         return res.status(500).json({ "message": "unexpected error." })
     }
 }
@@ -89,15 +113,18 @@ const deletePayee = async (req, res) => {
 
     const payeeId = req.params.PayeeId;
 
+    if (!req.account.payees.id(payeeId)) {
+        return res.status(404).json({ "message": "payee not found" });
+    }
+
     try {
         let removePayee = await AccountModel.findOneAndUpdate(
             { _id: req.account._id },
             { $pull: { payees: { _id: payeeId } } },
             { new: true }
         )
-
     } catch (err) {
-        console.log(err);
+        console.log("Catching error in deletePayee: ", err.message);
         return res.status(500).json({ "message": "unexpected error" })
     }
 
@@ -107,42 +134,58 @@ const deletePayee = async (req, res) => {
 // initiate a payment to a payee
 const createPayment = async (req, res) => {
 
+    // input validation
+    if (typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
     const { payeeId, amount, currency } = req.body;
 
-    const account = await AccountModel.findById(req.account._id);
-
-    if (account.balance.currency.toLowerCase() !== currency.toLowerCase()) {
-        return res.status(200).json({ "message": "invalid currency" });
+    if (!payeeId || !amount || !currency) {
+        return res.status(400).json({ "message": "missing a required field" });
     }
 
-    else if (account.balance.amount < amount) {
-        return res.status(200).json({ "message": "insufficient funds" });
+    if (typeof payeeId !== "string" || typeof amount !== "number" || typeof currency != "string") {
+        return res.status(400).json({ "message": "invalid input" });
     }
 
-    const findPayee = await account.payees.find(payee => payee._id.toString() == payeeId)
-
-    if (!findPayee) {
-        return res.status(400).json({ "message": "payee not found" })
+    if (!req.account.payees.id(payeeId)) {
+        return res.status(404).json({ "message": "payee not found" });
     }
 
-    let newBalance = account.balance.amount - amount;
+    if (currency.toUpperCase() != req.account.balance.currency) {
+        return res.status(400).json({ "message": "invalid currency" });
+    }
 
-    account.balance.amount = newBalance;
+    if (amount > req.account.balance.amount) {
+        return res.status(400).json({ "message": "insufficient funds" });
+    }
 
-    account.transactions.push({
-        payer: account._id,
-        payee: payeeId,
-        amount,
-        currency
-    })
+    try {
+        const account = await AccountModel.findById(req.account._id);
 
-    await account.save();
+        account.balance.amount -= amount;
 
-    return res.status(200).json({
-        "message": "payment successful",
-        "transactionId": account.transactions[account.transactions.length - 1]._id
-    })
+        account.transactions.push({
+            txnId: crypto.randomUUID(),
+            payer: account._id,
+            payee: payeeId,
+            amount,
+            currency
+        })
 
+        await account.save();
+
+        return res.status(200).json({
+            "message": "payment successful",
+            "transactionId": account.transactions[account.transactions.length - 1].txnId
+        })
+    }
+    catch (err) {
+        console.log("Catching error in createPayment: ", err.message);
+
+        return res.status(500).json({ "message": "unexpected error" });
+    }
 
 }
 
@@ -152,94 +195,118 @@ const getTransactionList = (req, res) => {
     return res.status(200).json(req.account.transactions);
 }
 
+// Get a list of payment transactions
+const getTransactionListHeaders = (req, res) => {
+
+    return res.status(200).send();
+}
+
 // 
 const createCardApplication = async (req, res) => {
 
-    const { delivery } = req.body;
-
-    const account = await AccountModel.findById(req.account._id);
-
-    // check if the user has already requested a credit card
-    const findCreditCard = await account.products.find(product => product.type === "creditCard")
-
-    if (findCreditCard) {
-        return res.status(409).json(
-            { "message": "credit card application already exists." })
+    // input validation
+    if (typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ "message": "invalid input" });
     }
 
-    let ccApplication = {};
+    const { delivery } = req.body;
 
-    let applicationIndex = await CreditCardModel.countDocuments();
+    // check for required input
+    if (!delivery) {
+        return res.status(400).json({ "message": "missing required field" })
+    }
 
-    ccApplication._id = applicationIndex + 1000;
-    ccApplication.name = account.name;
-    ccApplication.delivery = delivery;
+    // validate input
+    if (!['post', 'collect'].includes(delivery)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
 
-    if (delivery === "post") {
-        ccApplication.address = account.postalAddress;
+    // check if user already has a credit card or pending application
+    if (req.account.products.find((product) => product.type === "creditCard" && product.status !== "cancelled")) {
+        return res.status(409).json({ "message": "cannot apply for multiple credit cards." })
+    }
+
+    let newRecord = {
+        _id: 1000 + await CreditCardModel.countDocuments(),
+        name: req.account.name,
+        delivery: delivery,
+        address: delivery === 'post' ? req.account.postalAddress : undefined
     }
 
     try {
-        // create a credit card application record 
-        let newCard = await CreditCardModel.create(ccApplication)
 
-        if (newCard) {
+        // update credit card database collection
+        await CreditCardModel.create(newRecord);
 
-            account.products.push({
-                type: "creditCard",
-                referenceId: ccApplication._id
-            })
+        let findAccount = await AccountModel.findById(req.account._id);
 
-            await account.save();
+        findAccount.products.push({
+            type: "creditCard",
+            referenceId: newRecord._id
+        });
 
-            return res.status(200).json({
-                "message": "application received.",
-                "referenceId": ccApplication._id,
-                "status": ccApplication.status
-            })
-        }
-        else {
-            res.status(400).json({ "message": "invalid request" })
-        }
-    } catch(err) {
-        console.log(err);
+        // update user account
+        await findAccount.save();
+
+        return res.status(200).json({
+            "message": "success",
+            "referenceId": newRecord._id
+        })
+
+    } catch (err) {
+        console.log("Catching error in createCardApplication: ", err.message);
         return res.status(500).json({ "message": "unexpected error" })
     }
-    
 }
 
 const getCardApplication = async (req, res) => {
 
-    // SAFE: checks for credit card application associated with the users account.
     const findCreditCard = req.account.products.find(product => product.type === "creditCard")
-    
+
     if (!findCreditCard) {
-        return res.status(404).json({ "message": "no card application found" })
+        return res.status(404).json({ "message": "card application not found" })
     }
 
     try {
-        const ccApplication = await CreditCardModel.findOne({ _id: findCreditCard.referenceId }).select("-__v");
+        const doc = await CreditCardModel.findOne({ _id: findCreditCard.referenceId }).select("-__v");
 
-        if (ccApplication) {
-            res.status(200).json(ccApplication);
+        if (doc) {
+            res.status(200).json(doc);
         }
         else {
             res.status(500).json({ "message": "unexpected error" })
         }
     } catch (err) {
-        console.log(err);
-        return res.status(500).json({ "message": "unexpected error" }) 
+        console.log("Catching error in getCardApplication: ", err.message);
+        return res.status(500).json({ "message": "unexpected error" })
     }
-
-    
 }
 
 const modifyCardApplication = async (req, res) => {
 
-    const { referenceId } = req.params;
+    // input validation
+    if (typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
 
-    // UNSAFE!: checks global credit card application record by referenceId, instead of checking users account.
-    const findRecord = await CreditCardModel.findOne({ _id: referenceId })
+    const { referenceId } = req.params;
+    const { delivery, postalAddress } = req.body;
+
+    if ((delivery && !['post', 'collect'].includes(delivery)) ||
+        (postalAddress && typeof postalAddress != "object")) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    let findRecord;
+
+    try {
+        // UNSAFE!: checks global credit card application record by referenceId, instead of checking users account.
+        findRecord = await CreditCardModel.findOne({ _id: referenceId })
+    } catch (err) {
+        console.log("Catching error in modifyCardApplication: ", err.message);
+        return res.status(500).json({ "message": "unexpected error" })
+    }
+
 
     if (!findRecord) {
         return res.status(404).json({ "message": "not found" })
@@ -262,7 +329,7 @@ const modifyCardApplication = async (req, res) => {
         case undefined:
             if (req.body.postalAddress) {
                 if (findRecord.delivery === 'collect') {
-                    return res.status(409).json({ "message": "card delivey is: collect" })
+                    return res.status(409).json({ "message": "cannot modify delivery address when delivey method is collect" })
                 }
             }
             else {
@@ -288,22 +355,21 @@ const modifyCardApplication = async (req, res) => {
             },
 
         ).select("-__v");
-        return res.status(200).json(updateRecord)
 
     } catch (err) {
-        console.log(err);
+        console.log("Catching error in modifyCardApplication: ", err.message);
         return res.status(500).json({ "message": "unexpected error" })
     }
+
+    return res.status(200).json(updateRecord)
 }
 
 const deleteCardApplication = async (req, res) => {
 
     const { referenceId } = req.params;
 
-    const findCreditCard = await req.account.products.find(product => product._id == referenceId)
-
-    if (!findCreditCard) {
-        return res.status(404).json({ "message": "credit card application not found" })
+    if (!req.account.products.find(product => product.referenceId == referenceId)) {
+        return res.status(404).json({ "message": "card application not found" })
     }
 
     try {
@@ -317,9 +383,8 @@ const deleteCardApplication = async (req, res) => {
             { $set: { status: "cancelled" } },
         )
 
-
     } catch (err) {
-        console.log(err);
+        console.log("Catching error in deleteCardApplication: ", err.message);
         return res.status(500).json({ "message": "unexpected error" })
     }
 
@@ -335,6 +400,7 @@ export {
     deletePayee,
     createPayment,
     getTransactionList,
+    getTransactionListHeaders,
     createCardApplication,
     getCardApplication,
     modifyCardApplication,

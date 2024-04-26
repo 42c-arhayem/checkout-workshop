@@ -33,7 +33,51 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"{{user1}}\",\n  \"email\": \"{{user1-email}}\",\n  \"postalAddress\": {\n    \"addressLine\": [\n        \"1 Leafy Lane\",\n        \"Hazelbrook\",\n        \"Windy City\"\n    ],\n    \"postCode\": \"AAA111\",\n    \"country\": \"UK\"\n  },\n  \"pan\": \"{{pan}}\"\n}",
+							"raw": "{\n  \"name\": \"{{user1}}\",\n  \"email\": \"{{user1-email}}\",\n  \"postalAddress\": {\n    \"addressLine\": [\n        \"1 Leafy Lane\",\n        \"Hazelbrook\",\n        \"Windy City\"\n    ],\n    \"postCode\": \"AAA111\",\n    \"country\": \"UK\"\n  },\n  \"pan\": \"{{user1-pan}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Account Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.environment.set(\"AccountId\", response.AccountId);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{user2}}\",\n    \"email\": \"{{user2-email}}\",\n    \"postalAddress\": {\n        \"addressLine\": [\n            \"8 Elm Grove\",\n            \"Rocky District\",\n            \"Main town\"\n        ],\n        \"postCode\": \"BBB123\",\n        \"country\": \"UK\"\n    },\n    \"pan\": \"{{pan}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -77,7 +121,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{pan}}\"\n}",
+							"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{user1-pan}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -105,7 +149,10 @@
 							"script": {
 								"exec": [
 									"let response = pm.response.json();",
-									"pm.environment.set(\"AccountId\", response.accountId);"
+									"if(response.accountId) {",
+									"    pm.environment.set(\"AccountId\", response.accountId);",
+									"}",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -113,7 +160,7 @@
 						}
 					],
 					"request": {
-						"method": "GET",
+						"method": "HEAD",
 						"header": [],
 						"url": {
 							"raw": "{{baseURL}}/account",
@@ -196,7 +243,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"Kevin Kerns\",\n    \"iban\": \"IE12BOFI90000112777777\"\n}",
+							"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"James McGuire\",\n    \"iban\": \"IE12BOFI90000112777666\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -240,14 +287,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/account/payees/6614edc92644fd215f65f4a0",
+							"raw": "{{baseURL}}/account/payees/{{payeeId}}",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"account",
 								"payees",
-								"6614edc92644fd215f65f4a0"
+								"{{payeeId}}"
 							]
 						}
 					},
@@ -260,7 +307,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"payeeId\": \"6614edc92644fd215f65f4a0\",\n    \"amount\": 25,\n    \"currency\": \"EUR\"\n}",
+							"raw": "{\n    \"payeeId\": \"{{payeeId}}\",\n    \"amount\": 25,\n    \"currency\": \"EUR\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -284,6 +331,24 @@
 					"name": "Get Transactions",
 					"request": {
 						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/transactions",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions Headers",
+					"request": {
+						"method": "HEAD",
 						"header": [],
 						"url": {
 							"raw": "{{baseURL}}/account/transactions",
@@ -328,6 +393,22 @@
 				},
 				{
 					"name": "Get Credit Card Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"if(response.referenceId) {",
+									"    pm.environment.set(\"referenceId\", response.referenceId);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -352,7 +433,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/account/products/cards/1000",
+							"raw": "{{baseURL}}/account/products/cards/{{referenceId}}",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -360,7 +441,7 @@
 								"account",
 								"products",
 								"cards",
-								"1000"
+								"{{referenceId}}"
 							]
 						}
 					},
@@ -381,7 +462,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/account/products/cards/1000",
+							"raw": "{{baseURL}}/account/products/cards/{{referenceId}}",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -389,7 +470,7 @@
 								"account",
 								"products",
 								"cards",
-								"1000"
+								"{{referenceId}}"
 							]
 						}
 					},
@@ -427,7 +508,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"{{user2}}\",\n  \"email\": \"{{user2-email}}\",\n  \"postalAddress\": {\n    \"addressLine\": [\n        \"88 Elm Park\",\n        \"Beechwood Grove\",\n        \"Newtown\"\n    ],\n    \"postCode\": \"BBB222\",\n    \"country\": \"US\"\n  },\n  \"pan\": \"{{pan}}\"\n}",
+									"raw": "{\n  \"name\": \"{{user2}}\",\n  \"email\": \"{{user2-email}}\",\n  \"postalAddress\": {\n    \"addressLine\": [\n        \"88 Elm Park\",\n        \"Beechwood Grove\",\n        \"Newtown\"\n    ],\n    \"postCode\": \"BBB222\",\n    \"country\": \"US\"\n  },\n  \"pan\": \"{{user2-pan}}\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -471,7 +552,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"email\": \"{{user2-email}}\",\n  \"pan\": \"{{pan}}\"\n}",
+									"raw": "{\n  \"email\": \"{{user2-email}}\",\n  \"pan\": \"{{user2-pan}}\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"

@@ -1,5 +1,6 @@
 import express from 'express';
-import { authenticateToken } from "../middleware/tokens.js";
+import { authenticateToken } from "../middleware/authHandlers.js";
+import { handleMethodNotAllowed } from '../middleware/errorHandlers.js';
 import {     
     getAccounts,
     deleteAccount,
@@ -9,6 +10,7 @@ import {
     deletePayee,
     createPayment,
     getTransactionList,
+    getTransactionListHeaders,
     createCardApplication,
     getCardApplication,
     modifyCardApplication,
@@ -17,18 +19,41 @@ import {
 
 const router  = express.Router();
 
-router.get('/', authenticateToken, getAccounts);
-router.delete('/', authenticateToken, deleteAccount );
-router.get('/balances', authenticateToken, getBalance);
-router.get('/payees', authenticateToken, getPayeeList );
-router.post('/payees', authenticateToken, createPayee );
-router.delete('/payees/:PayeeId', authenticateToken, deletePayee );
-router.post('/payments', authenticateToken, createPayment );
-router.get('/transactions', authenticateToken, getTransactionList);
-router.post('/products/cards', authenticateToken, createCardApplication );
-router.get('/products/cards', authenticateToken, getCardApplication);
-router.put('/products/cards/:referenceId', authenticateToken, modifyCardApplication);
-router.delete('/products/cards/:referenceId', authenticateToken, deleteCardApplication );
+router.route('/')
+    .get(authenticateToken, getAccounts)
+    .delete(authenticateToken, deleteAccount)
+    .all(handleMethodNotAllowed)
 
+router.route('/balances')
+    .get(authenticateToken, getBalance)
+    .all(handleMethodNotAllowed)
+
+router.route('/payees')
+    .get(authenticateToken, getPayeeList)
+    .post(authenticateToken, createPayee)
+    .all(handleMethodNotAllowed)
+
+router.route('/payees/:PayeeId')
+    .delete(authenticateToken, deletePayee)
+    .all(handleMethodNotAllowed)
+
+router.route('/payments')
+    .post(authenticateToken, createPayment)
+    .all(handleMethodNotAllowed)
+
+router.route('/transactions')
+    .get(authenticateToken, getTransactionList)
+    .head(authenticateToken, getTransactionListHeaders)
+    .all(handleMethodNotAllowed)
+
+router.route('/products/cards')
+    .get(authenticateToken, getCardApplication)
+    .post(authenticateToken, createCardApplication)
+    .all(handleMethodNotAllowed)
+
+router.route('/products/cards/:referenceId')
+    .put(authenticateToken, modifyCardApplication)
+    .delete(authenticateToken, deleteCardApplication)
+    .all(handleMethodNotAllowed)
 
 export default router;

@@ -56,134 +56,111 @@
                 "payee": "6614ed9a2644fd215f65f492",
                 "amount": 43,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614edf12644fd215f65f4ae"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:27:45.384Z"
-                }
+                "createdAt": "2023-09-12T07:27:45.384Z",
+                "txnId": "fb4691db-2931-4c28-9441-f2fd637437d5"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614ed9a2644fd215f65f492",
                 "amount": 48,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614edf62644fd215f65f4ba"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:27:50.459Z"
-                }
+                "createdAt": "2023-10-09T07:27:50.459Z",
+                "txnId": "b20a7e0c-4f9e-4ddc-b1f3-bb667d64770a"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614ed9a2644fd215f65f492",
                 "amount": 25,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614edfd2644fd215f65f4c8"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:27:57.847Z"
-                }
+                "createdAt": "2023-12-21T07:27:57.847Z",
+                "txnId": "e7884c17-4656-4062-94e6-28ab28af1141"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614ed9a2644fd215f65f492",
                 "amount": 59,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614ee022644fd215f65f4d8"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:28:02.682Z"
-                }
+                "createdAt": "2024-01-14T07:28:02.682Z",
+                "txnId": "7f15fc56-1a45-45bb-bad2-35793b0fcd7a"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614edb82644fd215f65f498",
                 "amount": 80,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614ee1a2644fd215f65f4ea"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:28:26.829Z"
-                }
+                "createdAt": "2024-02-11T07:28:26.829Z",
+                "txnId": "2581212f-921c-4fe3-a6df-5ff8e48d5399"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614edb82644fd215f65f498",
                 "amount": 68,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614ee1f2644fd215f65f4fe"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:28:31.785Z"
-                }
+                "createdAt": "2024-03-28T07:28:31.785Z",
+                "txnId": "f1c2bb92-b4ef-4e63-8d87-29e611e3f197"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614edb82644fd215f65f498",
                 "amount": 76,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614ee262644fd215f65f514"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:28:38.313Z"
-                }
+                "createdAt": "2024-04-01T07:28:38.313Z",
+                "txnId": "664dead5-0e3b-40e7-85f3-6b03b9e5d5fa"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614edb82644fd215f65f498",
                 "amount": 14,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614ee2b2644fd215f65f52c"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:28:43.112Z"
-                }
+                "createdAt": "2024-04-02T07:28:43.112Z",
+                "txnId": "b3e2507d-2cd7-4b77-93a2-5d753eb1d2aa"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614edc92644fd215f65f4a0",
                 "amount": 25,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614ee422644fd215f65f546"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:29:06.659Z"
-                }
+                "createdAt": "2024-04-06T07:29:06.659Z",
+                "txnId": "1d504d0f-75a6-47e3-bec8-73e4a0cdd21c"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614edc92644fd215f65f4a0",
                 "amount": 25,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614ee432644fd215f65f562"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:29:07.847Z"
-                }
+                "createdAt": "2024-04-09T07:29:07.847Z",
+                "txnId": "aaf4d14a-aaf7-4556-b672-f88238c9109f"
             },
             {
                 "payer": "6614e6b5e088561458403e99",
                 "payee": "6614edc92644fd215f65f4a0",
                 "amount": 25,
                 "currency": "EUR",
-                "_id": {
-                    "$oid": "6614ee442644fd215f65f580"
-                },
-                "createdAt": {
-                    "$date": "2024-04-09T07:29:08.978Z"
-                }
+                "createdAt": "2024-04-09T07:29:08.978Z",
+                "txnId": "617eaa2a-1de8-4634-918d-e19b63951724"
             }
         ]
+    },
+    {
+        "name": "Dave Rogers",
+        "email": "drogers@email.com",
+        "postalAddress": {
+            "addressLine": [
+                "8 Elm Grove",
+                "Rocky District",
+                "Main town"
+            ],
+            "postCode": "BBB123",
+            "country": "UK"
+        },
+        "pan": "$2a$08$gisjMbvsABQ0SlkH2mdJyew5ssAm5TJTJFVq1Y1Uc0W7NrexCwpZm",
+        "balance": {
+            "amount": 1000,
+            "currency": "EUR"
+        },
+        "payees": [],
+        "products": [],
+        "transactions": []
     }
 ]
 
