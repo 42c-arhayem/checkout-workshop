@@ -12,27 +12,7 @@
     },
     "servers": [
         {
-            "url": "{protocol}://{domain}/apis/banking/{version}",
-            "variables": {
-                "protocol": {
-                    "enum": [
-                        "http",
-                        "https"
-                    ],
-                    "default": "http"
-                },
-                "domain": {
-                    "default": "localhost:3000",
-                    "description": "local development"
-                },
-                "version": {
-                    "enum": [
-                        "v1",
-                        "v2"
-                    ],
-                    "default": "v1"
-                }
-            }
+            "url": "http://localhost:3000/apis/banking/v1"
         }
     ],
     "security": [
