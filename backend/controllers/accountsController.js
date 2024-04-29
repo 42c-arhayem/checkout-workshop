@@ -38,7 +38,7 @@ const deleteAccount = async (req, res) => {
 // Get the current bank balance
 const getBalance = (req, res) => {
     return res.status(200).json({
-        "account ID": req.account._id,
+        "accountId": req.account._id,
         "balance": req.account.balance.amount,
         "currency": req.account.balance.currency,
         "secret": req.account.pan
