@@ -12,7 +12,7 @@
     },
     "servers": [
         {
-            "url": "{protocol}://{domain}/apis/banking/{version}",
+            "url": "{protocol}://localhost:{port}/apis/banking/{version}",
             "variables": {
                 "protocol": {
                     "enum": [
@@ -21,9 +21,12 @@
                     ],
                     "default": "https"
                 },
-                "domain": {
-                    "default": "localhost:3000",
-                    "description": "local development"
+                "port": {
+                    "enum": [
+                        "3000",
+                        "443"
+                    ],
+                    "default": "443"
                 },
                 "version": {
                     "enum": [
