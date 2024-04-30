@@ -10,10 +10,12 @@ services:
       MONGO_INITDB_DATABASE: 42c-bank-db
     restart: always
       
-  app:
+  api:
     image: anthony42crunch/test42c
+    container_name: 42c-bank-api
     ports:
       - '3000:3000'
+      - '443:443'
     depends_on:
       - database
     restart: always
