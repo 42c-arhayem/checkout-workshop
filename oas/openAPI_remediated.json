@@ -391,7 +391,8 @@
                                     "type": "integer",
                                     "minimum": 0,
                                     "maximum": 100,
-                                    "format": "int32"                                }
+                                    "format": "int32"
+                                }
                             }
                         }
                     },
@@ -478,7 +479,18 @@
                                         "$ref": "#/components/schemas/Address"
                                     }
                                 },
-                                "additionalProperties": false
+                                "additionalProperties": false,
+                                "example": {
+                                    "delivery": "post",
+                                    "postalAddress": {
+                                        "addressLine": [
+                                            "999 Hackers Way",
+                                            "Vice City"
+                                        ],
+                                        "postCode": "44400",
+                                        "country": "NL"
+                                    }
+                                }
                             }
                         }
                     }
@@ -637,12 +649,12 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type":"object",
-                                    "properties":{
-                                        "message":{
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
                                             "$ref": "#/components/schemas/ResponseMessage"
                                         },
-                                        "payeeId":{
+                                        "payeeId": {
                                             "$ref": "#/components/schemas/AccountId"
                                         }
                                     },

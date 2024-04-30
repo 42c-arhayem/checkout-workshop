@@ -190,9 +190,19 @@ const createPayment = async (req, res) => {
 }
 
 // Get a list of payment transactions
-const getTransactionList = (req, res) => {
+const getTransactionList = async (req, res) => {
 
-    return res.status(200).json(req.account.transactions);
+    const list = req.account.transactions
+        .map((transaction) => ({
+            'payer': transaction.payer,
+            'payee': transaction.payee,
+            'amount': transaction.amount,
+            'currency': transaction.currency
+        }))
+
+        console.log(list);
+
+    return res.status(200).json(list);
 }
 
 // Get a list of payment transactions
