@@ -38,5 +38,5 @@ SERVER.use('/apis/banking/v1/auth', authRoutes);
 SERVER.use(handleRouteNotFound);
 SERVER.use(handleError);
 
-SERVER.listen(PORT, () => console.log('Server started.'));
-HTTPS_SERVER.listen(443, () => console.log('HTTPS server started'));
+SERVER.listen(PORT, () => console.log(`API server started on port ${PORT}` ));
+HTTPS_SERVER.listen(443, () => console.log('API server with HTTPS started on port 443'));

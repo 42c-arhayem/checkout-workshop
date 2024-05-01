@@ -3,6 +3,7 @@ services:
 
   database:
     image: anthony42crunch/test42c:database
+    command: mongod --quiet --logpath /dev/null 
     container_name: mongo-db
     ports:
       - '27017:27017'
