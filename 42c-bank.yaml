@@ -3,15 +3,13 @@ services:
 
   database:
     image: anthony42crunch/test42c:database
-    command: mongod --quiet --logpath /dev/null 
     container_name: mongo-db
     ports:
       - '27017:27017'
-    environment:
-      MONGO_INITDB_DATABASE: 42c-bank-db
     restart: always
+    command: mongod --quiet
       
-  api:
+  apiserver:
     image: anthony42crunch/test42c
     container_name: 42c-bank-api
     ports:

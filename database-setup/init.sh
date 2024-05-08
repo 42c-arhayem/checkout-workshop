@@ -1,2 +1,3 @@
-mongoimport --db=42c-bank-db --collection=accounts --jsonArray --file=docker-entrypoint-initdb.d/init-accountData.json
-mongoimport --db=42c-bank-db --collection=creditcards --jsonArray --file=docker-entrypoint-initdb.d/init-ccData.json
+#!/bin/bash
+mongoimport --db='42c-bank-db' --collection='creditcards' --jsonArray --file='docker-entrypoint-initdb.d/init-ccData.json' 
+mongoimport --db='42c-bank-db' --collection='accounts' --jsonArray --file='docker-entrypoint-initdb.d/init-accountData.json' 
