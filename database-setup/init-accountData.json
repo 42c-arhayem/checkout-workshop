@@ -19,22 +19,25 @@
         "payees": [
             {
                 "name": "Gas Bill",
+                "payeeType": "utility",
                 "utility": "gas",
-                "account": "2008348",
+                "accountNumber": "2008348",
                 "_id": {
                     "$oid": "6614ed9a2644fd215f65f492"
                 }
             },
             {
                 "name": "Elec Bill",
+                "payeeType": "utility",
                 "utility": "electricity",
-                "account": "AH800919",
+                "accountNumber": "AH800919",
                 "_id": {
                     "$oid": "6614edb82644fd215f65f498"
                 }
             },
             {
                 "name": "Kevin Kerns",
+                "payeeType": "contact",
                 "iban": "IE12BOFI90000112777777",
                 "_id": {
                     "$oid": "6614edc92644fd215f65f4a0"
@@ -153,7 +156,7 @@
             "postCode": "BBB123",
             "country": "UK"
         },
-        "pan": "$2a$08$gisjMbvsABQ0SlkH2mdJyew5ssAm5TJTJFVq1Y1Uc0W7NrexCwpZm",
+        "pan": "$2a$08$Gzbf4/cpKQ.0eebFqvCyuu5LtXAEbrfWjeTDBOaBddU6mvpAyrNJy",
         "balance": {
             "amount": 1000,
             "currency": "EUR"

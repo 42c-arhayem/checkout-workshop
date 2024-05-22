@@ -67,28 +67,15 @@ const createPayee = async (req, res) => {
 
     payeeType.toLowerCase();
 
-    if ((payeeType === "utility" && (typeof accountNumber !== "string" || typeof utility !== "string")) ||
+    if ( (payeeType !== "utility" && payeeType !== "contact") ||
+        (payeeType === "utility" && (typeof accountNumber !== "string" || typeof utility !== "string")) ||
         (payeeType === "contact" && typeof iban !== "string")) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
-
-    let newPayee = {};
-    newPayee.name = name;
-
-    if (payeeType === "utility") {
-        newPayee.account = accountNumber;
-        newPayee.utility = utility;
-    }
-    else if (payeeType === "contact") {
-        newPayee.iban = iban;
-    }
-    else {
         return res.status(400).json({ "message": "invalid input" });
     }
 
     let findAccount = await AccountModel.findById(req.account._id);
 
-    findAccount.payees.push(newPayee);
+    findAccount.payees.push(req.body);
 
     try {
         await findAccount.save();
