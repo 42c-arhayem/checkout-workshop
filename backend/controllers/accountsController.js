@@ -39,16 +39,36 @@ const deleteAccount = async (req, res) => {
 const getBalance = (req, res) => {
     return res.status(200).json({
         "accountId": req.account._id,
-        "balance": req.account.balance.amount,
-        "currency": req.account.balance.currency,
-        "secret": req.account.pan
+        "balance": req.account.balance,
+        "currency": req.account.currency,
+        "secret": req.account.pa
     })
 }
 
 // Get the list of registered payee's for the account
 const getPayeeList = (req, res) => {
 
-    return res.status(200).json(req.account.payees);
+    let payeeList = req.account.payees.map( payee => {
+
+        if(payee.payeeType === 'utility') {
+            return {
+                "name": payee.name,
+                "accountNumber": payee.account,
+                "payeeType": payee.payeeType,
+                "payeeId": payee._id
+            }
+        }
+        else {
+            return {
+                "name": payee.name,
+                "iban": payee.account,
+                "payeeType": payee.payeeType,
+                "payeeId": payee._id
+            }
+        }
+    })
+
+    return res.status(200).json(payeeList);
 }
 
 // Register a payee for the account. Can be for a contact or utility payee
@@ -58,24 +78,36 @@ const createPayee = async (req, res) => {
     if (typeof req.body !== "object" || Array.isArray(req.body)) {
         return res.status(400).json({ "message": "invalid input" });
     }
-    const { payeeType, name, accountNumber, utility, iban } = req.body;
 
+    const { payeeType, name, accountNumber, iban } = req.body;
+
+    if(!payeeType || !name) {
+        return res.status(400).json({ "message": "missing required field" });
+    }
 
     if (typeof payeeType !== "string" || typeof name != "string") {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+    
+    payeeType.toLowerCase();
+
+    if( (payeeType === "utility" && !accountNumber) ||
+        (payeeType === "contact" && !iban)) {
         return res.status(400).json({ "message": "missing required fields" });
     }
 
-    payeeType.toLowerCase();
-
-    if ( (payeeType !== "utility" && payeeType !== "contact") ||
-        (payeeType === "utility" && (typeof accountNumber !== "string" || typeof utility !== "string")) ||
-        (payeeType === "contact" && typeof iban !== "string")) {
+    if ( (accountNumber && typeof accountNumber !== "string") ||
+         (iban && typeof iban !== "string")) {
         return res.status(400).json({ "message": "invalid input" });
     }
 
     let findAccount = await AccountModel.findById(req.account._id);
 
-    findAccount.payees.push(req.body);
+    findAccount.payees.push({
+        name,
+        payeeType,
+        account: payeeType === 'utility' ? accountNumber : iban
+    });
 
     try {
         await findAccount.save();
@@ -118,47 +150,102 @@ const deletePayee = async (req, res) => {
     return res.status(200).json({ "message": "payee removed." })
 }
 
-// initiate a payment to a payee
-const createPayment = async (req, res) => {
+// initiate a transfer to a contact
+const createTransferPayment = async (req, res) => {
 
     // input validation
     if (typeof req.body !== "object" || Array.isArray(req.body)) {
         return res.status(400).json({ "message": "invalid input" });
     }
 
-    const { payeeId, amount, currency } = req.body;
+    const { name, iban, amount, currency, description } = req.body;
 
-    if (!payeeId || !amount || !currency) {
+    if (!iban || !amount || !currency) {
         return res.status(400).json({ "message": "missing a required field" });
     }
 
-    if (typeof payeeId !== "string" || typeof amount !== "number" || typeof currency != "string") {
+    if (typeof iban !== "string" || typeof amount !== "number" || amount < 0 || typeof currency != "string") {
         return res.status(400).json({ "message": "invalid input" });
     }
 
-    if (!req.account.payees.id(payeeId)) {
-        return res.status(404).json({ "message": "payee not found" });
-    }
-
-    if (currency.toUpperCase() != req.account.balance.currency) {
+    if (currency.toUpperCase() != "EUR" && currency.toUpperCase() != "GBP") {
         return res.status(400).json({ "message": "invalid currency" });
     }
 
-    if (amount > req.account.balance.amount) {
+    if (amount > req.account.balance) {
         return res.status(400).json({ "message": "insufficient funds" });
     }
 
     try {
         const account = await AccountModel.findById(req.account._id);
 
-        account.balance.amount -= amount;
+        account.balance -= amount;
 
         account.transactions.push({
-            txnId: crypto.randomUUID(),
-            payer: account._id,
-            payee: payeeId,
+            "txnId": crypto.randomUUID(),
+            "txnType": "funds transfer",
+            "txnDir": "debit",
+            name,
+            iban,
             amount,
-            currency
+            currency,
+            description
+        })
+
+        await account.save();
+
+        return res.status(200).json({
+            "message": "payment successful",
+            "transactionId": account.transactions[account.transactions.length - 1].txnId
+        })
+    }
+    catch (err) {
+        console.log("Catching error in createPayment: ", err.message);
+
+        return res.status(500).json({ "message": "unexpected error" });
+    }
+
+}
+
+// initiate a bill payment to a utility account
+const createBillPayment = async (req, res) => {
+
+    // input validation
+    if (typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    const { name, accountNumber, amount, currency } = req.body;
+
+    if (!name || !accountNumber || !amount) {
+        return res.status(400).json({ "message": "missing a required field" });
+    }
+
+    if (typeof name !== "string" || typeof accountNumber !== "string" || typeof amount != "number") {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    if (currency && (currency.toUpperCase() != req.account.currency)) {
+        return res.status(400).json({ "message": "invalid currency" });
+    }
+
+    if (amount > req.account.balance) {
+        return res.status(400).json({ "message": "insufficient funds" });
+    }
+
+    try {
+        const account = await AccountModel.findById(req.account._id);
+
+        // BUG: amount can be negative, thereby increasing the balance
+        account.balance -= amount;
+
+        account.transactions.push({
+            "txnId": crypto.randomUUID(),
+            "txnType": "bill payment",
+            name,
+            accountNumber,
+            amount,
+            "currency": currency ?  currency : req.account.currency
         })
 
         await account.save();
@@ -179,17 +266,7 @@ const createPayment = async (req, res) => {
 // Get a list of payment transactions
 const getTransactionList = async (req, res) => {
 
-    const list = req.account.transactions
-        .map((transaction) => ({
-            'payer': transaction.payer,
-            'payee': transaction.payee,
-            'amount': transaction.amount,
-            'currency': transaction.currency
-        }))
-
-        console.log(list);
-
-    return res.status(200).json(list);
+    return res.status(200).json(req.account.transactions);
 }
 
 // Get a list of payment transactions
@@ -395,7 +472,8 @@ export {
     getPayeeList,
     createPayee,
     deletePayee,
-    createPayment,
+    createTransferPayment,
+    createBillPayment,
     getTransactionList,
     getTransactionListHeaders,
     createCardApplication,

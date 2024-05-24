@@ -8,7 +8,8 @@ import {
     getPayeeList,
     createPayee,
     deletePayee,
-    createPayment,
+    createTransferPayment,
+    createBillPayment,
     getTransactionList,
     getTransactionListHeaders,
     createCardApplication,
@@ -37,8 +38,12 @@ router.route('/payees/:PayeeId')
     .delete(authenticateToken, deletePayee)
     .all(handleMethodNotAllowed)
 
-router.route('/payments')
-    .post(authenticateToken, createPayment)
+router.route('/payments/transfer')
+    .post(authenticateToken, createTransferPayment)
+    .all(handleMethodNotAllowed)
+
+router.route('/payments/bill')
+    .post(authenticateToken, createBillPayment)
     .all(handleMethodNotAllowed)
 
 router.route('/transactions')

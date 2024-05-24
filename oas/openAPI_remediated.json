@@ -68,6 +68,12 @@
                                         "$ref": "#/components/schemas/PersonalAccountNumber"
                                     }
                                 },
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "postalAddress",
+                                    "pan"
+                                ],
                                 "additionalProperties": false
                             }
                         }
@@ -127,6 +133,7 @@
                                         "$ref": "#/components/schemas/PersonalAccountNumber"
                                     }
                                 },
+                                "required":["email", "pan"],
                                 "additionalProperties": false
                             }
                         }
@@ -300,17 +307,40 @@
                                     "items": {
                                         "type": "object",
                                         "properties": {
-                                            "payer": {
-                                                "$ref": "#/components/schemas/AccountId"
+                                            "txnId": {
+                                              "type": "string",
+                                              "format": "uuid",
+                                              "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                                              "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                                              "minLength": 36,
+                                              "maxLength": 36,
+                                              "x-42c-format": "o:uuid"
                                             },
-                                            "payee": {
-                                                "$ref": "#/components/schemas/AccountId"
+                                            "txnType": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "funds transfer",
+                                                    "bill payment"
+                                                ]
+                                            },
+                                            "name": {
+                                                "$ref": "#/components/schemas/Name"
+                                            },
+                                            "accountNumber": {
+                                                "$ref": "#/components/schemas/UtilityAccountId"
+                                            },
+                                            "iban": {
+                                                "$ref": "#/components/schemas/IBAN"
                                             },
                                             "amount": {
-                                                "type": "number"
+                                                "$ref": "#/components/schemas/TransferAmount"
                                             },
                                             "currency": {
                                                 "$ref": "#/components/schemas/Currency"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "pattern": "^[A-Za-z0-9 _.,!\"?]{0,100}$"
                                             }
                                         },
                                         "additionalProperties": false
@@ -360,6 +390,9 @@
                                         "$ref": "#/components/schemas/DeliveryType"
                                     }
                                 },
+                                "required": [
+                                    "delivery"
+                                ],
                                 "additionalProperties": false
                             }
                         }
@@ -736,6 +769,11 @@
                                         "$ref": "#/components/schemas/Currency"
                                     }
                                 },
+                                "required": [
+                                    "payeeId",
+                                    "amount",
+                                    "currency"
+                                ],
                                 "additionalProperties": false
                             }
                         }
@@ -848,11 +886,16 @@
                     {
                         "type": "object",
                         "properties": {
+                            "name": {
+                                "$ref": "#/components/schemas/Name"
+                            },
                             "iban": {
-                                "type": "string",
-                                "pattern": "^[A-Z0-9]{22,24}$"
+                                "$ref": "#/components/schemas/IBAN"
                             }
-                        }
+                        },
+                        "required": [
+                            "iban"
+                        ]
                     }
                 ],
                 "example": {
@@ -895,6 +938,15 @@
                 "maxLength": 320,
                 "x-42c-format": "o:email-secured"
             },
+            "IBAN": {
+                "type": "string",
+                "format": "o:Finance:iban",
+                "example": "FR1420041010050500013M02606",
+                "pattern": "^[A-Z]{2}[0-9]{2}[A-Z0-9]{18,32}$",
+                "minLength": 22,
+                "maxLength": 36,
+                "x-42c-format": "o:Finance:iban"
+            },
             "Name": {
                 "type": "string",
                 "description": "persons name",
@@ -906,9 +958,6 @@
                 "properties": {
                     "payeeType": {
                         "$ref": "#/components/schemas/PayeeType"
-                    },
-                    "name": {
-                        "$ref": "#/components/schemas/Name"
                     }
                 },
                 "required": [
@@ -956,28 +1005,30 @@
                     {
                         "type": "object",
                         "properties": {
-                            "utility": {
-                                "$ref": "#/components/schemas/UtilityType"
+                            "name": {
+                                "$ref": "#/components/schemas/Utility"
                             },
                             "accountNumber": {
                                 "$ref": "#/components/schemas/UtilityAccountId"
                             }
-                        }
+                        },
+                        "required": [
+                            "name",
+                            "accountNumber"
+                        ]
                     }
                 ],
                 "example": {
                     "payeeType": "utility",
                     "name": "Phone Bill",
-                    "utility": "mobile",
                     "accountNumber": "BT2221801"
                 }
             },
-            "UtilityType": {
+            "Utility": {
                 "type": "string",
                 "enum": [
-                    "electric",
-                    "gas",
-                    "mobile"
+                    "electricity bill",
+                    "gas bill"
                 ]
             },
             "TransactionId": {

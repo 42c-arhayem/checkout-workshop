@@ -11,9 +11,16 @@ const accountRegistration = async (req, res) => {
 
     const { name, email, postalAddress, pan } = req.body;
 
-    if (typeof name !== "string" || typeof email !== "string" || typeof pan !== "string" ||
-        (postalAddress && typeof postalAddress != "object")) {
+    if(!name || !email || !postalAddress || !pan) {
+        return res.status(400).json({ "message": "missing required field" });
+    }
+
+    if (typeof name !== "string" || typeof email !== "string" || typeof pan !== "string" || typeof postalAddress != "object") {
         return res.status(400).json({ "message": "invalid input" });
+    }
+
+    if(!postalAddress.country) {
+        return res.status(400).json({ "message": "missing required field" });
     }
 
     try {
@@ -23,7 +30,15 @@ const accountRegistration = async (req, res) => {
             return res.status(400).json({ "message": "User already exists." });
         }
 
-        account = await AccountModel.create({ name, email, postalAddress, pan })
+        account = await AccountModel.create(
+            { 
+                name, 
+                email, 
+                postalAddress, 
+                pan, 
+                currency: postalAddress.country.toUpperCase() === 'UK' ? "GBP" : "EUR"  
+            }
+        )
 
         if (account) {
             return res.status(201).json(

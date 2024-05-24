@@ -27,10 +27,8 @@ const accountSchema = mongoose.Schema(
             type: addressSchema
         },
         pan: { type: String, required: true },
-        balance: {
-            amount: { type: Number, default: 1000 },
-            currency: { type: String, default: "EUR" }
-        },
+        balance: { type: Number, default: 1000 },
+        currency: { type: String, default: "EUR" },
         payees: {
             type: [payeeSchema]
         },
