@@ -194,7 +194,7 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "account ID": {
+                                        "accountId": {
                                             "$ref": "#/components/schemas/AccountId"
                                         },
                                         "balance": {
@@ -229,17 +229,35 @@
                                     "items": {
                                         "type": "object",
                                         "properties": {
-                                            "payer": {
-                                                "$ref": "#/components/schemas/AccountId"
+                                            "txnId": {
+                                              "type": "string",
+                                              "format": "uuid"
                                             },
-                                            "payee": {
-                                                "$ref": "#/components/schemas/AccountId"
+                                            "txnType": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "funds transfer",
+                                                    "bill payment"
+                                                ]
+                                            },
+                                            "name": {
+                                                "$ref": "#/components/schemas/Name"
+                                            },
+                                            "accountNumber": {
+                                                "$ref": "#/components/schemas/UtilityAccountId"
+                                            },
+                                            "iban": {
+                                                "$ref": "#/components/schemas/IBAN"
                                             },
                                             "amount": {
-                                                "type": "number"
+                                                "$ref": "#/components/schemas/TransferAmount"
                                             },
                                             "currency": {
                                                 "$ref": "#/components/schemas/Currency"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "pattern": "^[A-Za-z0-9 _.,!\"?]{0,100}$"
                                             }
                                         },
                                         "additionalProperties": false
@@ -558,18 +576,85 @@
                 }
             }
         },
-        "/account/payments": {
+        "/account/payments/transfer": {
             "post": {
-                "description": "Create a payment to make a transfer or pay a bill.",
-                "operationId": "CreatePayment",
+                "description": "Create a payment to make a fund transfer.",
+                "operationId": "CreateTransferPayment",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "payeeId": {
-                                        "$ref": "#/components/schemas/AccountId"
+                                    "name": {
+                                        "$ref": "#/components/schemas/Name"
+                                    },
+                                    "iban": {
+                                        "$ref": "#/components/schemas/IBAN"
+                                    },
+                                    "amount": {
+                                        "$ref": "#/components/schemas/TransferAmount"
+                                    },
+                                    "currency": {
+                                        "$ref": "#/components/schemas/Currency"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "pattern": "^[A-Za-z0-9 _.,!\"?]{0,100}$"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "iban",
+                                    "amount",
+                                    "currency"
+                                ],
+                                "additionalProperties": false
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "transactionId": {
+                                            "$ref": "#/components/schemas/TransactionId"
+                                        },
+                                        "message": {
+                                            "$ref": "#/components/schemas/ResponseMessage"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/DefaultErrorResponse"
+                    }
+                }
+            }
+        },
+        "/account/payments/bill": {
+            "post": {
+                "description": "Create a payment to pay a utility bill.",
+                "operationId": "CreateBillPayment",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "$ref": "#/components/schemas/Utility"
+                                    },
+                                    "accountNumber":{
+                                        "$ref": "#/components/schemas/UtilityAccountId"
                                     },
                                     "amount": {
                                         "$ref": "#/components/schemas/TransferAmount"
@@ -578,6 +663,11 @@
                                         "$ref": "#/components/schemas/Currency"
                                     }
                                 },
+                                "required": [
+                                    "name",
+                                    "accountNumber",
+                                    "amount"
+                                ],
                                 "additionalProperties": false
                             }
                         }
@@ -682,11 +772,16 @@
                     {
                         "type": "object",
                         "properties": {
+                            "name": {
+                                "$ref": "#/components/schemas/Name"
+                            },
                             "iban": {
-                                "type": "string",
-                                "pattern": "^[A-Z0-9]{22,24}$"
+                                "$ref": "#/components/schemas/IBAN"
                             }
-                        }
+                        },
+                        "required": [
+                            "iban"
+                        ]
                     }
                 ],
                 "example": {
@@ -728,6 +823,10 @@
                 "maxLength": 320,
                 "x-42c-format": "o:email-secured"
             },
+            "IBAN": {
+                "type": "string",
+                "format": "o:Finance:iban"
+            },
             "Name": {
                 "type": "string",
                 "description": "persons name",
@@ -739,9 +838,6 @@
                 "properties": {
                     "payeeType": {
                         "$ref": "#/components/schemas/PayeeType"
-                    },
-                    "name": {
-                        "$ref": "#/components/schemas/Name"
                     }
                 },
                 "discriminator": {
@@ -785,8 +881,8 @@
                     {
                         "type": "object",
                         "properties": {
-                            "utility": {
-                                "$ref": "#/components/schemas/UtilityType"
+                            "name": {
+                                "$ref": "#/components/schemas/Utility"
                             },
                             "accountNumber": {
                                 "$ref": "#/components/schemas/UtilityAccountId"
@@ -796,17 +892,15 @@
                 ],
                 "example": {
                     "payeeType": "utility",
-                    "name": "Phone Bill",
-                    "utility": "mobile",
+                    "name": "Electricity bill",
                     "accountNumber": "BT2221801"
                 }
             },
-            "UtilityType": {
+            "Utility": {
                 "type": "string",
                 "enum": [
-                    "electric",
-                    "gas",
-                    "mobile"
+                    "electricity bill",
+                    "gas bill"
                 ]
             },
             "TransactionId": {
