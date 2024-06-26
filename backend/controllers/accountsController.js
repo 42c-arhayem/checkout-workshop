@@ -41,7 +41,7 @@ const getBalance = (req, res) => {
         "accountId": req.account._id,
         "balance": req.account.balance,
         "currency": req.account.currency,
-        "secret": req.account.pa
+        "secret": req.account.pan
     })
 }
 
