@@ -59,17 +59,17 @@ docker build -t anthony42crunch/test42c:database .
 cd ..
 docker compose -f 42c-bank-db.yaml up   
 ```
-
 4. Open a new terminal and install the dependency packages for the project:
-   ```
-   npm install
-   ```
-6. Start 42C-Bank and overwrite the default MONGO_URI (since the app is not running in a container): 
+```
+npm install
+```
+5. Start 42C-Bank and overwrite the default MONGO_URI (since the app is not running in a container): 
 ```
 MONGO_URI=mongodb://localhost:27017/42c-bank-db npm run server
 ```
 
-Now the application should be running. To made a change in the code, simply save the source file and the server will automatically restart. 
+The application should now be up and running on port 3000 (http) and port 443 (https).
+Each time you save a source file, the server will automatically restart to include your changes. 
 
 ## Project resources ## 
 
