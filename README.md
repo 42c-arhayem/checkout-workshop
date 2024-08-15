@@ -50,7 +50,7 @@ To make it easy during a demo to modify the API source code and rerun a Conforma
 1. If not already available locally, build a local version of the database docker container; which includes some seed data:
 ```
 cd database-setup 
-docker build -t anthony42crunch/test42c:database .
+docker build .
 ```
 2. If not already started, start Docker for Desktop 
 
