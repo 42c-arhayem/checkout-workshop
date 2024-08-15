@@ -44,7 +44,7 @@ If you have any request, please [create an issue](https://github.com/anthony-42c
 docker-compose -f 42c-bank.yaml up
 ```
 
-## Get started (developer mode)##
+## Get started (developer mode) ##
 To make it easy during a demo to modify the API source code and rerun a Conformance Scan test, the project uses nodemon to automatically update the running backend server whenever changes are made to the API code. This requires separating the application and database deployments. 
 
 1. If not already available locally, build a local version of the database docker container; which includes some seed data:
