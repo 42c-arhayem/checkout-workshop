@@ -1,4 +1,4 @@
-// error handler to catch calls to undefined endpoints
+// error handler to catch calls to undefined methods
 const handleMethodNotAllowed = (req, res, next) => {
 
     const err = new Error(`Invalid operation ${req.method} ${req.originalUrl}`);

@@ -1,7 +1,15 @@
 import AccountModel from "../models/accountModel.js";
 import CreditCardModel from "../models/productModel.js";
+import MeetingPlannerModel from "../models/meetingModel.js";
 import crypto from 'crypto';
+import fetch from 'node-fetch';
 
+const TRANSFER_MAX_LIMIT = 3000.00;
+const TRANSACTIONS_PER_PAGE = 5;
+const LINKEDIN_URL = new RegExp('^(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/in\/');
+const X_URL = new RegExp('^(?:https?:)?\/\/(?:[A-z]+\.)?twitter\.com\/');
+const FACEBOOK_URL = new RegExp('^(?:https?:)?\/\/(?:www\.)?(?:facebook|fb)\.com\/');
+const DATE_TIME = new RegExp('^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]$')
 
 // Return the basic account details
 const getAccounts = (req, res) => {
@@ -12,7 +20,6 @@ const getAccounts = (req, res) => {
         "email": req.account.email,
         "address": req.account.postalAddress
     })
-
 }
 
 // Delete the account
@@ -35,22 +42,115 @@ const deleteAccount = async (req, res) => {
     }
 }
 
+const updateAccountOptions = async (req, res) => {
+
+    // input validation
+    if (typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    // BUG: OWASP API-3 (BOPLA / mass assignment)
+    // Description: Allows changes to account options that should not be updated by the client.
+    // Solution: 
+    // const options = {
+    //     paperStatements: req.body.paperStatements,
+    //     cardActivityAlerts: req.body.cardActivityAlerts,
+    //     smsNotifications: req.body.smsNotifications
+    // }
+    
+    const options = {...req.body};
+
+    if ((options.paperStatements && typeof options.paperStatements !== 'boolean') ||
+        (options.cardActivityAlerts && typeof options.cardActivityAlerts !== 'boolean') ||
+        (options.smsNotifications && typeof options.smsNotifications !== 'boolean')) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    try {
+        const doc = await AccountModel.findOneAndUpdate(req.account._id, { options }, { returnOriginal: false });
+        if (!doc) {
+            return res.status(500).json({ "message": "unexpected error" })
+        }
+
+        // BUG: OWASP API-3 (BOPLA / excessive data exposure)
+        // Description: not defining and enforcing the properties returned by the API
+        // Solution:
+        // return res.status(200).json({
+        //   paperStatements: doc.options.paperStatements,
+        //   cardActivityAlerts: doc.options.cardActivityAlerts,
+        //   smsNotifications: doc.options.smsNotifications
+        // })
+        return res.status(200).json(doc.options)
+
+    } catch (err) {
+
+        console.log("Catching error in updateAccountOptions: ", err.message);
+        return res.status(500).json({ "message": "unexpected error" })
+    }
+}
+
+const createNotification = async (req, res) => {
+
+    // input validation
+    if (typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    const { profileUrl } = req.body;
+
+    if (!profileUrl || (typeof profileUrl !== "string")) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    // if the social media domain is unrecognized, check if URL provided is responsive 
+    if(!(LINKEDIN_URL.test(profileUrl) || X_URL.test(profileUrl) || FACEBOOK_URL.test(profileUrl) ))  {
+
+        // BUG: API-7 (SSRF)
+        // Description: User supplied input should be whitelisted for valid URLs only
+        // Solution:
+        // return res.status(400).json({ "message": "invalid input" });
+
+        try {
+            const response = await fetch(profileUrl);
+
+            if (response.status != 200) {
+                return res.status(response.status).json({ "message": `${profileUrl} HTTP ${response.status}` })
+            }
+        } catch (error) {
+            return res.status(500).json({ "message": `${profileUrl} HTTP ${error.code}` });
+        }
+    }
+
+    try {
+        req.account.socialMedia = profileUrl;
+        await req.account.save();
+        
+        return res.status(200).json({ "message": "account updated" })
+    }
+    catch (err) {
+        console.log("Catching createNotification error: ", err.message);
+        return res.status(500).json({ "message": "unexpected error." })
+    }
+
+    
+}
+
 // Get the current bank balance
 const getBalance = (req, res) => {
+
     return res.status(200).json({
         "accountId": req.account._id,
         "balance": req.account.balance,
-        "currency": req.account.currency,
-        "secret": req.account.pan
+        "currency": req.account.currency
     })
 }
 
 // Get the list of registered payee's for the account
 const getPayeeList = (req, res) => {
 
-    let payeeList = req.account.payees.map( payee => {
+    let payeeList = req.account.payees.map(payee => {
 
-        if(payee.payeeType === 'utility') {
+        if (payee.payeeType === 'utility') {
             return {
                 "name": payee.name,
                 "accountNumber": payee.account,
@@ -81,23 +181,23 @@ const createPayee = async (req, res) => {
 
     const { payeeType, name, accountNumber, iban } = req.body;
 
-    if(!payeeType || !name) {
+    if (!payeeType || !name) {
         return res.status(400).json({ "message": "missing required field" });
     }
 
     if (typeof payeeType !== "string" || typeof name != "string") {
         return res.status(400).json({ "message": "invalid input" });
     }
-    
+
     payeeType.toLowerCase();
 
-    if( (payeeType === "utility" && !accountNumber) ||
+    if ((payeeType === "utility" && !accountNumber) ||
         (payeeType === "contact" && !iban)) {
         return res.status(400).json({ "message": "missing required fields" });
     }
 
-    if ( (accountNumber && typeof accountNumber !== "string") ||
-         (iban && typeof iban !== "string")) {
+    if ((accountNumber && typeof accountNumber !== "string") ||
+        (iban && typeof iban !== "string")) {
         return res.status(400).json({ "message": "invalid input" });
     }
 
@@ -217,7 +317,7 @@ const createBillPayment = async (req, res) => {
 
     const { name, accountNumber, amount, currency } = req.body;
 
-    if (!name || !accountNumber || !amount) {
+    if (!name || !accountNumber || (amount !== 0 && !amount)) {
         return res.status(400).json({ "message": "missing a required field" });
     }
 
@@ -225,7 +325,15 @@ const createBillPayment = async (req, res) => {
         return res.status(400).json({ "message": "invalid input" });
     }
 
-    if (currency && (currency.toUpperCase() != req.account.currency)) {
+    // BUG: Input Validation
+    // Description: amount can be negative, thereby increasing the balance
+    // Solution: 
+    // if(amount < 0 || amount > TRANSFER_MAX_LIMIT) {
+    if (amount > TRANSFER_MAX_LIMIT) {
+        return res.status(400).json({ "message": "invalid amount" });
+    }
+
+    if (currency && (typeof currency !== "string" || (currency.toUpperCase() != req.account.currency))) {
         return res.status(400).json({ "message": "invalid currency" });
     }
 
@@ -236,7 +344,6 @@ const createBillPayment = async (req, res) => {
     try {
         const account = await AccountModel.findById(req.account._id);
 
-        // BUG: amount can be negative, thereby increasing the balance
         account.balance -= amount;
 
         account.transactions.push({
@@ -245,7 +352,7 @@ const createBillPayment = async (req, res) => {
             name,
             accountNumber,
             amount,
-            "currency": currency ?  currency : req.account.currency
+            "currency": currency ? currency : req.account.currency
         })
 
         await account.save();
@@ -266,6 +373,11 @@ const createBillPayment = async (req, res) => {
 // Get a list of payment transactions
 const getTransactionList = async (req, res) => {
 
+    // BUG: API-4 (Unrestricted Resource Consumption)
+    // Description: No constraints on the number of records to return
+    // Solution:
+    // return res.status(200).json(req.account.transactions.slice(-TRANSACTIONS_PER_PAGE))
+
     return res.status(200).json(req.account.transactions);
 }
 
@@ -275,7 +387,7 @@ const getTransactionListHeaders = (req, res) => {
     return res.status(200).send();
 }
 
-// 
+// Request a new credit card
 const createCardApplication = async (req, res) => {
 
     // input validation
@@ -333,6 +445,7 @@ const createCardApplication = async (req, res) => {
     }
 }
 
+// Get the status of an existing credit card application
 const getCardApplication = async (req, res) => {
 
     const findCreditCard = req.account.products.find(product => product.type === "creditCard")
@@ -356,6 +469,7 @@ const getCardApplication = async (req, res) => {
     }
 }
 
+// Modify an existing credit card application
 const modifyCardApplication = async (req, res) => {
 
     // input validation
@@ -374,13 +488,18 @@ const modifyCardApplication = async (req, res) => {
     let findRecord;
 
     try {
-        // UNSAFE!: checks global credit card application record by referenceId, instead of checking users account.
+        // BUG: OWASP API-1 (BOLA)
+        // Description: verify if the record to be modified, identified by 'referencedId', is associated with the authenticated users account
+        // Solution:
+        // if (!req.account.products.find(product => product.referenceId == referenceId)) {
+        //    return res.status(404).json({ "message": "card application not found" })
+        // }
+
         findRecord = await CreditCardModel.findOne({ _id: referenceId })
     } catch (err) {
         console.log("Catching error in modifyCardApplication: ", err.message);
         return res.status(500).json({ "message": "unexpected error" })
     }
-
 
     if (!findRecord) {
         return res.status(404).json({ "message": "not found" })
@@ -438,6 +557,7 @@ const modifyCardApplication = async (req, res) => {
     return res.status(200).json(updateRecord)
 }
 
+// Delete an existing credit card application
 const deleteCardApplication = async (req, res) => {
 
     const { referenceId } = req.params;
@@ -465,9 +585,56 @@ const deleteCardApplication = async (req, res) => {
     return res.status(200).json({ "message": "credit card application cancelled." })
 }
 
+const createMeeting = async (req, res) => {
+
+    // input validation
+    if (typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    const { schedule } = req.body;
+
+    if (!schedule || typeof schedule !== "string" || !DATE_TIME.test(schedule)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    try {
+
+        const doc = await MeetingPlannerModel.findOne({ schedule }).select("-__v");
+
+        if (doc) {
+            return res.status(409).json({"message": "the requested time slot is not available."});
+        }
+        else {
+
+            // BUG: OWASP API-6 (Unrestricted Access to Sensitive Business Flows)
+            // Description: A user can book all available timeslots of mortgage advisors
+            // Solution: 
+            // const doc = await MeetingPlannerModel.findOne({ "accountId": req.account._id }).select("-__v");
+            // if (doc) {
+            //     return res.status(403).json({"message": "you cannot reserve more than one mortgage consultation"});
+            // }
+            
+
+            await MeetingPlannerModel.create(
+                {
+                    "schedule": schedule,
+                    "accountId": req.account._id,
+                }
+            ); 
+            return res.status(201).json({ "message": "appointment with mortgage advisor is reserved." })
+        }
+    }catch (err) {
+        console.log("Catching error in createMeeting: ", err.message);
+        return res.status(500).json({ "message": "unexpected error" })
+    }
+}
+
 export {
     getAccounts,
     deleteAccount,
+    updateAccountOptions,
+    createNotification,
     getBalance,
     getPayeeList,
     createPayee,
@@ -479,5 +646,6 @@ export {
     createCardApplication,
     getCardApplication,
     modifyCardApplication,
-    deleteCardApplication
+    deleteCardApplication,
+    createMeeting
 }

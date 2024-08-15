@@ -74,6 +74,13 @@ const accountLogin = async (req, res) => {
         return res.status(400).json({ "message": "invalid input" });
     }
 
+    // BUG: OWASP API-2 (Broken AuthN)
+    // Description: protect the validatePan hashing function from long password DOS
+    // Solution: 
+    // if(pan.length > 5) {
+    //  return res.status(400).json({ "message": "invalid input" });
+    //}
+
     try {
         const account = await AccountModel.findOne({ email });
 
@@ -82,7 +89,11 @@ const accountLogin = async (req, res) => {
         }
 
         if (!(await account.validatePan(pan))) {
-            return res.status(401).json({ "message": "invalid credentials" })
+            // BUG: OWASP API-3 (BOPLA)
+            // Description a user should not have direct access to the hashed pan value
+            // Solution: comment out the "secret" property in the returned object below
+
+            return res.status(401).json({ "message": "invalid credentials", "secret": req.account.pan })
         }
 
         const token = jwt.sign(

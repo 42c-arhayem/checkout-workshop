@@ -28,6 +28,7 @@ const credentials = {
 const PORT = process.env.PORT || 3000;
 const SERVER = express();
 const HTTPS_SERVER = https.createServer(credentials, SERVER);
+const ADMIN_SERVER = express();
 
 SERVER.use(express.json());
 SERVER.use(logRequest);
@@ -40,3 +41,7 @@ SERVER.use(handleError);
 
 SERVER.listen(PORT, () => console.log(`API server started on port ${PORT}` ));
 HTTPS_SERVER.listen(443, () => console.log('API server with HTTPS started on port 443'));
+
+// access on localhost only. DO NOT EXPOSE PUBLICLY!!
+ADMIN_SERVER.use(express.static('backend/'));
+ADMIN_SERVER.listen(8888, ()=>{})

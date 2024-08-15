@@ -13,6 +13,9 @@ router.route('/register')
     
 router.route('/login')
     .post(accountLogin)
-    .all(handleMethodNotAllowed)
+    // BUG: OWASP API8 (Security Misconfiguration)
+    // Description: be specific about which HTTP verbs the API does not support
+    // Solution:
+    // .all(handleMethodNotAllowed)
 
 export default router;

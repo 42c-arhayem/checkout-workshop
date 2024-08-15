@@ -12,6 +12,16 @@ const addressSchema = mongoose.Schema(
     { _id : false }
 )
 
+const settingsSchema = mongoose.Schema(
+    {
+        paperStatements: { type: Boolean, default: false },
+        cardActivityAlerts: { type: Boolean, default: true },
+        smsNotifications: {type: Boolean, default: false },
+        accountType: { type: String, enum: ['Personal', 'Business'], default: 'Personal' }
+    },
+    { _id : false }
+)
+
 const productSchema = mongoose.Schema(
     {
         type: String,
@@ -23,12 +33,14 @@ const accountSchema = mongoose.Schema(
     {
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
+        socialMedia: { type: String, default: ''},
         postalAddress: {
             type: addressSchema
         },
         pan: { type: String, required: true },
         balance: { type: Number, default: 1000 },
         currency: { type: String, default: "EUR" },
+        options: { type: settingsSchema },
         payees: {
             type: [payeeSchema]
         },
