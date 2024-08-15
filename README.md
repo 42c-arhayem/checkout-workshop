@@ -94,3 +94,17 @@ pan: 99999
 
 ### Postman assets ###
 A postman collection and enviroment are also provided to interact and test the API endpoints.  
+
+## Vulnerabilities ##
+
+| Vulnerability |	OWASP |	Operation | Endpoint | Source Code Fix |
+| ------------- | ----- | --------- | -------- | --------------- |
+| A user can update the credit card application of another user to change the postal address. |	API-1 (BOLA) | PUT | /account/products/cards/{referenceId} | accountsController.js |
+| A user can send a large PAN to the login endpoint. The large input can overwhelm the servers hashing function. | API-2 (Broken AuthN) | POST | /auth/login | authController.js |
+| A user can write a hidden property "accountType", setting it to 'Business' | API-3 (BOPLA - mass assignment)) |	PUT |	/account |	accountsController.js |
+| The API leaks the "accountType" property in the PUT response | API-3 (BOPLA - excessive data exposure) | PUT |	/account | accountsController.js |
+| The API leaks the hashed PAN in a 401 response from the login endpoint | API-3 (BOPLA - excessive data exposure) | POST	| /auth/login	| authController.js |
+| The API fails to restrict the number of transaction records returned in the response | API-4 (Unrestricted Resource Consumption) | GET | /account/transactions | accountsController.js |
+| A user can make unlimited requests for a meeting with a mortgage consultation, occuping the teams entire timeslots | API-6 (Unrestricted Access to Sensitive Business Flows) | POST |	/account/products/mortgages/meeting |	accountsController.js |
+| A user can submit a localhost url as their social media address, and figure out what ports are open on the server based on the API response (404 vs 500) |	API-7 (SSRF) | POST |	/account/notifications/socialmedia | accountsController.js |
+| The API does not explicitly block unsupported Verbs |	API-8 (Security Misconfiguration)	| POST |	/auth/login |	authRoutes.js |
