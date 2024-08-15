@@ -53,18 +53,18 @@ To make it easy during a demo to modify the API source code and rerun a Conforma
 cd database-setup 
 docker build .
 ```
-2. If not already started, start Docker for Desktop 
+3. If not already started, start Docker for Desktop 
 
-3. Use Docker compose to start the database container.
+4. Use Docker compose to start the database container.
 ```
 cd ..
 docker compose -f 42c-bank-db.yaml up   
 ```
-4. Open a new terminal and install the dependency packages for the project:
+5. Open a new terminal and install the dependency packages for the project:
 ```
 npm install
 ```
-5. Start 42C-Bank and overwrite the default MONGO_URI (since the app is not running in a container): 
+6. Start 42C-Bank and overwrite the default MONGO_URI (since the app is not running in a container): 
 ```
 MONGO_URI=mongodb://localhost:27017/42c-bank-db npm run server
 ```
