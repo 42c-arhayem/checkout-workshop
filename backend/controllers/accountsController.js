@@ -80,7 +80,7 @@ const updateAccountOptions = async (req, res) => {
         //   cardActivityAlerts: doc.options.cardActivityAlerts,
         //   smsNotifications: doc.options.smsNotifications
         // })
-        //return res.status(200).json(doc.options)
+        return res.status(200).json(doc.options)
 
     } catch (err) {
 
