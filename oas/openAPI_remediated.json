@@ -935,7 +935,14 @@
                 },
                 "responses": {
                     "200": {
-                        "$ref": "#/components/schemas/MessageObject"
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageObject"
+                                }
+                            }
+                        }
                     },
                     "406": {
                         "$ref": "#/components/responses/406ErrorResponse"
