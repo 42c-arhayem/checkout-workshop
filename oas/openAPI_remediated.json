@@ -282,11 +282,14 @@
                                         "accountId": {
                                             "$ref": "#/components/schemas/AccountId"
                                         },
+                                        "currency": {
+                                            "$ref": "#/components/schemas/Currency"
+                                        },
                                         "balance": {
                                             "$ref": "#/components/schemas/BalanceAmount"
                                         },
-                                        "currency": {
-                                            "$ref": "#/components/schemas/Currency"
+                                        "overdraft" : {
+                                            "$ref": "#/components/schemas/Overdraft"
                                         }
                                     },
                                     "additionalProperties": false
@@ -1169,6 +1172,13 @@
                 "description": "persons name",
                 "pattern": "^[A-Za-z0-9. -]{1,50}$",
                 "example": "Jean Bernard"
+            },
+            "Overdraft": {
+                "type": "number",
+                "format": "float",
+                "minimum": 0,
+                "maximum": 5000.00,
+                "example": 100
             },
             "Payee": {
                 "type": "object",
