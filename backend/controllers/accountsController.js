@@ -140,8 +140,9 @@ const getBalance = (req, res) => {
 
     return res.status(200).json({
         "accountId": req.account._id,
+        "currency": req.account.currency,
         "balance": req.account.balance,
-        "currency": req.account.currency
+        "overdraft": req.account.options.accountType === "Business" ? 5000 : 500
     })
 }
 
@@ -272,8 +273,10 @@ const createTransferPayment = async (req, res) => {
         return res.status(400).json({ "message": "invalid currency" });
     }
 
-    if (amount > req.account.balance) {
-        return res.status(400).json({ "message": "insufficient funds" });
+    const overdraftLimit = req.account.options.accountType === "Business" ? 5000 : 500;
+
+    if (amount > req.account.balance + overdraftLimit) {
+        return res.status(400).json({ "message": "payment failed as it would exceed your overdraft limit." });
     }
 
     try {
@@ -337,8 +340,10 @@ const createBillPayment = async (req, res) => {
         return res.status(400).json({ "message": "invalid currency" });
     }
 
-    if (amount > req.account.balance) {
-        return res.status(400).json({ "message": "insufficient funds" });
+    const overdraftLimit = req.account.options.accountType === "Business" ? 5000 : 500;
+
+    if (amount > req.account.balance + overdraftLimit) {
+        return res.status(400).json({ "message": "payment failed as it would exceed your overdraft limit." });
     }
 
     try {
