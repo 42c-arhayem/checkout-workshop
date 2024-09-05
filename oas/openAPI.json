@@ -614,6 +614,9 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
+                                    "accountId":{
+                                        "$ref": "#/components/schemas/AccountId"
+                                    },
                                     "name": {
                                         "$ref": "#/components/schemas/Name"
                                     },
@@ -632,6 +635,7 @@
                                     }
                                 },
                                 "required": [
+                                    "accountId",
                                     "name",
                                     "iban",
                                     "amount",

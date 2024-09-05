@@ -57,7 +57,7 @@ const updateAccountOptions = async (req, res) => {
     //     cardActivityAlerts: req.body.cardActivityAlerts,
     //     smsNotifications: req.body.smsNotifications
     // }
-    
+
     const options = {...req.body};
 
     if ((options.paperStatements && typeof options.paperStatements !== 'boolean') ||
@@ -124,7 +124,7 @@ const createNotification = async (req, res) => {
     try {
         req.account.socialMedia = profileUrl;
         await req.account.save();
-        
+
         return res.status(200).json({ "message": "account updated" })
     }
     catch (err) {
@@ -259,7 +259,13 @@ const createTransferPayment = async (req, res) => {
         return res.status(400).json({ "message": "invalid input" });
     }
 
-    const { name, iban, amount, currency, description } = req.body;
+    // BUG: API-8:2019 (Injection)
+    // Description: user input for accountId is vulnerable to nosql injection
+    // Solution: 
+    // const { name, iban, amount, currency, description } = req.body;
+    // const { accountId } = req.account._id
+
+    const { accountId, name, iban, amount, currency, description } = req.body;
 
     if (!iban || !amount || !currency) {
         return res.status(400).json({ "message": "missing a required field" });
@@ -280,7 +286,8 @@ const createTransferPayment = async (req, res) => {
     }
 
     try {
-        const account = await AccountModel.findById(req.account._id);
+        // const account = await AccountModel.findById(req.account._id);
+        const account = await AccountModel.findById(accountId);
 
         account.balance -= amount;
 
@@ -619,14 +626,14 @@ const createMeeting = async (req, res) => {
             // if (doc) {
             //     return res.status(403).json({"message": "you cannot reserve more than one mortgage consultation"});
             // }
-            
+
 
             await MeetingPlannerModel.create(
                 {
                     "schedule": schedule,
                     "accountId": req.account._id,
                 }
-            ); 
+            );
             return res.status(201).json({ "message": "appointment with mortgage advisor is reserved." })
         }
     }catch (err) {
