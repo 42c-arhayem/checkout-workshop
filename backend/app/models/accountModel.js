@@ -23,7 +23,6 @@ const accountSchema = mongoose.Schema(
     {
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
-        socialMedia: { type: String, default: '' },
         postalAddress: {
             type: addressSchema
         },

@@ -1,5 +1,5 @@
 FROM node:22-alpine
-WORKDIR /home/42c-bank
+WORKDIR /home/42c-bank/backend/app
 COPY package*.json ./
 RUN npm install
 COPY . .

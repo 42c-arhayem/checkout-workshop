@@ -2,14 +2,19 @@ import AccountModel from "../models/accountModel.js";
 import CreditCardModel from "../models/productModel.js";
 import MeetingPlannerModel from "../models/meetingModel.js";
 import crypto from 'crypto';
-import fetch from 'node-fetch';
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path'
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const TRANSFER_MAX_LIMIT = 3000.00;
 const TRANSACTIONS_PER_PAGE = 5;
-const LINKEDIN_URL = new RegExp('^(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/in\/');
-const X_URL = new RegExp('^(?:https?:)?\/\/(?:[A-z]+\.)?twitter\.com\/');
-const FACEBOOK_URL = new RegExp('^(?:https?:)?\/\/(?:www\.)?(?:facebook|fb)\.com\/');
 const DATE_TIME = new RegExp('^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]$')
+const FILENAME = new RegExp('^[a-zA-Z0-9._-]{5,256}$')
+const VALID_DOMAIN = new RegExp('^https://drive.google.com/')
 
 // Return the basic account details
 const getAccounts = (req, res) => {
@@ -58,7 +63,7 @@ const updateAccountOptions = async (req, res) => {
     //     smsNotifications: req.body.smsNotifications
     // }
 
-    const options = {...req.body};
+    const options = { ...req.body };
 
     if ((options.paperStatements && typeof options.paperStatements !== 'boolean') ||
         (options.cardActivityAlerts && typeof options.cardActivityAlerts !== 'boolean') ||
@@ -87,52 +92,6 @@ const updateAccountOptions = async (req, res) => {
         console.log("Catching error in updateAccountOptions: ", err.message);
         return res.status(500).json({ "message": "unexpected error" })
     }
-}
-
-const createNotification = async (req, res) => {
-
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
-
-    const { profileUrl } = req.body;
-
-    if (!profileUrl || (typeof profileUrl !== "string")) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
-
-    // if the social media domain is unrecognized, check if URL provided is responsive 
-    if(!(LINKEDIN_URL.test(profileUrl) || X_URL.test(profileUrl) || FACEBOOK_URL.test(profileUrl) ))  {
-
-        // BUG: API-7 (SSRF)
-        // Description: User supplied input should be whitelisted for valid URLs only
-        // Solution:
-        // return res.status(400).json({ "message": "invalid input" });
-
-        try {
-            const response = await fetch(profileUrl);
-
-            if (response.status != 200) {
-                return res.status(response.status).json({ "message": `${profileUrl} HTTP ${response.status}` })
-            }
-        } catch (error) {
-            return res.status(500).json({ "message": `${profileUrl} HTTP ${error.code}` });
-        }
-    }
-
-    try {
-        req.account.socialMedia = profileUrl;
-        await req.account.save();
-
-        return res.status(200).json({ "message": "account updated" })
-    }
-    catch (err) {
-        console.log("Catching createNotification error: ", err.message);
-        return res.status(500).json({ "message": "unexpected error." })
-    }
-
-    
 }
 
 // Get the current bank balance
@@ -259,21 +218,22 @@ const createTransferPayment = async (req, res) => {
         return res.status(400).json({ "message": "invalid input" });
     }
 
-    // BUG: API-8:2019 (Injection)
-    // Description: user input for accountId is vulnerable to nosql injection
-    // Solution: 
-    // const { name, iban, amount, currency, description } = req.body;
-    // const { accountId } = req.account._id
-
     const { accountId, name, iban, amount, currency, description } = req.body;
 
-    if (!iban || !amount || !currency) {
+    if (!accountId || !iban || !amount || !currency) {
         return res.status(400).json({ "message": "missing a required field" });
     }
 
     if (typeof iban !== "string" || typeof amount !== "number" || amount < 0 || typeof currency != "string") {
         return res.status(400).json({ "message": "invalid input" });
     }
+
+    // BUG: API-8:2019 (Injection)
+    // Description: user input for accountId is vulnerable to nosql injection
+    // Solution: 
+    // if( typeof accountId !== "string" || accountId !== req.account._id ) {
+    //     return res.status(400).json({ "message": "invalid input" });
+    // }
 
     if (currency.toUpperCase() != "EUR" && currency.toUpperCase() != "GBP") {
         return res.status(400).json({ "message": "invalid currency" });
@@ -615,7 +575,7 @@ const createMeeting = async (req, res) => {
         const doc = await MeetingPlannerModel.findOne({ schedule }).select("-__v");
 
         if (doc) {
-            return res.status(409).json({"message": "the requested time slot is not available."});
+            return res.status(409).json({ "message": "the requested time slot is not available." });
         }
         else {
 
@@ -627,7 +587,6 @@ const createMeeting = async (req, res) => {
             //     return res.status(403).json({"message": "you cannot reserve more than one mortgage consultation"});
             // }
 
-
             await MeetingPlannerModel.create(
                 {
                     "schedule": schedule,
@@ -636,17 +595,102 @@ const createMeeting = async (req, res) => {
             );
             return res.status(201).json({ "message": "appointment with mortgage advisor is reserved." })
         }
-    }catch (err) {
+    } catch (err) {
         console.log("Catching error in createMeeting: ", err.message);
         return res.status(500).json({ "message": "unexpected error" })
     }
 }
 
+const createFile = async (req, res) => {
+
+    // input validation
+    if (typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    const { url } = req.body;
+
+    if (!url || (typeof url !== "string")) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    // BUG: OWASP API-7  (Server-side Request Forgery)
+    // Description: the url input is vulnerable to SSRF
+    // Solution: 
+    if(!VALID_DOMAIN.test(url)) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+
+    const fileName = path.basename(url); // get the file name from the URL
+    const outputPath = path.resolve(__dirname, 'downloads', fileName);
+
+    try {
+        // Create the downloads folder if it doesn't exist
+        if (!fs.existsSync(path.resolve(__dirname, 'downloads'))) {
+            fs.mkdirSync(path.resolve(__dirname, 'downloads'));
+        }
+
+        await downloadFile(url, outputPath);
+        res.status(200).json({"message": `File downloaded and saved to ${outputPath}`});
+    } catch (error) {
+        res.status(500).json({"message": `Error downloading the file: ${error.message}`});
+    }
+}
+
+const getFile = async (req, res) => {
+
+    const uploadDir = path.join(__dirname, 'downloads'); // Directory where files are stored
+
+    // Route for file download (vulnerable to path traversal)
+    const filename = req.query.filename;
+    const filePath = path.join(uploadDir, filename);
+
+    // BUG: OWASP A01:2021  (Broken Access Control)
+    // Description: the filename input is vulnerable to path traversal attacks
+    // Solution: 
+    // if (!FILENAME.test(filename)) {
+    //     return res.status(400).json({ "message": "invalid input" });
+    // }
+
+    // Check if file exists
+    fs.stat(filePath, (err, stats) => {
+        if (err) {
+            return res.status(404).json({ "message": "File not found. "});
+        }
+
+        // Send the file without validating or sanitizing the input
+        res.download(filePath, (downloadErr) => {
+            if (downloadErr) {
+                res.status(500).json( { "message": "Error downloading the file."} );
+            }
+        });
+    });
+}
+
+// Helper function to download and store an external file
+const downloadFile = async (fileUrl, outputLocationPath) => {
+    const writer = fs.createWriteStream(outputLocationPath);
+
+    const response = await axios({
+        method: 'GET',
+        url: fileUrl,
+        responseType: 'stream',
+    });
+
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+        writer.on('finish', resolve);
+        writer.on('error', reject);
+    });
+};
+
+
+
 export {
     getAccounts,
     deleteAccount,
     updateAccountOptions,
-    createNotification,
     getBalance,
     getPayeeList,
     createPayee,
@@ -659,5 +703,7 @@ export {
     getCardApplication,
     modifyCardApplication,
     deleteCardApplication,
-    createMeeting
+    createMeeting,
+    createFile,
+    getFile
 }

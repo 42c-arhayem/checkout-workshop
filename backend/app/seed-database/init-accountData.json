@@ -2,7 +2,6 @@
     {
         "name": "Jane Doe",
         "email": "janedoe@email.com",
-        "socialMedia": "",
         "postalAddress": {
             "addressLine": [
                 "1 Leafy Lane",
@@ -155,7 +154,6 @@
     {
         "name": "Lucas Jansen",
         "email": "ljansen@email.com",
-        "socialMedia": "",
         "postalAddress": {
             "addressLine": [
                 "IJntzelaan 27",
