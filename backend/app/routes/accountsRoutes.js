@@ -5,7 +5,6 @@ import {
     getAccounts,
     deleteAccount,
     updateAccountOptions,
-    createNotification,
     getBalance,
     getPayeeList,
     createPayee,
@@ -18,7 +17,9 @@ import {
     getCardApplication,
     modifyCardApplication,
     deleteCardApplication,
-    createMeeting
+    createMeeting,
+    createFile,
+    getFile
  } from '../controllers/accountsController.js';
 
 const router  = express.Router();
@@ -27,10 +28,6 @@ router.route('/')
     .get(authenticateToken, getAccounts)
     .delete(authenticateToken, deleteAccount)
     .put(authenticateToken, updateAccountOptions)
-    .all(handleMethodNotAllowed)
-
-router.route('/notifications/socialmedia')
-    .post(authenticateToken, createNotification)
     .all(handleMethodNotAllowed)
 
 router.route('/balances')
@@ -71,6 +68,11 @@ router.route('/products/cards/:referenceId')
 
 router.route('/products/mortgages/meeting')
     .post(authenticateToken, createMeeting)
+    .all(handleMethodNotAllowed)
+
+router.route('/files')
+    .post(authenticateToken, createFile)
+    .get(authenticateToken, getFile)
     .all(handleMethodNotAllowed)
 
 export default router;

@@ -232,10 +232,10 @@
             "put": {
                 "description": "Update account optional settings",
                 "operationId": "UpdateAccount",
-                "requestBody":{
+                "requestBody": {
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "$ref": "#/components/schemas/AccountOptions"
                             }
                         }
@@ -245,8 +245,8 @@
                     "200": {
                         "description": "OK",
                         "content": {
-                            "application/json":{
-                                "schema":{
+                            "application/json": {
+                                "schema": {
                                     "$ref": "#/components/schemas/AccountOptions"
                                 }
                             }
@@ -288,7 +288,7 @@
                                         "balance": {
                                             "$ref": "#/components/schemas/BalanceAmount"
                                         },
-                                        "overdraft" : {
+                                        "overdraft": {
                                             "$ref": "#/components/schemas/Overdraft"
                                         }
                                     },
@@ -779,6 +779,9 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
+                                    "accountId": {
+                                        "$ref": "#/components/schemas/AccountId"
+                                    },
                                     "name": {
                                         "$ref": "#/components/schemas/Name"
                                     },
@@ -797,6 +800,7 @@
                                     }
                                 },
                                 "required": [
+                                    "accountId",
                                     "name",
                                     "iban",
                                     "amount",
@@ -855,7 +859,7 @@
                                     "name": {
                                         "$ref": "#/components/schemas/Utility"
                                     },
-                                    "accountNumber":{
+                                    "accountNumber": {
                                         "$ref": "#/components/schemas/UtilityAccountId"
                                     },
                                     "amount": {
@@ -910,39 +914,44 @@
                 }
             }
         },
-        "/account/notifications/socialmedia": {
+        "/account/products/mortgages/meeting": {
             "post": {
-                "description": "Initiate a connection request to your social media account for bank notifications",
-                "operationId": "CreateSocialMediaNotification",
-                "parameters": [],
-                "requestBody":{
+                "description": "Reserve a meeting with a mortgage consultant",
+                "operationId": "CreateAppointment",
+                "requestBody": {
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "profileUrl":{
-                                      "type": "string",
-                                      "format": "uri",
-                                      "pattern": "^(?:(?:[A-Za-z][A-Za-z0-9\\-+.]*):(?:(?://(?:(?:(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})|(?:(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3}|\\[(?:(?:(?:[0-9A-Fa-f]{1,4}):){6}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|::(?:(?:[0-9A-Fa-f]{1,4}):){5}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:[0-9A-Fa-f]{1,4})?::(?:(?:[0-9A-Fa-f]{1,4}):){4}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,1}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){3}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,2}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):){2}(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,3}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4}):(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,4}(?:[0-9A-Fa-f]{1,4}))?::(?:(?:[0-9A-Fa-f]{1,4}):(?:[0-9A-Fa-f]{1,4})|(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])(?:\\.(?:25[0-5]|(?:2[0-4]|1[0-9]|[1-9]|)[0-9])){3})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,5}(?:[0-9A-Fa-f]{1,4}))?::(?:[0-9A-Fa-f]{1,4})|(?:(?:(?:[0-9A-Fa-f]{1,4}):){0,6}(?:[0-9A-Fa-f]{1,4}))?::)\\]))(?:\\:(?:[1-5][0-9]{0,4}|6(?:|[0-4][0-9]{0,3}|5(?:|[0-4][0-9]{0,2}|5(?:|[0-2][0-9]?|3[0-5]?|[4-9])|[6789][0-9]?)|[6789][0-9]{0,2})|[789][0-9]{0,3}))?)(?:/(?:[\\w\\-.~!$&'()*+,;=%@:]+(?:/[\\w\\-.~!$&'()*+,;=%@:]*)*)?)?|(?:/(?:[\\w\\-.~!$&'()*+,;=%@:]+(?:/[\\w\\-.~!$&'()*+,;=%@:]*)*)?)|(?:[\\w\\-.~!$&'()*+,;=%@:]+(?:/[\\w\\-.~!$&'()*+,;=%@:]*)*))?(?:\\?[\\w\\-.~!$&'()*+,;=%@:/\\?]*)?(?:#[\\w\\-.~!$&'()*+,;=%@:/\\?]*)?)?)$",
-                                      "example": "https://linkedin/in/anthonylonergan/",
-                                      "minLength": 2,
-                                      "maxLength": 2000,
-                                      "x-42c-format": "o:uri"
+                                    "schedule": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-08-01T16:00",
+                                        "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
                                     }
                                 },
+                                "required": [
+                                    "schedule"
+                                ],
                                 "additionalProperties": false
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Ok",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MessageObject"
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "$ref": "#/components/schemas/ResponseMessage"
+                                        }
+                                    },
+                                    "additionalProperties": false
                                 }
                             }
                         }
@@ -962,33 +971,35 @@
                 }
             }
         },
-        "/account/products/mortgages/meeting": {
+        "/account/file": {
             "post": {
-                "description": "Reserve a meeting with a mortgage consultant",
-                "operationId": "CreateAppointment",
-                "parameters": [],
-                "requestBody":{
+                "description": "Upload a file from Google Drive",
+                "operationId": "CreateFile",
+                "requestBody": {
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "url"
+                                ],
                                 "properties": {
-                                    "schedule": {
+                                    "url": {
                                         "type": "string",
-                                        "format": "date-time",
-                                        "example": "2024-08-01T16:00",
-                                        "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
+                                        "pattern": "^https://drive.google.com/file/d/(.*?)",
+                                        "minLength": 35,
+                                        "maxLength": 256,
+                                        "example": "https://drive.google.com/file/d/1d6fdCvAmKyIkzuR_AiRyP6p1tSEepl4d"
                                     }
-                                },
-                                "required": ["schedule"],
-                                "additionalProperties": false
+                                }
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                       "description": "Ok",
+                        "description": "Ok",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -999,6 +1010,40 @@
                                         }
                                     },
                                     "additionalProperties": false
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "$ref": "#/components/responses/406ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/415ErrorResponse"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/DefaultErrorResponse"
+                    }
+                }
+            },
+            "get": {
+                "description": "Download the identification document",
+                "operationId": "GetFile",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/filename"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/octet-stream": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
                                 }
                             }
                         }
@@ -1332,6 +1377,17 @@
             }
         },
         "parameters": {
+            "filename": {
+                "name": "filename",
+                "in": "query",
+                "required": true,
+                "description": "A file name",
+                "schema": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9._-]{5,256}$",
+                    "example": "bill.pdf"
+                }
+            },
             "payeeId": {
                 "name": "payeeId",
                 "in": "path",

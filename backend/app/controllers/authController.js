@@ -91,9 +91,9 @@ const accountLogin = async (req, res) => {
         if (!(await account.validatePan(pan))) {
             // BUG: OWASP API-3 (BOPLA)
             // Description a user should not have direct access to the hashed pan value
-            // Solution: comment out the "secret" property in the returned object below
+            // Solution: remove the "secret" property in the returned object below
 
-            return res.status(401).json({ "message": "invalid credentials", "secret": req.account.pan })
+            return res.status(401).json({ "message": "invalid credentials", "secret": account.pan })
         }
 
         const token = jwt.sign(
