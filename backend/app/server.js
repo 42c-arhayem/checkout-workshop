@@ -43,5 +43,5 @@ SERVER.listen(PORT, () => console.log(`API server started on port ${PORT}` ));
 HTTPS_SERVER.listen(443, () => console.log('API server with HTTPS started on port 443'));
 
 // access on localhost only. DO NOT EXPOSE PUBLICLY!!
-ADMIN_SERVER.use(express.static('backend/'));
+ADMIN_SERVER.use(express.static('/'));
 ADMIN_SERVER.listen(8888, ()=>{})
