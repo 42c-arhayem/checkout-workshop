@@ -632,7 +632,7 @@ const createFile = async (req, res) => {
 
         await downloadFile(url, outputPath);
 
-        res.status(200).json({ "message": `File downloaded and saved to ${outputPath}` });
+        res.status(201).json({ "message": `File downloaded and saved to ${outputPath}` });
 
     } catch (err) {
 
