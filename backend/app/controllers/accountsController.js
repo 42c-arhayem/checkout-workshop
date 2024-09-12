@@ -632,9 +632,12 @@ const createFile = async (req, res) => {
 
         await downloadFile(url, outputPath);
 
-        res.status(201).json({ "message": `File downloaded and saved to ${outputPath}` });
+        return res.status(201).json({ "message": `File downloaded and saved to downloads/${fileName}` });
 
     } catch (err) {
+
+
+        console.log(err);
 
         if(err.response) {
             res.status(err.response.status).json({ "message": `Error downloading the file: ${err.response.message}`})
@@ -646,6 +649,11 @@ const createFile = async (req, res) => {
 }
 
 const getFile = async (req, res) => {
+
+    // input validation
+    if (!req.query.filename || typeof req.query.filename !== "string") {
+        return res.status(400).json({ "message": "invalid input" });
+    }
 
     const uploadDir = path.join(__dirname, 'downloads'); // Directory where files are stored
 
