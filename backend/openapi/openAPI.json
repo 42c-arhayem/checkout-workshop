@@ -777,7 +777,7 @@
                 }
             }
         },
-        "/account/file": {
+        "/account/files": {
             "post": {
                 "description": "Upload a file from Google Drive",
                 "operationId": "CreateFile",
