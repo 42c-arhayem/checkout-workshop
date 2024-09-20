@@ -142,6 +142,9 @@
                             }
                         }
                     },
+                    "401": {
+                        "$ref": "#/components/responses/401ErrorResponse"
+                    },
                     "406": {
                         "$ref": "#/components/responses/406ErrorResponse"
                     },
@@ -796,7 +799,8 @@
                                     },
                                     "description": {
                                         "type": "string",
-                                        "pattern": "^[A-Za-z0-9 _.,!\"?]{0,100}$"
+                                        "pattern": "^[A-Za-z0-9 _.,!\"?]{0,100}$",
+                                        "example": "Transer 100 euros to Jane."
                                     }
                                 },
                                 "required": [
@@ -987,10 +991,8 @@
                                 "properties": {
                                     "url": {
                                         "type": "string",
-                                        "pattern": "^https://drive.google.com/file/d/(.*?)",
-                                        "minLength": 35,
-                                        "maxLength": 256,
-                                        "example": "https://drive.google.com/file/d/1d6fdCvAmKyIkzuR_AiRyP6p1tSEepl4d"
+                                        "pattern": "^https:\\/\\/drive\\.usercontent\\.google\\.com\\/download\\?id=[A-Za-z0-9_-]{33}$",
+                                        "example": "https://drive.usercontent.google.com/download?id=19KrQ71YAwA_6cYx4w4IvYkCB0DQpnYrH"
                                     }
                                 }
                             }
@@ -1043,7 +1045,8 @@
                             "application/octet-stream": {
                                 "schema": {
                                     "type": "string",
-                                    "format": "binary"
+                                    "format": "binary",
+                                    "maxLength": 100000000
                                 }
                             }
                         }
@@ -1086,7 +1089,13 @@
                         "type": "boolean"
                     }
                 },
-                "additionalProperties": false
+                "additionalProperties": false,
+                "example": {
+                    "paperStatements": false,
+                    "cardActivityAlerts": false,
+                    "smsNotifications": true
+                }
+
             },
             "Address": {
                 "type": "object",
@@ -1254,7 +1263,7 @@
             },
             "ResponseMessage": {
                 "type": "string",
-                "pattern": "^[A-Za-z0-9\/\\.\"', _]{1,100}$"
+                "pattern": "^[A-Za-z0-9\/\\.\"', :_]{1,100}$"
             },
             "MessageObject": {
                 "type": "object",
@@ -1267,7 +1276,8 @@
             },
             "UtilityAccountId": {
                 "type": "string",
-                "pattern": "^[A-Z0-9]{8,12}$"
+                "pattern": "^[A-Z0-9]{8,12}$",
+                "example": "EI4673939"
             },
             "UtilityPayee": {
                 "allOf": [
