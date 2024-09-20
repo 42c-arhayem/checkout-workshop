@@ -14,7 +14,8 @@ const TRANSFER_MAX_LIMIT = 3000.00;
 const TRANSACTIONS_PER_PAGE = 5;
 const DATE_TIME = new RegExp('^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]$')
 const FILENAME = new RegExp('^[a-zA-Z0-9._-]{5,256}$')
-const VALID_DOMAIN = new RegExp('^https://drive.google.com/')
+const URL_WHITELIST = new RegExp('^https:\\/\\/drive\\.usercontent\\.google\\.com\\/download\\?id=[A-Za-z0-9_-]{33}$')
+
 
 // Return the basic account details
 const getAccounts = (req, res) => {
@@ -57,10 +58,11 @@ const updateAccountOptions = async (req, res) => {
     // BUG: OWASP API-3 (BOPLA / mass assignment)
     // Description: Allows changes to account options that should not be updated by the client.
     // Solution: 
-    // const options = {
-    //     paperStatements: req.body.paperStatements,
-    //     cardActivityAlerts: req.body.cardActivityAlerts,
-    //     smsNotifications: req.body.smsNotifications
+    // const allowedProperties = ['paperStatements', 'cardActivityAlerts', 'smsNotifications'];
+    // const requestProperties = Object.keys(req.body);
+    // if (requestProperties.length > 3 || requestProperties.some( property => !allowedProperties.includes(property)))
+    // {
+    //     return res.status(400).json({ "message": "invalid input" });
     // }
 
     const options = { ...req.body };
@@ -101,7 +103,7 @@ const getBalance = (req, res) => {
         "accountId": req.account._id,
         "currency": req.account.currency,
         "balance": req.account.balance,
-        "overdraft": req.account.options.accountType === "Business" ? 5000 : 500
+        "overdraft": req.account.options.accountType === "Business" ? 10000 : 500
     })
 }
 
@@ -239,7 +241,7 @@ const createTransferPayment = async (req, res) => {
         return res.status(400).json({ "message": "invalid currency" });
     }
 
-    const overdraftLimit = req.account.options.accountType === "Business" ? 5000 : 500;
+    const overdraftLimit = req.account.options.accountType === "Business" ? 10000 : 500;
 
     if (amount > req.account.balance + overdraftLimit) {
         return res.status(400).json({ "message": "payment failed as it would exceed your overdraft limit." });
@@ -307,7 +309,7 @@ const createBillPayment = async (req, res) => {
         return res.status(400).json({ "message": "invalid currency" });
     }
 
-    const overdraftLimit = req.account.options.accountType === "Business" ? 5000 : 500;
+    const overdraftLimit = req.account.options.accountType === "Business" ? 10000 : 500;
 
     if (amount > req.account.balance + overdraftLimit) {
         return res.status(400).json({ "message": "payment failed as it would exceed your overdraft limit." });
@@ -617,12 +619,12 @@ const createFile = async (req, res) => {
     // BUG: OWASP API-7  (Server-side Request Forgery)
     // Description: the url input is vulnerable to SSRF
     // Solution: 
-    // if(!VALID_DOMAIN.test(url)) {
+    // if(!URL_WHITELIST.test(url)) {
     //     return res.status(400).json({ "message": "invalid input" });
     // }
 
-    const fileName = path.basename(url); // get the file name from the URL
-    const outputPath = path.resolve(__dirname, 'downloads', fileName);
+    const fileName = url.split("id=")[1]; // get the file Id from the URL
+    const outputPath = path.resolve(__dirname, 'downloads', `${fileName}.pdf`);
 
     try {
         // Create the downloads folder if it doesn't exist
@@ -632,18 +634,17 @@ const createFile = async (req, res) => {
 
         await downloadFile(url, outputPath);
 
-        return res.status(201).json({ "message": `File downloaded and saved to downloads/${fileName}` });
+        return res.status(201).json({ "message": `File downloaded and saved` });
 
     } catch (err) {
 
+        console.log("Catching error in createFile: ", err);
 
-        console.log(err);
-
-        if(err.response) {
-            res.status(err.response.status).json({ "message": `Error downloading the file: ${err.response.message}`})
+        if (err.response) {
+            res.status(err.response.status).json({ "message": `Error downloading the file: ${err.response.message}` })
         }
         else {
-            res.status(500).json({ "message": `Error downloading the file: ${err.code}`})
+            res.status(500).json({ "message": `Error downloading the file: ${err.code}` })
         }
     }
 }
@@ -657,7 +658,6 @@ const getFile = async (req, res) => {
 
     const uploadDir = path.join(__dirname, 'downloads'); // Directory where files are stored
 
-    // Route for file download (vulnerable to path traversal)
     const filename = req.query.filename;
     const filePath = path.join(uploadDir, filename);
 
@@ -686,13 +686,17 @@ const getFile = async (req, res) => {
 // Helper function to download and store an external file
 const downloadFile = async (fileUrl, outputLocationPath) => {
 
-    const writer = fs.createWriteStream(outputLocationPath);
-
     const response = await axios({
         method: 'GET',
         url: fileUrl,
         responseType: 'stream',
     });
+
+    if (response.headers['content-type'] !== 'application/octet-stream') {
+        throw new Error(response);
+    }
+
+    const writer = fs.createWriteStream(outputLocationPath);
 
     response.data.pipe(writer);
 
@@ -700,8 +704,7 @@ const downloadFile = async (fileUrl, outputLocationPath) => {
         writer.on('finish', resolve);
         writer.on('error', reject);
     });
-};
-
+} 
 
 
 export {
