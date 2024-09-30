@@ -14,6 +14,7 @@ const TRANSFER_MAX_LIMIT = 3000.00;
 const TRANSACTIONS_PER_PAGE = 5;
 const DATE_TIME = new RegExp('^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]$')
 const FILENAME = new RegExp('^[a-zA-Z0-9._-]{5,256}$')
+const ACCOUNTID = new RegExp('^[a-f\\d]{24}$')
 const URL_WHITELIST = new RegExp('^https:\\/\\/drive\\.usercontent\\.google\\.com\\/download\\?id=[A-Za-z0-9_-]{33}$')
 
 
@@ -220,9 +221,9 @@ const createTransferPayment = async (req, res) => {
         return res.status(400).json({ "message": "invalid input" });
     }
 
-    const { accountId, name, iban, amount, currency, description } = req.body;
+    const { sourceAccountId, name, iban, amount, currency, description } = req.body;
 
-    if (!accountId || !iban || !amount || !currency) {
+    if (!sourceAccountId || !iban || !amount || !currency) {
         return res.status(400).json({ "message": "missing a required field" });
     }
 
@@ -233,9 +234,10 @@ const createTransferPayment = async (req, res) => {
     // BUG: API-8:2019 (Injection)
     // Description: user input for accountId is vulnerable to nosql injection
     // Solution: 
-    // if( typeof accountId !== "string" || accountId !== req.account._id ) {
-    //     return res.status(400).json({ "message": "invalid input" });
-    // }
+    if( typeof sourceAccountId !== "string" || (!ACCOUNTID.test(sourceAccountId))) {
+        return res.status(400).json({ "message": "invalid input" });
+    }
+    
 
     if (currency.toUpperCase() != "EUR" && currency.toUpperCase() != "GBP") {
         return res.status(400).json({ "message": "invalid currency" });
@@ -249,7 +251,11 @@ const createTransferPayment = async (req, res) => {
 
     try {
         // const account = await AccountModel.findById(req.account._id);
-        const account = await AccountModel.findById(accountId);
+        const account = await AccountModel.findById(sourceAccountId);
+
+        if(!account) {
+            return res.status(404).json({ "message": `Cannot find source account: ${sourceAccountId}` });
+        }
 
         account.balance -= amount;
 
@@ -301,9 +307,9 @@ const createBillPayment = async (req, res) => {
     // Description: amount can be negative, thereby increasing the balance
     // Solution: 
     // if(amount < 0 || amount > TRANSFER_MAX_LIMIT) {
-    if (amount > TRANSFER_MAX_LIMIT) {
-        return res.status(400).json({ "message": "invalid amount" });
-    }
+    // if (amount > TRANSFER_MAX_LIMIT) {
+    //     return res.status(400).json({ "message": "invalid amount" });
+    // }
 
     if (currency && (typeof currency !== "string" || (currency.toUpperCase() != req.account.currency))) {
         return res.status(400).json({ "message": "invalid currency" });

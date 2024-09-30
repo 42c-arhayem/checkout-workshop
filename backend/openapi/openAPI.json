@@ -614,7 +614,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "accountId":{
+                                    "sourceAccountId":{
                                         "$ref": "#/components/schemas/AccountId"
                                     },
                                     "name": {
@@ -859,7 +859,7 @@
                 "description": "A unique and immutable identifier used to identify the account resource. This identifier has no meaning to the account owner.",
                 "type": "string",
                 "pattern": "^[a-f\\d]{24}$",
-                "example": "661cc8464787094021349548"
+                "example": "66ed4e51d301319c446d2c29"
             },
             "AccountOptions": {
                 "description": "Optional settings for a users bank account",

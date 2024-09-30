@@ -339,7 +339,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"accountId\": {\"$ne\": \"66d6b2f7256f295c9db2ddb3\"},\n    \"name\": \"Lisa Lovejoy\",\n    \"iban\": \"UK8979879DDDD312349012D1\",\n    \"amount\": 25,\n    \"currency\": \"EUR\",\n    \"description\": \"personal loan\"\n}",
+							"raw": "{\n    \"sourceAccountId\": \"66daba21d0bc05aa1d335068\",\n    \"name\": \"Lisa Lovejoy\",\n    \"iban\": \"UK8979879DDDD312349012D1\",\n    \"amount\": 25,\n    \"currency\": \"EUR\",\n    \"description\": \"personal loan\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -986,7 +986,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"accountType\": \"Business\"\n}",
+									"raw": "{\n    \"cardActivityAlerts\": true,\n    \"accountType\": \"Business\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1271,6 +1271,33 @@
 							"response": []
 						},
 						{
+							"name": "Files",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"url\": \"https://drive.usercontent.google.com/download?id=19KrQ71YAwA_6cYx4w4IvYkCB0DQpnYrH\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/account/files",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Files (port 3000)",
 							"request": {
 								"method": "POST",
@@ -1497,7 +1524,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"accountId\": {\"$ne\": \"66daba21d0bc05aa1d335067\"},\n    \"name\": \"Lisa Lovejoy\",\n    \"iban\": \"UK8979879DDDD312349012D1\",\n    \"amount\": 25,\n    \"currency\": \"EUR\",\n    \"description\": \"personal loan\"\n}",
+									"raw": "{\n    \"sourceAccountId\": {\"$ne\": \"66daba21d0bc05aa1d335067\"},\n    \"name\": \"Lisa Lovejoy\",\n    \"iban\": \"UK8979879DDDD312349012D1\",\n    \"amount\": 25,\n    \"currency\": \"EUR\",\n    \"description\": \"personal loan\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1570,21 +1597,33 @@
 						},
 						{
 							"name": "Files",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"url\": \"https://file-examples.com/wp-content/storage/2017/10/file-sample_150kB.pdf\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+								"url": {
+									"raw": "{{baseURL}}/account/files?filename=1nY26-PzjF5z2e3aQSjG1OJGd2f7PI7Jl.pdf",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"account",
+										"files"
+									],
+									"query": [
+										{
+											"key": "filename",
+											"value": "1nY26-PzjF5z2e3aQSjG1OJGd2f7PI7Jl.pdf"
 										}
-									}
-								},
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Files (path traversal)",
+							"request": {
+								"method": "GET",
+								"header": [],
 								"url": {
 									"raw": "{{baseURL}}/account/files?filename=/../../certs/key.pem",
 									"host": [
