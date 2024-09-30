@@ -782,7 +782,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "accountId": {
+                                    "sourceAccountId": {
                                         "$ref": "#/components/schemas/AccountId"
                                     },
                                     "name": {
@@ -804,7 +804,7 @@
                                     }
                                 },
                                 "required": [
-                                    "accountId",
+                                    "sourceAccountId",
                                     "name",
                                     "iban",
                                     "amount",
@@ -1042,7 +1042,7 @@
                     "200": {
                         "description": "Ok",
                         "content": {
-                            "application/octet-stream": {
+                            "application/pdf": {
                                 "schema": {
                                     "type": "string",
                                     "format": "binary",
@@ -1070,10 +1070,10 @@
     "components": {
         "schemas": {
             "AccountId": {
-                "description": "A unique and immutable identifier used to identify the account resource. This identifier has no meaning to the account owner.",
+                "description": "A unique and immutable identifier used to identify the account resource.",
                 "type": "string",
                 "pattern": "^[a-f\\d]{24}$",
-                "example": "661cc8464787094021349548"
+                "example": "66ed4e51d301319c446d2c29"
             },
             "AccountOptions": {
                 "description": "Optional settings for a users bank account",
@@ -1395,7 +1395,7 @@
                 "schema": {
                     "type": "string",
                     "pattern": "^[a-zA-Z0-9._-]{5,256}$",
-                    "example": "bill.pdf"
+                    "example": "1nY26-PzjF5z2e3aQSjG1OJGd2f7PI7Jl.pdf"
                 }
             },
             "payeeId": {
