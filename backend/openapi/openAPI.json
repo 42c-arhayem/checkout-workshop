@@ -533,11 +533,6 @@
             "post": {
                 "description": "Add new payee",
                 "operationId": "CreatePayee",
-                "security": [
-                    {
-                        "APIKey": []
-                    }
-                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -1156,11 +1151,6 @@
                 "type": "http",
                 "scheme": "bearer",
                 "bearerFormat": "JWT"
-            },
-            "APIKey": {
-                "type": "apiKey",
-                "name": "api_key",
-                "in": "header"
             }
         }
     }
