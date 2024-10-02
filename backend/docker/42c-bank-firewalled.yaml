@@ -2,7 +2,8 @@ name: "42c-bank"
 services:
 
   database:
-    image: anthony42crunch/test42c:database
+    # image: anthony42crunch/test42c:database
+    build: ../app/seed-database
     command: mongod --quiet --logpath /dev/null
     container_name: mongo-db
     ports:
@@ -12,7 +13,8 @@ services:
     restart: always
 
   apiserver:
-    image: anthony42crunch/test42c
+    # image: anthony42crunch/test42c
+    build: ../app
     container_name: 42c-bank-api
     ports:
       - "3000:3000"
@@ -26,19 +28,22 @@ services:
     ports:
       - "443:443"
     volumes:
-      - ./api-firewall/ssl:/opt/guardian/conf/ssl
+      - ../api-firewall/ssl:/opt/guardian/conf/ssl
+      - ../api-firewall/LetsEncryptCert:/certs
     command:
-      ["/bin/squire", "-platform", "protection.42crunch.com:8001", "-debug"]
+      ["/bin/squire", "-platform", "protection.demolabs.42crunch.cloud:8001", "-debug"]
     environment:
-      - SERVER_NAME=localhost:443
+      - SERVER_NAME=cute-noble-boar.ngrok-free.app
       - LISTEN_PORT=443
-      - PROTECTION_TOKEN=${PROTECTION_TOKEN}
+      - PROTECTION_TOKEN=0855aa6d-a5ec-4541-b1e6-576bbca43ae3
       - GUARDIAN_NODE_NAME=Local-Firewall
       - GUARDIAN_INSTANCE_NAME=Local-Firewall
       - LISTEN_SSL_CERT=firewall-cert.pem
       - LISTEN_SSL_KEY=firewall-key.pem
       - LOG_LEVEL=DEBUG
       - TARGET_URL=http://apiserver:3000
+      - PRESERVE_HOST=ON
     depends_on:
       - database
       - apiserver
+    env_file: ".env"

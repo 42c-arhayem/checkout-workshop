@@ -2,7 +2,8 @@ name: '42c-bank'
 services:
 
   database:
-    image: anthony42crunch/test42c:database
+    # image: anthony42crunch/test42c:database
+    build: ../app/seed-database
     container_name: mongo-db
     ports:
       - '27017:27017'
@@ -10,7 +11,8 @@ services:
     command: mongod --quiet
       
   apiserver:
-    image: anthony42crunch/test42c
+    # image: anthony42crunch/test42c
+    build: ../app
     container_name: 42c-bank-api
     ports:
       - '3000:3000'

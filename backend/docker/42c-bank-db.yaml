@@ -1,6 +1,7 @@
 services:
   database:
-    image: anthony42crunch/test42c:database
+    # image: anthony42crunch/test42c:database
+    build: ../app/seed-database
     container_name: mongo-db
     ports:
       - '27017:27017'
