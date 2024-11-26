@@ -58,6 +58,7 @@ jobs:
         id: Check_Audit
         run: |
           echo "Audit JSON Report:"
+          echo ${{ github.workspace }}/audit-action-report-${{ github.run_id }}.json
           cat ${{ github.workspace }}/audit-action-report-${{ github.run_id }}.json
           apiId=$(cat ${{ github.workspace }}/audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."backend/openapi/openAPI_remediated.json".apiId')
           echo "Bank API UUID: $apiId"
@@ -68,6 +69,7 @@ jobs:
         id: Fetch_API_AliasId
         run: |
           echo "Audit JSON Report:"
+          echo ${{ github.workspace }}/.42c/conf.yaml
           cat ${{ github.workspace }}/.42c/conf.yaml
           aliasId=$(yq '.apis.["backend/openapi/openAPI_remediated.json"].alias' < ${{ github.workspace }}/.42c/conf.yaml)
           echo "Bank API AliasId: $aliasId"
