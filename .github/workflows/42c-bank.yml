@@ -18,7 +18,7 @@ jobs:
       platformService: 'services.demolabs.42crunch.cloud:8001'
       X42C_API_TOKEN: ${{ secrets.API_KEY }} # Use GitHub Secrets
       config_name: 42c_bank_demo
-      API_URL: 'https://sadly-pleased-gobbler.ngrok-free.app/apis/banking/v1'
+      API_URL: 'https://cute-noble-boar.ngrok-free.app/apis/banking/v1'
 
     steps:
       # Checkout code

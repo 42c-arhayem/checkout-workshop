@@ -56,7 +56,7 @@
           "name": "SCAN42C_HOST",
           "from": "environment",
           "required": false,
-          "default": "https://sadly-pleased-gobbler.ngrok-free.app/apis/banking/v1"
+          "default": "https://cute-noble-boar.ngrok-free.app/apis/banking/v1"
         },
         "user1_inbound": {
           "name": "SCAN42C_USER1_INBOUND",
