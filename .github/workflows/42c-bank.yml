@@ -50,7 +50,7 @@ jobs:
             -e X42C_API_TOKEN=${{ env.X42C_API_TOKEN }} \
             -e X42C_BRANCH_NAME=main \
             -e X42C_LOG_LEVEL=DEBUG \
-            -e X42C_JSON_REPORT=audit-action-report-${{ github.run_id }}.json \
+            -e X42C_JSON_REPORT=${{ github.workspace }}/audit-action-report-${{ github.run_id }}.json \
             42crunch/docker-api-security-audit:v3
 
       # Fetch Bank API UUID from the Audit Summary Report
@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "Audit JSON Report:"
           cat ${{ github.workspace }}/audit-action-report-${{ github.run_id }}.json
-          apiId=$(cat ${{ github.workspace }}/audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."oas/openAPI_remediated.json".apiId')
+          apiId=$(cat ${{ github.workspace }}/audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."backend/openapi/openAPI_remediated.json".apiId')
           echo "Bank API UUID: $apiId"
           echo "::set-output name=API_UUID::$apiId"
 
