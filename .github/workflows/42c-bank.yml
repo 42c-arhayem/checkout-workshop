@@ -69,7 +69,7 @@ jobs:
         id: Fetch_API_AliasId
         run: |
           echo "Audit JSON Report:"
-          cat /home/runner/work/42c-banking/.42c/conf.yaml
+          cat https://github.com/42c-arhayem/42c-banking/.42c/conf.yaml
           aliasId=$(yq '.apis.["backend/openapi/openAPI_remediated.json"].alias' < ${{ github.workspace }}/.42c/conf.yaml)
           echo "Bank API AliasId: $aliasId"
           echo "::set-output name=API_ALIAS_ID::$aliasId"
