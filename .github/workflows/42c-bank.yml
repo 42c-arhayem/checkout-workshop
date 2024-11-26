@@ -25,6 +25,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # List files in the working directory
+      - name: List files
+        run: ls -la ${{ github.workspace }}
+        
       # Setup Python
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
