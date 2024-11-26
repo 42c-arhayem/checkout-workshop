@@ -12,7 +12,7 @@
     },
     "servers": [
         {
-            "url": "https://localhost/apis/banking/v1"
+            "url": "https://sadly-pleased-gobbler.ngrok-free.app/apis/banking/v1"
         }
     ],
     "security": [
