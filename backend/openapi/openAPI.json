@@ -996,7 +996,7 @@
               "format": "o:openbanking:iban",
               "example": "FR1420041010050500013M02606",
               "pattern": "^[A-Z]{2}[0-9]{2}[A-Z0-9]{18,32}$",
-              "minLength": 22,
+              "minLength": 23,
               "maxLength": 36,
               "x-42c-format": "o:openbanking:iban"
             },
