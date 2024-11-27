@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ngrok http --url=cute-noble-boar.ngrok-free.app 443
+ngrok http --url=cute-noble-boar.ngrok-free.app 3000
