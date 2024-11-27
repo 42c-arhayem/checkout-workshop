@@ -42,7 +42,7 @@ services:
       - LISTEN_SSL_KEY=firewall-key.pem
       - LOG_LEVEL=DEBUG
       - TARGET_URL=http://apiserver:3000
-      - PRESERVE_HOST=OFF
+      - PRESERVE_HOST=ON
     depends_on:
       - database
       - apiserver
