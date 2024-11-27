@@ -12,7 +12,7 @@
     },
     "servers": [
         {
-            "url": "https://localhost/apis/banking/v1"
+            "url": "https://cute-noble-boar.ngrok-free.app/apis/banking/v1"
         }
     ],
     "security": [
