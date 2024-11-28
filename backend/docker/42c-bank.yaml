@@ -16,8 +16,7 @@ services:
       container_name: 42c-bank-api
       ports:
         - '3000:3000'
-        - '443:443'
       depends_on:
         - database
       restart: always
-      command: nodemon start
+      command: npx nodemon server.js
