@@ -1,1689 +1,1689 @@
 {
-  "version": "2.0.0",
-  "runtimeConfiguration": {
-    "environment": "default",
-    "laxTestingModeEnabled": false,
-    "apiConnectivityCheck": true,
-    "logLevel": "error",
-    "logDestination": "stdout+platform",
-    "logMaxFileSize": 2147483648,
-    "requestHeaderNameRequestId": "x-scan-request-id",
-    "requestHeaderNameScenarioId": "x-scan-scenario-id",
-    "requestHeaderNameRequestType": "x-scan-request-type",
-    "requestFlowrate": 100,
-    "requestTimeout": 30,
-    "requestTlsInsecureSkipVerify": true,
-    "responseFollowRedirection": false,
-    "responseMaxBodySizeScan": 10485760,
-    "happyPathOnly": false,
-    "maxRequestRetryAttempts": 5,
-    "maxScanDuration": 1800,
-    "memoryLimit": 2147483648,
-    "memoryTimeSpan": 10,
-    "reportMaxRequestSizeHappyPath": 8092,
-    "reportMaxRequestSizeTest": 8092,
-    "reportIncludeRequestBody": true,
-    "reportIncludeResponseBody": true,
-    "reportMaxHttpResponseSizeHappyPath": 8092,
-    "reportMaxBodySizeHappyPath": 8092,
-    "reportMaxHttpResponseSizeTest": 8092,
-    "reportMaxBodySizeTest": 8092,
-    "reportIssuesOnly": false,
-    "reportMaxIssues": 1000,
-    "reportMaxSize": 20971520,
-    "reportGenerateCurlCommand": true
-  },
-  "customizations": {
-    "happyPaths": {
-      "retry": 1,
-      "responsePolicy": {
-        "httpStatusExpected": true,
-        "mustBeConformant": true
-      },
-      "httpStatusExpected": []
+    "version": "2.0.0",
+    "runtimeConfiguration": {
+        "environment": "default",
+        "laxTestingModeEnabled": false,
+        "apiConnectivityCheck": true,
+        "logLevel": "error",
+        "logDestination": "stdout+platform",
+        "logMaxFileSize": 2147483648,
+        "requestHeaderNameRequestId": "x-scan-request-id",
+        "requestHeaderNameScenarioId": "x-scan-scenario-id",
+        "requestHeaderNameRequestType": "x-scan-request-type",
+        "requestFlowrate": 100,
+        "requestTimeout": 30,
+        "requestTlsInsecureSkipVerify": true,
+        "responseFollowRedirection": false,
+        "responseMaxBodySizeScan": 10485760,
+        "happyPathOnly": false,
+        "maxRequestRetryAttempts": 5,
+        "maxScanDuration": 1800,
+        "memoryLimit": 2147483648,
+        "memoryTimeSpan": 10,
+        "reportMaxRequestSizeHappyPath": 8092,
+        "reportMaxRequestSizeTest": 8092,
+        "reportIncludeRequestBody": true,
+        "reportIncludeResponseBody": true,
+        "reportMaxHttpResponseSizeHappyPath": 8092,
+        "reportMaxBodySizeHappyPath": 8092,
+        "reportMaxHttpResponseSizeTest": 8092,
+        "reportMaxBodySizeTest": 8092,
+        "reportIssuesOnly": false,
+        "reportMaxIssues": 1000,
+        "reportMaxSize": 20971520,
+        "reportGenerateCurlCommand": true
     },
-    "tests": {
-      "responsePolicy": {
-        "httpStatusExpected": true,
-        "mustBeConformant": true
-      }
-    }
-  },
-  "environments": {
-    "default": {
-      "variables": {
-        "host": {
-          "name": "SCAN42C_HOST",
-          "from": "environment",
-          "required": false,
-          "default": "https://cute-noble-boar.ngrok-free.app/apis/banking/v1"
+    "customizations": {
+        "happyPaths": {
+            "retry": 1,
+            "responsePolicy": {
+                "httpStatusExpected": true,
+                "mustBeConformant": true
+            },
+            "httpStatusExpected": []
         },
-        "user1_inbound": {
-          "name": "SCAN42C_USER1_INBOUND",
-          "from": "environment",
-          "required": false,
-          "default": "janedoe@email.com"
-        },
-        "pan1_inbound": {
-          "name": "SCAN42C_PAN1_INBOUND",
-          "from": "environment",
-          "required": false,
-          "default": "11111"
-        },
-        "user2_inbound": {
-          "name": "SCAN42C_USER2_INBOUND",
-          "from": "environment",
-          "required": false,
-          "default": "ljansen@email.com"
-        },
-        "pan2_inbound": {
-          "name": "SCAN42C_PAN2_INBOUND",
-          "from": "environment",
-          "required": false,
-          "default": "99999"
+        "tests": {
+            "responsePolicy": {
+                "httpStatusExpected": true,
+                "mustBeConformant": true
+            }
         }
-      }
-    }
-  },
-  "operations": {
-    "AccountLogin": {
-      "operationId": "AccountLogin",
-      "request": {
-        "operationId": "AccountLogin",
-        "request": {
-          "type": "42c",
-          "details": {
+    },
+    "environments": {
+        "default": {
+            "variables": {
+                "host": {
+                    "name": "SCAN42C_HOST",
+                    "from": "environment",
+                    "required": false,
+                    "default": "https://cute-noble-boar.ngrok-free.app/apis/banking/v1"
+                },
+                "user1_inbound": {
+                    "name": "SCAN42C_USER1_INBOUND",
+                    "from": "environment",
+                    "required": false,
+                    "default": "janedoe@email.com"
+                },
+                "pan1_inbound": {
+                    "name": "SCAN42C_PAN1_INBOUND",
+                    "from": "environment",
+                    "required": false,
+                    "default": "11111"
+                },
+                "user2_inbound": {
+                    "name": "SCAN42C_USER2_INBOUND",
+                    "from": "environment",
+                    "required": false,
+                    "default": "ljansen@email.com"
+                },
+                "pan2_inbound": {
+                    "name": "SCAN42C_PAN2_INBOUND",
+                    "from": "environment",
+                    "required": false,
+                    "default": "99999"
+                }
+            }
+        }
+    },
+    "operations": {
+        "AccountLogin": {
             "operationId": "AccountLogin",
-            "method": "POST",
-            "url": "{{host}}/auth/login",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "email": "{{user1_inbound}}",
-                "pan": "{{pan1_inbound}}"
-              }
-            }
-          }
+            "request": {
+                "operationId": "AccountLogin",
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "AccountLogin",
+                        "method": "POST",
+                        "url": "{{host}}/auth/login",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "email": "{{user1_inbound}}",
+                                "pan": "{{pan1_inbound}}"
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/AccountLogin/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/AccountLogin/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "AccountRegister": {
-      "operationId": "AccountRegister",
-      "request": {
-        "operationId": "AccountRegister",
-        "request": {
-          "type": "42c",
-          "details": {
+        "AccountRegister": {
             "operationId": "AccountRegister",
-            "method": "POST",
-            "url": "{{host}}/auth/register",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+            "request": {
+                "operationId": "AccountRegister",
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "AccountRegister",
+                        "method": "POST",
+                        "url": "{{host}}/auth/register",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "email": "{{user1_inbound}}",
+                                "name": "Jean Bernard",
+                                "pan": "{{pan1_inbound}}",
+                                "postalAddress": {
+                                    "addressLine": [
+                                        "101 Avenue de Nice",
+                                        "Cagnes sur mer",
+                                        "Nice"
+                                    ],
+                                    "country": "FR",
+                                    "postCode": "06000"
+                                }
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "201",
+                "responses": {
+                    "201": {
+                        "expectations": {
+                            "httpStatus": 201
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "before": [
+                {
+                    "$ref": "#/operations/AccountLogin/request",
+                    "environment": {
+                        "user1_inbound": "janedoe@email.com",
+                        "pan1_inbound": "11111"
+                    },
+                    "responses": {
+                        "200": {
+                            "expectations": {
+                                "httpStatus": 200
+                            },
+                            "variableAssignments": {
+                                "AccessToken": {
+                                    "from": "response",
+                                    "in": "body",
+                                    "contentType": "json",
+                                    "path": {
+                                        "type": "jsonPointer",
+                                        "value": "/access"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "$ref": "#/requests/DeleteAccount2",
+                    "environment": {
+                        "AccessToken": "{{AccessToken}}"
+                    }
+                }
             ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "email": "{{user1_inbound}}",
-                "name": "Jean Bernard",
-                "pan": "{{pan1_inbound}}",
-                "postalAddress": {
-                  "addressLine": [
-                    "101 Avenue de Nice",
-                    "Cagnes sur mer",
-                    "Nice"
-                  ],
-                  "country": "FR",
-                  "postCode": "06000"
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/AccountRegister/request"
+                        }
+                    ],
+                    "fuzzing": true
                 }
-              }
-            }
-          }
+            ]
         },
-        "defaultResponse": "201",
-        "responses": {
-          "201": {
-            "expectations": {
-              "httpStatus": 201
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "before": [
-        {
-          "$ref": "#/operations/AccountLogin/request",
-          "environment": {
-            "user1_inbound": "janedoe@email.com",
-            "pan1_inbound": "11111"
-          },
-          "responses": {
-            "200": {
-              "expectations": {
-                "httpStatus": 200
-              },
-              "variableAssignments": {
-                "AccessToken": {
-                  "from": "response",
-                  "in": "body",
-                  "contentType": "json",
-                  "path": {
-                    "type": "jsonPointer",
-                    "value": "/access"
-                  }
-                }
-              }
-            }
-          }
-        },
-        {
-          "$ref": "#/requests/DeleteAccount2",
-          "environment": {
-            "AccessToken": "{{AccessToken}}"
-          }
-        }
-      ],
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/AccountRegister/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "CreateAppointment": {
-      "operationId": "CreateAppointment",
-      "request": {
-        "operationId": "CreateAppointment",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "CreateAppointment": {
             "operationId": "CreateAppointment",
-            "method": "POST",
-            "url": "{{host}}/account/products/mortgages/meeting",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "schedule": "2024-08-01T16:00"
-              }
-            }
-          }
+            "request": {
+                "operationId": "CreateAppointment",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "CreateAppointment",
+                        "method": "POST",
+                        "url": "{{host}}/account/products/mortgages/meeting",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "schedule": "2024-08-01T16:00"
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "201",
+                "responses": {
+                    "201": {
+                        "expectations": {
+                            "httpStatus": 201
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/CreateAppointment/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "201",
-        "responses": {
-          "201": {
-            "expectations": {
-              "httpStatus": 201
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/CreateAppointment/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "CreateBillPayment": {
-      "operationId": "CreateBillPayment",
-      "request": {
-        "operationId": "CreateBillPayment",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "CreateBillPayment": {
             "operationId": "CreateBillPayment",
-            "method": "POST",
-            "url": "{{host}}/account/payments/bill",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "accountNumber": "RG5W368MTX96",
-                "amount": 100,
-                "name": "gas bill"
-              }
-            }
-          }
+            "request": {
+                "operationId": "CreateBillPayment",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "CreateBillPayment",
+                        "method": "POST",
+                        "url": "{{host}}/account/payments/bill",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "accountNumber": "RG5W368MTX96",
+                                "amount": 100,
+                                "name": "gas bill"
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/CreateBillPayment/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/CreateBillPayment/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "CreateCardApplication": {
-      "operationId": "CreateCardApplication",
-      "request": {
-        "operationId": "CreateCardApplication",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "CreateCardApplication": {
             "operationId": "CreateCardApplication",
-            "method": "POST",
-            "url": "{{host}}/account/products/cards",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "delivery": "post"
-              }
-            }
-          }
-        },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "before": [
-        {
-          "$ref": "#/operations/GetCardApplication/request",
-          "responses": {
-            "200": {
-              "expectations": {
-                "httpStatus": 200
-              },
-              "variableAssignments": {
-                "referenceId": {
-                  "in": "body",
-                  "from": "response",
-                  "contentType": "json",
-                  "path": {
-                    "type": "jsonPointer",
-                    "value": "/_id"
-                  }
+            "request": {
+                "operationId": "CreateCardApplication",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "CreateCardApplication",
+                        "method": "POST",
+                        "url": "{{host}}/account/products/cards",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "delivery": "post"
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
                 }
-              }
-            }
-          }
+            },
+            "before": [
+                {
+                    "$ref": "#/operations/GetCardApplication/request",
+                    "responses": {
+                        "200": {
+                            "expectations": {
+                                "httpStatus": 200
+                            },
+                            "variableAssignments": {
+                                "referenceId": {
+                                    "in": "body",
+                                    "from": "response",
+                                    "contentType": "json",
+                                    "path": {
+                                        "type": "jsonPointer",
+                                        "value": "/_id"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "$ref": "#/operations/DeleteCardApplication/request",
+                    "environment": {
+                        "referenceId": "{{referenceId}}"
+                    }
+                }
+            ],
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/CreateCardApplication/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        {
-          "$ref": "#/operations/DeleteCardApplication/request",
-          "environment": {
-            "referenceId": "{{referenceId}}"
-          }
-        }
-      ],
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/CreateCardApplication/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "CreateFile": {
-      "operationId": "CreateFile",
-      "request": {
-        "operationId": "CreateFile",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "CreateFile": {
             "operationId": "CreateFile",
-            "method": "POST",
-            "url": "{{host}}/account/files",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "url": "https://drive.google.com/file/d/1d6fdCvAmKyIkzuR_AiRyP6p1tSEepl4d"
-              }
-            }
-          }
+            "request": {
+                "operationId": "CreateFile",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "CreateFile",
+                        "method": "POST",
+                        "url": "{{host}}/account/files",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "url": "https://drive.google.com/file/d/1d6fdCvAmKyIkzuR_AiRyP6p1tSEepl4d"
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "201",
+                "responses": {
+                    "201": {
+                        "expectations": {
+                            "httpStatus": 201
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/CreateFile/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "201",
-        "responses": {
-          "201": {
-            "expectations": {
-              "httpStatus": 201
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/CreateFile/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "CreatePayee": {
-      "operationId": "CreatePayee",
-      "request": {
-        "operationId": "CreatePayee",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "CreatePayee": {
             "operationId": "CreatePayee",
-            "method": "POST",
-            "url": "{{host}}/account/payees",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "iban": "IE12BOFI90000112777777",
-                "name": "Lisa Laurent",
-                "payeeType": "contact"
-              }
-            }
-          }
+            "request": {
+                "operationId": "CreatePayee",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "CreatePayee",
+                        "method": "POST",
+                        "url": "{{host}}/account/payees",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "iban": "IE12BOFI90000112777777",
+                                "name": "Lisa Laurent",
+                                "payeeType": "contact"
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/CreatePayee/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/CreatePayee/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "CreateTransferPayment": {
-      "operationId": "CreateTransferPayment",
-      "request": {
-        "operationId": "CreateTransferPayment",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "CreateTransferPayment": {
             "operationId": "CreateTransferPayment",
-            "method": "POST",
-            "url": "{{host}}/account/payments/transfer",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "accountId": "{{accountId}}",
-                "amount": 10,
-                "currency": "EUR",
-                "iban": "FR1420041010050500013M02606",
-                "name": "Jean Bernard"
-              }
-            }
-          }
-        },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "before": [
-        {
-          "$ref": "#/operations/GetAccount/request",
-          "responses": {
-            "200": {
-              "expectations": {
-                "httpStatus": 200
-              },
-              "variableAssignments": {
-                "accountId": {
-                  "from": "response",
-                  "in": "body",
-                  "contentType": "json",
-                  "path": {
-                    "type": "jsonPointer",
-                    "value": "/accountId"
-                  }
+            "request": {
+                "operationId": "CreateTransferPayment",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "CreateTransferPayment",
+                        "method": "POST",
+                        "url": "{{host}}/account/payments/transfer",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "accountId": "{{accountId}}",
+                                "amount": 10,
+                                "currency": "EUR",
+                                "iban": "FR1420041010050500013M02606",
+                                "name": "Jean Bernard"
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
                 }
-              }
-            }
-          }
-        }
-      ],
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/CreateTransferPayment/request",
-              "environment": {
-                "accountId": "{{accountId}}"
-              }
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "DeleteAccount": {
-      "operationId": "DeleteAccount",
-      "request": {
-        "operationId": "DeleteAccount",
-        "auth": [
-          "AccessToken/user_to_delete"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+            },
+            "before": [
+                {
+                    "$ref": "#/operations/GetAccount/request",
+                    "responses": {
+                        "200": {
+                            "expectations": {
+                                "httpStatus": 200
+                            },
+                            "variableAssignments": {
+                                "accountId": {
+                                    "from": "response",
+                                    "in": "body",
+                                    "contentType": "json",
+                                    "path": {
+                                        "type": "jsonPointer",
+                                        "value": "/accountId"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/CreateTransferPayment/request",
+                            "environment": {
+                                "accountId": "{{accountId}}"
+                            }
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
+        },
+        "DeleteAccount": {
             "operationId": "DeleteAccount",
-            "method": "DELETE",
-            "url": "{{host}}/account"
-          }
+            "request": {
+                "operationId": "DeleteAccount",
+                "auth": [
+                    "AccessToken/user_to_delete"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "DeleteAccount",
+                        "method": "DELETE",
+                        "url": "{{host}}/account"
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/DeleteAccount/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/DeleteAccount/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "DeleteCardApplication": {
-      "operationId": "DeleteCardApplication",
-      "request": {
-        "operationId": "DeleteCardApplication",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "DeleteCardApplication": {
             "operationId": "DeleteCardApplication",
-            "method": "DELETE",
-            "url": "{{host}}/account/products/cards/{referenceId}",
-            "paths": [
-              {
-                "key": "referenceId",
-                "value": "{{referenceId}}"
-              }
-            ]
-          }
-        },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "before": [
-        {
-          "$ref": "#/operations/GetCardApplication/request",
-          "responses": {
-            "200": {
-              "expectations": {
-                "httpStatus": 200
-              },
-              "variableAssignments": {
-                "referenceId": {
-                  "from": "response",
-                  "in": "body",
-                  "contentType": "json",
-                  "path": {
-                    "type": "jsonPointer",
-                    "value": "/_id"
-                  }
+            "request": {
+                "operationId": "DeleteCardApplication",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "DeleteCardApplication",
+                        "method": "DELETE",
+                        "url": "{{host}}/account/products/cards/{referenceId}",
+                        "paths": [
+                            {
+                                "key": "referenceId",
+                                "value": "{{referenceId}}"
+                            }
+                        ]
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
                 }
-              }
-            }
-          }
-        }
-      ],
-      "after": [
-        {
-          "$ref": "#/operations/CreateCardApplication/request"
-        }
-      ],
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/DeleteCardApplication/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "DeletePayee": {
-      "operationId": "DeletePayee",
-      "request": {
-        "operationId": "DeletePayee",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+            },
+            "before": [
+                {
+                    "$ref": "#/operations/GetCardApplication/request",
+                    "responses": {
+                        "200": {
+                            "expectations": {
+                                "httpStatus": 200
+                            },
+                            "variableAssignments": {
+                                "referenceId": {
+                                    "from": "response",
+                                    "in": "body",
+                                    "contentType": "json",
+                                    "path": {
+                                        "type": "jsonPointer",
+                                        "value": "/_id"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "after": [
+                {
+                    "$ref": "#/operations/CreateCardApplication/request"
+                }
+            ],
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/DeleteCardApplication/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
+        },
+        "DeletePayee": {
             "operationId": "DeletePayee",
-            "method": "DELETE",
-            "url": "{{host}}/account/payees/{payeeId}",
-            "paths": [
-              {
-                "key": "payeeId",
-                "value": "{{payeeId}}"
-              }
-            ]
-          }
-        },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "401": {
-            "expectations": {
-              "httpStatus": 401
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "before": [
-        {
-          "$ref": "#/operations/CreatePayee/request",
-          "responses": {
-            "200": {
-              "expectations": {
-                "httpStatus": 200
-              },
-              "variableAssignments": {
-                "payeeId": {
-                  "from": "response",
-                  "in": "body",
-                  "contentType": "json",
-                  "path": {
-                    "type": "jsonPointer",
-                    "value": "/payeeId"
-                  }
+            "request": {
+                "operationId": "DeletePayee",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "DeletePayee",
+                        "method": "DELETE",
+                        "url": "{{host}}/account/payees/{payeeId}",
+                        "paths": [
+                            {
+                                "key": "payeeId",
+                                "value": "{{payeeId}}"
+                            }
+                        ]
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "401": {
+                        "expectations": {
+                            "httpStatus": 401
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
                 }
-              }
-            }
-          }
-        }
-      ],
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/DeletePayee/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "GetAccount": {
-      "operationId": "GetAccount",
-      "request": {
-        "operationId": "GetAccount",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+            },
+            "before": [
+                {
+                    "$ref": "#/operations/CreatePayee/request",
+                    "responses": {
+                        "200": {
+                            "expectations": {
+                                "httpStatus": 200
+                            },
+                            "variableAssignments": {
+                                "payeeId": {
+                                    "from": "response",
+                                    "in": "body",
+                                    "contentType": "json",
+                                    "path": {
+                                        "type": "jsonPointer",
+                                        "value": "/payeeId"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/DeletePayee/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
+        },
+        "GetAccount": {
             "operationId": "GetAccount",
-            "method": "GET",
-            "url": "{{host}}/account"
-          }
+            "request": {
+                "operationId": "GetAccount",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "GetAccount",
+                        "method": "GET",
+                        "url": "{{host}}/account"
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/GetAccount/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/GetAccount/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "GetAccountBalances": {
-      "operationId": "GetAccountBalances",
-      "request": {
-        "operationId": "GetAccountBalances",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "GetAccountBalances": {
             "operationId": "GetAccountBalances",
-            "method": "GET",
-            "url": "{{host}}/account/balances"
-          }
+            "request": {
+                "operationId": "GetAccountBalances",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "GetAccountBalances",
+                        "method": "GET",
+                        "url": "{{host}}/account/balances"
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/GetAccountBalances/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/GetAccountBalances/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "GetAccountPayees": {
-      "operationId": "GetAccountPayees",
-      "request": {
-        "operationId": "GetAccountPayees",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "GetAccountPayees": {
             "operationId": "GetAccountPayees",
-            "method": "GET",
-            "url": "{{host}}/account/payees"
-          }
+            "request": {
+                "operationId": "GetAccountPayees",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "GetAccountPayees",
+                        "method": "GET",
+                        "url": "{{host}}/account/payees"
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/GetAccountPayees/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/GetAccountPayees/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "GetAccountTransactions": {
-      "operationId": "GetAccountTransactions",
-      "request": {
-        "operationId": "GetAccountTransactions",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "GetAccountTransactions": {
             "operationId": "GetAccountTransactions",
-            "method": "GET",
-            "url": "{{host}}/account/transactions"
-          }
+            "request": {
+                "operationId": "GetAccountTransactions",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "GetAccountTransactions",
+                        "method": "GET",
+                        "url": "{{host}}/account/transactions"
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/GetAccountTransactions/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/GetAccountTransactions/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "GetAccountTransactionsHeaders": {
-      "operationId": "GetAccountTransactionsHeaders",
-      "request": {
-        "operationId": "GetAccountTransactionsHeaders",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "GetAccountTransactionsHeaders": {
             "operationId": "GetAccountTransactionsHeaders",
-            "method": "HEAD",
-            "url": "{{host}}/account/transactions"
-          }
+            "request": {
+                "operationId": "GetAccountTransactionsHeaders",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "GetAccountTransactionsHeaders",
+                        "method": "HEAD",
+                        "url": "{{host}}/account/transactions"
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/GetAccountTransactionsHeaders/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/GetAccountTransactionsHeaders/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "GetCardApplication": {
-      "operationId": "GetCardApplication",
-      "request": {
-        "operationId": "GetCardApplication",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "GetCardApplication": {
             "operationId": "GetCardApplication",
-            "method": "GET",
-            "url": "{{host}}/account/products/cards"
-          }
+            "request": {
+                "operationId": "GetCardApplication",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "GetCardApplication",
+                        "method": "GET",
+                        "url": "{{host}}/account/products/cards"
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/GetCardApplication/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/GetCardApplication/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "GetFile": {
-      "operationId": "GetFile",
-      "request": {
-        "operationId": "GetFile",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "GetFile": {
             "operationId": "GetFile",
-            "method": "GET",
-            "url": "{{host}}/account/files"
-          }
+            "request": {
+                "operationId": "GetFile",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "GetFile",
+                        "method": "GET",
+                        "url": "{{host}}/account/files"
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "before": [
+                {
+                    "$ref": "#/operations/CreateFile/request"
+                }
+            ],
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/GetFile/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "before": [
-        {
-          "$ref": "#/operations/CreateFile/request"
-        }
-      ],
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/GetFile/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "UpdateAccount": {
-      "operationId": "UpdateAccount",
-      "request": {
-        "operationId": "UpdateAccount",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "UpdateAccount": {
             "operationId": "UpdateAccount",
-            "method": "PUT",
-            "url": "{{host}}/account",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "cardActivityAlerts": true
-              }
-            }
-          }
+            "request": {
+                "operationId": "UpdateAccount",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "UpdateAccount",
+                        "method": "PUT",
+                        "url": "{{host}}/account",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "cardActivityAlerts": true
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
+                        }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
+                    }
+                }
+            },
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/UpdateAccount/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ]
         },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/UpdateAccount/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "UpdateCardApplication": {
-      "operationId": "UpdateCardApplication",
-      "request": {
-        "operationId": "UpdateCardApplication",
-        "auth": [
-          "AccessToken"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
+        "UpdateCardApplication": {
             "operationId": "UpdateCardApplication",
-            "method": "PUT",
-            "url": "{{host}}/account/products/cards/{referenceId}",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "paths": [
-              {
-                "key": "referenceId",
-                "value": "{{referenceId}}"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "delivery": "post",
-                "postalAddress": {
-                  "addressLine": [
-                    "999 Hackers Way",
-                    "Vice City"
-                  ],
-                  "country": "NL",
-                  "postCode": "44400"
-                }
-              }
-            }
-          }
-        },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "406": {
-            "expectations": {
-              "httpStatus": 406
-            }
-          },
-          "415": {
-            "expectations": {
-              "httpStatus": 415
-            }
-          },
-          "429": {
-            "expectations": {
-              "httpStatus": 429
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      },
-      "before": [
-        {
-          "$ref": "#/operations/GetCardApplication/request",
-          "responses": {
-            "200": {
-              "expectations": {
-                "httpStatus": 200
-              },
-              "variableAssignments": {
-                "referenceId": {
-                  "from": "response",
-                  "in": "body",
-                  "contentType": "json",
-                  "path": {
-                    "type": "jsonPointer",
-                    "value": "/_id"
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/UpdateCardApplication/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ],
-      "authorizationTests": [
-        "UpdateCardApplication"
-      ]
-    }
-  },
-  "authenticationDetails": [
-    {
-      "AccessToken": {
-        "type": "bearer",
-        "default": "JaneToken",
-        "credentials": {
-          "JaneToken": {
-            "credential": "{{AccessToken}}",
-            "requests": [
-              {
-                "$ref": "#/operations/AccountLogin/request",
-                "responses": {
-                  "200": {
-                    "expectations": {
-                      "httpStatus": 200
-                    },
-                    "variableAssignments": {
-                      "AccessToken": {
-                        "in": "body",
-                        "from": "response",
-                        "contentType": "json",
-                        "path": {
-                          "type": "jsonPointer",
-                          "value": "/access"
+            "request": {
+                "operationId": "UpdateCardApplication",
+                "auth": [
+                    "AccessToken"
+                ],
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "operationId": "UpdateCardApplication",
+                        "method": "PUT",
+                        "url": "{{host}}/account/products/cards/{referenceId}",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "paths": [
+                            {
+                                "key": "referenceId",
+                                "value": "{{referenceId}}"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "delivery": "post",
+                                "postalAddress": {
+                                    "addressLine": [
+                                        "999 Hackers Way",
+                                        "Vice City"
+                                    ],
+                                    "country": "NL",
+                                    "postCode": "44400"
+                                }
+                            }
                         }
-                      }
                     }
-                  }
-                }
-              }
-            ]
-          },
-          "LucasToken": {
-            "credential": "{{AccessToken}}",
-            "requests": [
-              {
-                "$ref": "#/operations/AccountLogin/request",
-                "environment": {
-                  "user1_inbound": "{{user2_inbound}}",
-                  "pan1_inbound": "{{pan2_inbound}}"
                 },
+                "defaultResponse": "200",
                 "responses": {
-                  "200": {
-                    "expectations": {
-                      "httpStatus": 200
-                    },
-                    "variableAssignments": {
-                      "AccessToken": {
-                        "in": "body",
-                        "from": "response",
-                        "contentType": "json",
-                        "path": {
-                          "type": "jsonPointer",
-                          "value": "/access"
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
                         }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "user_to_delete": {
-            "credential": "{{AccessToken}}",
-            "requests": [
-              {
-                "$ref": "#/operations/AccountRegister/request",
-                "environment": {
-                  "user1_inbound": "user_to_delete@email.com",
-                  "user1_pan": "88888"
-                }
-              },
-              {
-                "$ref": "#/operations/AccountLogin/request",
-                "environment": {
-                  "user1_inbound": "user_to_delete@email.com",
-                  "user1_pan": "88888"
-                },
-                "responses": {
-                  "200": {
-                    "expectations": {
-                      "httpStatus": 200
                     },
-                    "variableAssignments": {
-                      "AccessToken": {
-                        "from": "response",
-                        "in": "body",
-                        "contentType": "json",
-                        "path": {
-                          "type": "jsonPointer",
-                          "value": "/access"
+                    "406": {
+                        "expectations": {
+                            "httpStatus": 406
                         }
-                      }
+                    },
+                    "415": {
+                        "expectations": {
+                            "httpStatus": 415
+                        }
+                    },
+                    "429": {
+                        "expectations": {
+                            "httpStatus": 429
+                        }
+                    },
+                    "default": {
+                        "expectations": {
+                            "httpStatus": "default"
+                        }
                     }
-                  }
                 }
-              }
+            },
+            "before": [
+                {
+                    "$ref": "#/operations/GetCardApplication/request",
+                    "responses": {
+                        "200": {
+                            "expectations": {
+                                "httpStatus": 200
+                            },
+                            "variableAssignments": {
+                                "referenceId": {
+                                    "from": "response",
+                                    "in": "body",
+                                    "contentType": "json",
+                                    "path": {
+                                        "type": "jsonPointer",
+                                        "value": "/_id"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "requests": [
+                        {
+                            "fuzzing": true,
+                            "$ref": "#/operations/UpdateCardApplication/request"
+                        }
+                    ],
+                    "fuzzing": true
+                }
+            ],
+            "authorizationTests": [
+                "UpdateCardApplication"
             ]
-          }
         }
-      }
-    }
-  ],
-  "authorizationTests": {
-    "UpdateCardApplication": {
-      "key": "authentication-swapping-bola",
-      "source": [
-        "AccessToken/JaneToken"
-      ],
-      "target": [
-        "AccessToken/LucasToken"
-      ]
-    }
-  },
-  "requests": {
-    "DeleteAccount2": {
-      "request": {
-        "type": "42c",
-        "details": {
-          "method": "DELETE",
-          "url": "{{host}}/account",
-          "headers": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{AccessToken}}"
+    },
+    "authenticationDetails": [
+        {
+            "AccessToken": {
+                "type": "bearer",
+                "default": "JaneToken",
+                "credentials": {
+                    "JaneToken": {
+                        "credential": "{{AccessToken}}",
+                        "requests": [
+                            {
+                                "$ref": "#/operations/AccountLogin/request",
+                                "responses": {
+                                    "200": {
+                                        "expectations": {
+                                            "httpStatus": 200
+                                        },
+                                        "variableAssignments": {
+                                            "AccessToken": {
+                                                "in": "body",
+                                                "from": "response",
+                                                "contentType": "json",
+                                                "path": {
+                                                    "type": "jsonPointer",
+                                                    "value": "/access"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "LucasToken": {
+                        "credential": "{{AccessToken}}",
+                        "requests": [
+                            {
+                                "$ref": "#/operations/AccountLogin/request",
+                                "environment": {
+                                    "user1_inbound": "{{user2_inbound}}",
+                                    "pan1_inbound": "{{pan2_inbound}}"
+                                },
+                                "responses": {
+                                    "200": {
+                                        "expectations": {
+                                            "httpStatus": 200
+                                        },
+                                        "variableAssignments": {
+                                            "AccessToken": {
+                                                "in": "body",
+                                                "from": "response",
+                                                "contentType": "json",
+                                                "path": {
+                                                    "type": "jsonPointer",
+                                                    "value": "/access"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "user_to_delete": {
+                        "credential": "{{AccessToken}}",
+                        "requests": [
+                            {
+                                "$ref": "#/operations/AccountRegister/request",
+                                "environment": {
+                                    "user1_inbound": "user_to_delete@email.com",
+                                    "user1_pan": "88888"
+                                }
+                            },
+                            {
+                                "$ref": "#/operations/AccountLogin/request",
+                                "environment": {
+                                    "user1_inbound": "user_to_delete@email.com",
+                                    "user1_pan": "88888"
+                                },
+                                "responses": {
+                                    "200": {
+                                        "expectations": {
+                                            "httpStatus": 200
+                                        },
+                                        "variableAssignments": {
+                                            "AccessToken": {
+                                                "from": "response",
+                                                "in": "body",
+                                                "contentType": "json",
+                                                "path": {
+                                                    "type": "jsonPointer",
+                                                    "value": "/access"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
             }
-          ]
         }
-      },
-      "defaultResponse": "200",
-      "responses": {
-        "200": {
-          "expectations": {
-            "httpStatus": 200
-          }
+    ],
+    "authorizationTests": {
+        "UpdateCardApplication": {
+            "key": "authentication-swapping-bola",
+            "source": [
+                "AccessToken/JaneToken"
+            ],
+            "target": [
+                "AccessToken/LucasToken"
+            ]
         }
-      }
+    },
+    "requests": {
+        "DeleteAccount2": {
+            "request": {
+                "type": "42c",
+                "details": {
+                    "method": "DELETE",
+                    "url": "{{host}}/account",
+                    "headers": [
+                        {
+                            "key": "Authorization",
+                            "value": "Bearer {{AccessToken}}"
+                        }
+                    ]
+                }
+            },
+            "defaultResponse": "200",
+            "responses": {
+                "200": {
+                    "expectations": {
+                        "httpStatus": 200
+                    }
+                }
+            }
+        }
     }
-  }
 }
