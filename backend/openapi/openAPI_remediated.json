@@ -43,13 +43,22 @@
                                     },
                                     "pan": {
                                         "$ref": "#/components/schemas/PersonalAccountNumber"
+                                    },
+                                    "accountType": {
+                                        "description": "Personal customer account type",
+                                        "type": "string",
+                                        "enum": [
+                                            "current",
+                                            "savings"
+                                        ]
                                     }
                                 },
                                 "required": [
                                     "name",
                                     "email",
                                     "postalAddress",
-                                    "pan"
+                                    "pan",
+                                    "accountType"
                                 ],
                                 "additionalProperties": false
                             }
@@ -796,11 +805,12 @@
                                     },
                                     "description": {
                                         "type": "string",
-                                        "pattern": "^[A-Za-z0-9 _.,!\"?]{0,100}$"
+                                        "pattern": "^[A-Za-z0-9 _.,!\"?]{0,100}$",
+                                        "example": "Transer 100 euros to contact."
                                     }
                                 },
                                 "required": [
-                                    "accountId",
+                                    "sourceAccountId",
                                     "name",
                                     "iban",
                                     "amount",
@@ -925,13 +935,10 @@
                                 "type": "object",
                                 "properties": {
                                     "schedule": {
-                                      "type": "string",
-                                      "format": "date-time",
-                                      "example": "2024-08-01T16:00",
-                                      "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:(?:[0-5][0-9]|60)(?:\\.[0-9]{1,15})?(?:Z|[+\\-](?:[01][0-9]|2[0-3]):[0-5][0-9])$",
-                                      "minLength": 20,
-                                      "maxLength": 38,
-                                      "x-42c-format": "o:date-time"
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-08-01T16:00",
+                                        "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
                                     }
                                 },
                                 "required": [
@@ -1043,11 +1050,11 @@
                     "200": {
                         "description": "Ok",
                         "content": {
-                            "application/octet-stream": {
+                            "application/pdf": {
                                 "schema": {
                                     "type": "string",
                                     "format": "binary",
-                                    "maxLength": 10485760
+                                    "maxLength": 100000000
                                 }
                             }
                         }
@@ -1071,10 +1078,10 @@
     "components": {
         "schemas": {
             "AccountId": {
-                "description": "A unique and immutable identifier used to identify the account resource. This identifier has no meaning to the account owner.",
+                "description": "A unique and immutable identifier used to identify the account resource.",
                 "type": "string",
                 "pattern": "^[a-f\\d]{24}$",
-                "example": "661cc8464787094021349548"
+                "example": "66ed4e51d301319c446d2c29"
             },
             "AccountOptions": {
                 "description": "Optional settings for a users bank account",
@@ -1090,7 +1097,12 @@
                         "type": "boolean"
                     }
                 },
-                "additionalProperties": false
+                "additionalProperties": false,
+                "example": {
+                    "paperStatements": false,
+                    "cardActivityAlerts": false,
+                    "smsNotifications": true
+                }
             },
             "Address": {
                 "type": "object",
@@ -1258,7 +1270,7 @@
             },
             "ResponseMessage": {
                 "type": "string",
-                "pattern": "^[A-Za-z0-9\/\\.\"',-_ ]{1,100}$"
+                "pattern": "^[A-Za-z0-9\/\\.\"', :_]{1,100}$"
             },
             "MessageObject": {
                 "type": "object",
@@ -1271,7 +1283,8 @@
             },
             "UtilityAccountId": {
                 "type": "string",
-                "pattern": "^[A-Z0-9]{8,12}$"
+                "pattern": "^[A-Z0-9]{8,12}$",
+                "example": "EI4673939"
             },
             "UtilityPayee": {
                 "allOf": [
@@ -1389,7 +1402,7 @@
                 "schema": {
                     "type": "string",
                     "pattern": "^[a-zA-Z0-9._-]{5,256}$",
-                    "example": "bill.pdf"
+                    "example": "1nY26-PzjF5z2e3aQSjG1OJGd2f7PI7Jl.pdf"
                 }
             },
             "payeeId": {
