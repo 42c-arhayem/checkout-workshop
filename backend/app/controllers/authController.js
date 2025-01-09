@@ -4,18 +4,13 @@ import AccountModel from '../models/accountModel.js';
 // Register a new user Account
 const accountRegistration = async (req, res) => {
 
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
+    const { name, email, postalAddress, pan, accountType } = req.body;
 
-    const { name, email, postalAddress, pan } = req.body;
-
-    if(!name || !email || !postalAddress || !pan) {
+    if(!name || !email || !postalAddress || !pan || !accountType ) {
         return res.status(400).json({ "message": "missing required field" });
     }
 
-    if (typeof name !== "string" || typeof email !== "string" || typeof pan !== "string" || typeof postalAddress != "object") {
+    if (typeof name !== "string" || typeof email !== "string" || typeof pan !== "string" || typeof accountType != "string" || typeof postalAddress != "object") {
         return res.status(400).json({ "message": "invalid input" });
     }
 
@@ -23,11 +18,20 @@ const accountRegistration = async (req, res) => {
         return res.status(400).json({ "message": "missing required field" });
     }
 
+    // BUG: OWASP A01 (Broken Access Control)
+    // Description: Allows user to register with privileged account type.
+    // Solution: 
+    // const allowedAccountTypes = ['current', 'savings'];
+    // if (!allowedAccountTypes.includes(accountType))
+    // {
+    //     return res.status(400).json({ "message": "invalid input" });
+    // }
+
     try {
         let account = await AccountModel.findOne({ email });
 
         if (account) {
-            return res.status(400).json({ "message": "User already exists." });
+            return res.status(409).json({ "message": "User already exists." });
         }
 
         account = await AccountModel.create(
@@ -36,7 +40,8 @@ const accountRegistration = async (req, res) => {
                 email, 
                 postalAddress, 
                 pan, 
-                currency: postalAddress.country.toUpperCase() === 'UK' ? "GBP" : "EUR"  
+                currency: postalAddress.country.toUpperCase() === 'UK' ? "GBP" : "EUR",
+                options: { accountType } 
             }
         )
 
@@ -62,11 +67,6 @@ const accountRegistration = async (req, res) => {
 
 // Login to a user account
 const accountLogin = async (req, res) => {
-
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
 
     const { email, pan } = req.body;
 

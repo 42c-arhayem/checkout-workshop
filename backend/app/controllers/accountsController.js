@@ -51,11 +51,6 @@ const deleteAccount = async (req, res) => {
 
 const updateAccountOptions = async (req, res) => {
 
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
-
     // BUG: OWASP API-3 (BOPLA / mass assignment)
     // Description: Allows changes to account options that should not be updated by the client.
     // Solution: 
@@ -104,7 +99,7 @@ const getBalance = (req, res) => {
         "accountId": req.account._id,
         "currency": req.account.currency,
         "balance": req.account.balance,
-        "overdraft": req.account.options.accountType === "Business" ? 10000 : 500
+        "overdraft": req.account.options.accountType === "business" ? 10000 : 500
     })
 }
 
@@ -136,11 +131,6 @@ const getPayeeList = (req, res) => {
 
 // Register a payee for the account. Can be for a contact or utility payee
 const createPayee = async (req, res) => {
-
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
 
     const { payeeType, name, accountNumber, iban } = req.body;
 
@@ -216,11 +206,6 @@ const deletePayee = async (req, res) => {
 // initiate a transfer to a contact
 const createTransferPayment = async (req, res) => {
 
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
-
     const { sourceAccountId, name, iban, amount, currency, description } = req.body;
 
     if (!sourceAccountId || !iban || !amount || !currency) {
@@ -234,16 +219,16 @@ const createTransferPayment = async (req, res) => {
     // BUG: API-8:2019 (Injection)
     // Description: user input for accountId is vulnerable to nosql injection
     // Solution: 
-    if( typeof sourceAccountId !== "string" || (!ACCOUNTID.test(sourceAccountId))) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
+    // if( typeof sourceAccountId !== "string" || (!ACCOUNTID.test(sourceAccountId))) {
+    //     return res.status(400).json({ "message": "invalid input" });
+    // }
     
 
     if (currency.toUpperCase() != "EUR" && currency.toUpperCase() != "GBP") {
         return res.status(400).json({ "message": "invalid currency" });
     }
 
-    const overdraftLimit = req.account.options.accountType === "Business" ? 10000 : 500;
+    const overdraftLimit = req.account.options.accountType === "business" ? 10000 : 500;
 
     if (amount > req.account.balance + overdraftLimit) {
         return res.status(400).json({ "message": "payment failed as it would exceed your overdraft limit." });
@@ -288,11 +273,6 @@ const createTransferPayment = async (req, res) => {
 // initiate a bill payment to a utility account
 const createBillPayment = async (req, res) => {
 
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
-
     const { name, accountNumber, amount, currency } = req.body;
 
     if (!name || !accountNumber || (amount !== 0 && !amount)) {
@@ -315,7 +295,7 @@ const createBillPayment = async (req, res) => {
         return res.status(400).json({ "message": "invalid currency" });
     }
 
-    const overdraftLimit = req.account.options.accountType === "Business" ? 10000 : 500;
+    const overdraftLimit = req.account.options.accountType === "business" ? 10000 : 500;
 
     if (amount > req.account.balance + overdraftLimit) {
         return res.status(400).json({ "message": "payment failed as it would exceed your overdraft limit." });
@@ -369,11 +349,6 @@ const getTransactionListHeaders = (req, res) => {
 
 // Request a new credit card
 const createCardApplication = async (req, res) => {
-
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
 
     const { delivery } = req.body;
 
@@ -449,21 +424,26 @@ const getCardApplication = async (req, res) => {
     }
 }
 
-// Modify an existing credit card application
+// Update an existing credit card application
 const modifyCardApplication = async (req, res) => {
-
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
 
     const { referenceId } = req.params;
     const { delivery, postalAddress } = req.body;
 
+    // SECURITY: API input validation
+    // ------------------------------
+     // const allowedProperties = ['paperStatements', 'cardActivityAlerts', 'smsNotifications'];
+    // const requestProperties = Object.keys(req.body);
+    // if (requestProperties.length > 3 || requestProperties.some( property => !allowedProperties.includes(property)))
+    // {
+    //     return res.status(400).json({ "message": "invalid input" });
+    // }
+    
     if ((delivery && !['post', 'collect'].includes(delivery)) ||
         (postalAddress && typeof postalAddress != "object")) {
         return res.status(400).json({ "message": "invalid input" });
     }
+    // ------------------------------
 
     let findRecord;
 
@@ -567,11 +547,6 @@ const deleteCardApplication = async (req, res) => {
 
 const createMeeting = async (req, res) => {
 
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
-
     const { schedule } = req.body;
 
     if (!schedule || typeof schedule !== "string" || !DATE_TIME.test(schedule)) {
@@ -610,11 +585,6 @@ const createMeeting = async (req, res) => {
 }
 
 const createFile = async (req, res) => {
-
-    // input validation
-    if (typeof req.body !== "object" || Array.isArray(req.body)) {
-        return res.status(400).json({ "message": "invalid input" });
-    }
 
     const { url } = req.body;
 

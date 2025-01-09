@@ -33,7 +33,7 @@ const accountSchema = mongoose.Schema(
             paperStatements: { type: Boolean, default: false },
             cardActivityAlerts: { type: Boolean, default: true },
             smsNotifications: { type: Boolean, default: false },
-            accountType: { type: String, enum: ['Personal', 'Business'], default: 'Personal' }
+            accountType: { type: String, default: 'current' }
         },
         payees: {
             type: [payeeSchema]
