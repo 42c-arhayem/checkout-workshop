@@ -473,8 +473,8 @@
                   },
                   "variableAssignments": {
                     "referenceId": {
-                      "from": "response",
                       "in": "body",
+                      "from": "response",
                       "contentType": "json",
                       "path": {
                         "type": "jsonPointer",
@@ -800,8 +800,8 @@
               },
               "variableAssignments": {
                 "referenceId": {
-                  "from": "response",
                   "in": "body",
+                  "from": "response",
                   "contentType": "json",
                   "path": {
                     "type": "jsonPointer",
