@@ -917,7 +917,8 @@
                 "x-42c-format": "o:email-secured"
             },
             "IBAN": {
-              "type": "string"
+              "type": "string",
+              "format": "o:openbanking:iban"
             },
             "Name": {
                 "type": "string",
