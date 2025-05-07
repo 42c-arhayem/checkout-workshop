@@ -917,7 +917,8 @@
                 "x-42c-format": "o:email-secured"
             },
             "IBAN": {
-              "type": "string"
+                "type": "string",
+                "description": "International Bank Account Number"
             },
             "Name": {
                 "type": "string",
