@@ -2,7 +2,7 @@
     "openapi": "3.0.3",
     "info": {
         "title": "42C Bank API",
-        "description": "An intentionally unsecure banking API for education and training purposes.",
+        "description": "An intentionally insecure banking API for education and training purposes.",
         "contact": {
             "name": "42Crunch Support",
             "url": "https://support.42crunch.com",
