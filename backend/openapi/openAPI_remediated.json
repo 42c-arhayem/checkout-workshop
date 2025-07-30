@@ -1220,7 +1220,7 @@
                 ],
                 "example": {
                     "payeeType": "utility",
-                    "name": "Electricity bill",
+                    "name": "electricity bill",
                     "accountNumber": "BT2221801"
                 }
             },
