@@ -5,8 +5,11 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: APIContractSecurityAudit@5
+- task: APIContractSecurityAudit@8
   inputs:
     platformServiceConnection: 'Demolabs'
     jsonReport: 'audit-action-report-$(Build.BuildId).json'
     sarifReport: 'audit-action-report-$(Build.BuildId).sarif'
+
+
+    
