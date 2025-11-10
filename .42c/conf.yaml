@@ -1,3 +1,5 @@
 apis:
   backend/openapi/openAPI_remediated.json:
     alias: 42c-bank-api-remediated
+  backend/openapi/openAPI.json:
+    alias: 42c-bank-api
