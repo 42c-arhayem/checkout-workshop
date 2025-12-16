@@ -117,12 +117,36 @@ Add this step to your `azure-pipelines.yml`:
 
 ### Pre-commit Hook
 
-Add to `.git/hooks/pre-commit`:
+A sample pre-commit hook is provided in `.pre-commit-hook.sample`. To install:
+
+```bash
+cp .pre-commit-hook.sample .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+Or create your own:
 
 ```bash
 #!/bin/bash
 python3 scripts/check-openapi.py -q || exit 1
 ```
+
+### Makefile
+
+The project includes a Makefile for common tasks:
+
+```bash
+# Check OpenAPI specification
+make check-openapi
+
+# Validate OpenAPI spec
+make validate
+
+# Install dependencies
+make install
+```
+
+See `make help` for all available commands.
 
 ---
 

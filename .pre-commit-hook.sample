@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# Pre-commit hook to check OpenAPI specification
+# 
+# To install this hook, copy it to .git/hooks/pre-commit:
+#   cp .pre-commit-hook.sample .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+#
+
+echo "Running pre-commit checks..."
+
+# Check OpenAPI specification
+echo "Checking OpenAPI specification..."
+python3 scripts/check-openapi.py -q
+
+if [ $? -ne 0 ]; then
+    echo "❌ OpenAPI check failed"
+    exit 1
+fi
+
+echo "✅ Pre-commit checks passed"
+exit 0

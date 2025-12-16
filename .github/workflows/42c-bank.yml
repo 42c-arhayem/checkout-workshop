@@ -44,6 +44,13 @@ jobs:
         run: |
           python -m pip install requests --upgrade pip
 
+      # Check and Generate OpenAPI Spec if Missing
+      - name: Check and Generate OpenAPI Specification
+        run: |
+          echo "Checking for OpenAPI specification..."
+          python3 ${{ github.workspace }}/scripts/check-openapi.py
+          echo "OpenAPI check complete"
+
       # 42Crunch API Security Audit using Docker Image
       - name: Run 42Crunch Audit Docker Image
         run: |
