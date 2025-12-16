@@ -77,6 +77,23 @@ Each time you save a source file, the server will automatically restart to inclu
 ### OpenAPI definitions ###
 Two OpenAPI files are provided. One will receive an Audit score of ~60/100 and is intended to showcase API Security Audit. The second will receive an Audit score of 100/100 and 0 issues, and is intended for use with API Conformance Scan. 
 
+**OpenAPI Specification Checking**
+
+The project includes automated scripts to check for the existence of OpenAPI specifications and generate them from source code if missing:
+
+```bash
+# Using Python
+python3 scripts/check-openapi.py
+
+# Using Bash wrapper
+./scripts/check-openapi.sh
+
+# Force regeneration
+python3 scripts/check-openapi.py --force-generate
+```
+
+These scripts evaluate the Express.js source code and automatically generate an OpenAPI 3.0.3 compliant specification if one is not found. See `scripts/README.md` for detailed documentation. 
+
 ### Seeded user accounts ### 
 The database provided has two prepared user accounts out of the box. You can use these immediately to login and test the banking services. 
 
