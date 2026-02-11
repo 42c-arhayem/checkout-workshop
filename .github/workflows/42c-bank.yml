@@ -143,8 +143,17 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      - name: Upload Drift Scan Configuration and Fetch Token
-        id: upload_drift_config
+      - name: Create Default Drift Scan Configuration
+        run: |
+          python3 ${{ github.workspace }}/scripts/conformance_scanv2.py \
+            -c ${{ secrets.API_KEY }} \
+            -p ${{ env.platformUrl }} \
+            -a ${{ needs.audit.outputs.api_uuid }} \
+            -n ${{ env.drift_config_name }} \
+            -s drift_scan \
+            --action create_conf
+
+      - name: Fetch Drift Scan Token
         run: |
           python3 ${{ github.workspace }}/scripts/conformance_scanv2.py \
             -c ${{ secrets.API_KEY }} \
@@ -152,8 +161,7 @@ jobs:
             -a ${{ needs.audit.outputs.api_uuid }} \
             -n ${{ env.drift_config_name }} \
             -t drift_scan_token.json \
-            -f ${{ github.workspace }}/.42c/scan/${{ needs.audit.outputs.api_alias_id }}/scanconf-drift.json --action upload_conf \
-            -s drift_scan
+            --action get_token
           drift_token=$(cat ${{ github.workspace }}/drift_scan_token.json | jq -r '.scan_token')
           echo "DRIFT_SCAN_TOKEN=$drift_token" >> $GITHUB_ENV
           echo "Drift scan token is $drift_token"
