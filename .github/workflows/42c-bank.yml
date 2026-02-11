@@ -157,6 +157,15 @@ jobs:
           echo "DRIFT_SCAN_TOKEN=$drift_token" >> $GITHUB_ENV
           echo "Drift scan token is $drift_token"
 
+      - name: Fetch Access Token for Drift Scan
+        id: fetch_access_token
+        run: |
+          ACCESS_TOKEN=$(curl -s -X POST "${{ env.API_URL }}/auth/login" \
+            -H "Content-Type: application/json" \
+            -d '{"email": "janedoe@email.com", "password": "11111"}' | jq -r '.access')
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+          echo "Access token fetched successfully"
+
       - name: Run Drift Scan
         run: |
           echo "Drift scan token is $DRIFT_SCAN_TOKEN"
@@ -164,7 +173,7 @@ jobs:
           docker run -e SCAN_TOKEN=$DRIFT_SCAN_TOKEN \
             -e SCAN42C_HOST=${{ env.API_URL }} \
             -e PLATFORM_SERVICE=${{ env.platformService }} \
-            -e SCAN42C_SECURITY_ACCESSTOKEN=${{ secrets.SCAN42C_SECURITY_ACCESSTOKEN }} \
+            -e SCAN42C_SECURITY_ACCESSTOKEN=$ACCESS_TOKEN \
             42crunch/scand-agent:v2
           echo "Drift scan report: ${{ env.platformUrl }}/apis/${{ needs.audit.outputs.api_uuid }}/scan"
 
