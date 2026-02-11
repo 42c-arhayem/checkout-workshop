@@ -1,4 +1,4 @@
-name: 42c-Bank Audit & Scan
+name: 42c-Bank CI - Audit, Scan & Firewall
 
 # Trigger on push or pull requests to the main branch
 on:
@@ -118,76 +118,7 @@ jobs:
           echo "Scan report: ${{ env.platformUrl }}/apis/${{ needs.audit.outputs.api_uuid }}/scan"
 
   # ──────────────────────────────────────────────
-  # Job 3 - 42Crunch Drift Scan (Production)
-  # ──────────────────────────────────────────────
-  drift-scan:
-    name: 42Crunch Drift Scan
-    runs-on: ubuntu-latest
-    needs: [audit, conformance-scan]
-
-    env:
-      drift_config_name: 42c_bank_drift
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install Python dependencies
-        run: python -m pip install requests --upgrade pip
-
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-
-      - name: Create Default Drift Scan Configuration
-        run: |
-          python3 ${{ github.workspace }}/scripts/conformance_scanv2.py \
-            -c ${{ secrets.API_KEY }} \
-            -p ${{ env.platformUrl }} \
-            -a ${{ needs.audit.outputs.api_uuid }} \
-            -n ${{ env.drift_config_name }} \
-            -s drift_scan \
-            --action create_conf
-
-      - name: Fetch Drift Scan Token
-        run: |
-          python3 ${{ github.workspace }}/scripts/conformance_scanv2.py \
-            -c ${{ secrets.API_KEY }} \
-            -p ${{ env.platformUrl }} \
-            -a ${{ needs.audit.outputs.api_uuid }} \
-            -n ${{ env.drift_config_name }} \
-            -t drift_scan_token.json \
-            --action get_token
-          drift_token=$(cat ${{ github.workspace }}/drift_scan_token.json | jq -r '.scan_token')
-          echo "DRIFT_SCAN_TOKEN=$drift_token" >> $GITHUB_ENV
-          echo "Drift scan token is $drift_token"
-
-      - name: Fetch Access Token for Drift Scan
-        id: fetch_access_token
-        run: |
-          ACCESS_TOKEN=$(curl -s -X POST "${{ env.API_URL }}/auth/login" \
-            -H "Content-Type: application/json" \
-            -d '{"email": "janedoe@email.com", "pan": "11111"}' | jq -r '.access')
-          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
-          echo "Access token fetched successfully"
-
-      - name: Run Drift Scan
-        run: |
-          echo "Drift scan token is $DRIFT_SCAN_TOKEN"
-          docker pull 42crunch/scand-agent:v2
-          docker run -e SCAN_TOKEN=$DRIFT_SCAN_TOKEN \
-            -e SCAN42C_HOST=${{ env.API_URL }} \
-            -e PLATFORM_SERVICE=${{ env.platformService }} \
-            -e SCAN42C_SECURITY_ACCESSTOKEN=$ACCESS_TOKEN \
-            42crunch/scand-agent:v2
-          echo "Drift scan report: ${{ env.platformUrl }}/apis/${{ needs.audit.outputs.api_uuid }}/scan"
-
-  # ──────────────────────────────────────────────
-  # Job 4 - Update API Firewall Protection
+  # Job 3 - Update API Firewall Protection
   # ──────────────────────────────────────────────
   update-firewall:
     name: Reconfigure API Firewall
