@@ -9,42 +9,34 @@ on:
     branches:
       - main
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+env:
+  platformUrl: 'https://demolabs.42crunch.cloud'
+  platformService: 'services.demolabs.42crunch.cloud:8001'
+  X42C_API_TOKEN: ${{ secrets.API_KEY }}
+  API_URL: 'https://cute-noble-boar.ngrok-free.app/apis/banking/v1'
 
-    env:
-      platformUrl: 'https://demolabs.42crunch.cloud'
-      platformService: 'services.demolabs.42crunch.cloud:8001'
-      X42C_API_TOKEN: ${{ secrets.API_KEY }} # Use GitHub Secrets
-      config_name: 42c_bank_demo
-      API_URL: 'https://cute-noble-boar.ngrok-free.app/apis/banking/v1'
+jobs:
+
+  # ──────────────────────────────────────────────
+  # Job 1 - 42Crunch API Security Audit
+  # ──────────────────────────────────────────────
+  audit:
+    name: 42Crunch Audit
+    runs-on: ubuntu-latest
+    outputs:
+      api_uuid: ${{ steps.Check_Audit.outputs.API_UUID }}
+      api_alias_id: ${{ steps.Fetch_API_AliasId.outputs.API_ALIAS_ID }}
 
     steps:
-      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # List files in the working directory
       - name: List files
         run: ls -la ${{ github.workspace }}
 
-      # Setup Python
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      # Set up Docker
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      # Install Python tools
-      - name: Install Python dependencies
-        run: |
-          python -m pip install requests --upgrade pip
-
-      # 42Crunch API Security Audit using Docker Image
       - name: Run 42Crunch Audit Docker Image
         run: |
           docker run -v "${{ github.workspace }}:/workspace" \
@@ -57,7 +49,6 @@ jobs:
             -e X42C_JSON_REPORT=audit-action-report-${{ github.run_id }}.json \
             42crunch/docker-api-security-audit:v3
 
-      # Fetch Bank API UUID from the Audit Summary Report
       - name: Check Audit Summary Report
         id: Check_Audit
         run: |
@@ -66,36 +57,57 @@ jobs:
           cat ${{ github.workspace }}/audit-action-report-${{ github.run_id }}.json
           apiId=$(cat ${{ github.workspace }}/audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."backend/openapi/openAPI_remediated.json".apiId')
           echo "Bank API UUID: $apiId"
-          echo "::set-output name=API_UUID::$apiId"
+          echo "API_UUID=$apiId" >> $GITHUB_OUTPUT
 
-      # Fetch Bank API AliasId from the .42c/conf.yaml
       - name: Fetch API AliasId
         id: Fetch_API_AliasId
         run: |
-          echo "Audit JSON Report:"
           cat ${{ github.workspace }}/.42c/conf.yaml
           aliasId=$(yq '.apis.["backend/openapi/openAPI_remediated.json"].alias' < ${{ github.workspace }}/.42c/conf.yaml)
           echo "Bank API AliasId: $aliasId"
-          echo "::set-output name=API_ALIAS_ID::$aliasId"
+          echo "API_ALIAS_ID=$aliasId" >> $GITHUB_OUTPUT
 
-      # Upload Scan V2 Configuration
+  # ──────────────────────────────────────────────
+  # Job 2 - 42Crunch Conformance Scan
+  # ──────────────────────────────────────────────
+  conformance-scan:
+    name: 42Crunch Conformance Scan
+    runs-on: ubuntu-latest
+    needs: audit
+
+    env:
+      config_name: 42c_bank_demo
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: python -m pip install requests --upgrade pip
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
       - name: Upload Scan Configuration and Fetch Token
         id: upload_scan_config
         run: |
           python3 ${{ github.workspace }}/scripts/conformance_scanv2.py \
             -c ${{ secrets.API_KEY }} \
             -p ${{ env.platformUrl }} \
-            -a ${{ steps.Check_Audit.outputs.API_UUID }} \
+            -a ${{ needs.audit.outputs.api_uuid }} \
             -n ${{ env.config_name }} \
             -t scan_token.json \
-            -f ${{ github.workspace }}/.42c/scan/${{ steps.Fetch_API_AliasId.outputs.API_ALIAS_ID }}/scanconf.json --action upload_conf
+            -f ${{ github.workspace }}/.42c/scan/${{ needs.audit.outputs.api_alias_id }}/scanconf.json --action upload_conf
           scan_token=$(cat ${{ github.workspace }}/scan_token.json | jq -r '.scan_token')
-          echo "SCAN_TOKEN=$scan_token" >> $GITHUB_ENV  # Save to GITHUB_ENV to pass between steps
+          echo "SCAN_TOKEN=$scan_token" >> $GITHUB_ENV
           echo "Scan token is $scan_token"
-          cat ${{ github.workspace }}/scan_token.json
 
-      # Pull and Run 42Crunch Docker Image
-      - name: Pull and Run 42Crunch Docker Image
+      - name: Run Conformance Scan
         run: |
           echo "Scan token is $SCAN_TOKEN"
           docker pull 42crunch/scand-agent:v2
@@ -103,16 +115,74 @@ jobs:
             -e SCAN42C_HOST=${{ env.API_URL }} \
             -e PLATFORM_SERVICE=${{ env.platformService }} \
             42crunch/scand-agent:v2
-          echo "Scan report: ${{ env.platformUrl }}/apis/${{ steps.Check_Audit.outputs.API_UUID }}/scan"
+          echo "Scan report: ${{ env.platformUrl }}/apis/${{ needs.audit.outputs.api_uuid }}/scan"
 
-        # Reconfigure Protection
+  # ──────────────────────────────────────────────
+  # Job 3 - 42Crunch Drift Scan (Production)
+  # ──────────────────────────────────────────────
+  drift-scan:
+    name: 42Crunch Drift Scan
+    runs-on: ubuntu-latest
+    needs: [audit, conformance-scan]
+
+    env:
+      drift_config_name: 42c_bank_drift
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: python -m pip install requests --upgrade pip
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Upload Drift Scan Configuration and Fetch Token
+        id: upload_drift_config
+        run: |
+          python3 ${{ github.workspace }}/scripts/conformance_scanv2.py \
+            -c ${{ secrets.API_KEY }} \
+            -p ${{ env.platformUrl }} \
+            -a ${{ needs.audit.outputs.api_uuid }} \
+            -n ${{ env.drift_config_name }} \
+            -t drift_scan_token.json \
+            -f ${{ github.workspace }}/.42c/scan/${{ needs.audit.outputs.api_alias_id }}/scanconf-drift.json --action upload_conf
+          drift_token=$(cat ${{ github.workspace }}/drift_scan_token.json | jq -r '.scan_token')
+          echo "DRIFT_SCAN_TOKEN=$drift_token" >> $GITHUB_ENV
+          echo "Drift scan token is $drift_token"
+
+      - name: Run Drift Scan
+        run: |
+          echo "Drift scan token is $DRIFT_SCAN_TOKEN"
+          docker pull 42crunch/scand-agent:v2
+          docker run -e SCAN_TOKEN=$DRIFT_SCAN_TOKEN \
+            -e SCAN42C_HOST=${{ env.API_URL }} \
+            -e PLATFORM_SERVICE=${{ env.platformService }} \
+            -e SCAN42C_SECURITY_ACCESSTOKEN=${{ secrets.SCAN42C_SECURITY_ACCESSTOKEN }} \
+            42crunch/scand-agent:v2
+          echo "Drift scan report: ${{ env.platformUrl }}/apis/${{ needs.audit.outputs.api_uuid }}/scan"
+
+  # ──────────────────────────────────────────────
+  # Job 4 - Update API Firewall Protection
+  # ──────────────────────────────────────────────
+  update-firewall:
+    name: Reconfigure API Firewall
+    runs-on: ubuntu-latest
+    needs: audit
+
+    steps:
       - name: Reconfigure Protection
-        id: Reconfigure_Protection
         run: |
           echo "Reconfiguring Protection"
-          echo "API UUID: ${{ steps.Check_Audit.outputs.API_UUID }}"
-          API_UUID=${{ steps.Check_Audit.outputs.API_UUID }}
+          API_UUID=${{ needs.audit.outputs.api_uuid }}
           PLATFORM_URL=${{ env.platformUrl }}
+          echo "API UUID: $API_UUID"
           curl --request POST "$PLATFORM_URL/api/v1/apis/$API_UUID/protection" \
             --header "Content-Type: application/json" \
             --header "X-API-KEY: ${{ env.X42C_API_TOKEN }}"
