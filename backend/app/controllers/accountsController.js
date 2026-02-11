@@ -336,9 +336,10 @@ const getTransactionList = async (req, res) => {
     // BUG: API-4 (Unrestricted Resource Consumption)
     // Description: No constraints on the number of records to return
     // Solution:
-    // return res.status(200).json(req.account.transactions.slice(-TRANSACTIONS_PER_PAGE))
+    const transactions = req.account.transactions.slice(-TRANSACTIONS_PER_PAGE).map(t => t.toJSON());
+    return res.status(200).json(transactions)
 
-    return res.status(200).json(req.account.transactions);
+    // return res.status(200).json(req.account.transactions);
 }
 
 // Get a list of payment transactions
