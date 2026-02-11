@@ -19,4 +19,7 @@ services:
       depends_on:
         - database
       restart: always
+      volumes:
+        - ../app:/home/42c-bank/backend/app
+        - /home/42c-bank/backend/app/node_modules
       command: npx nodemon server.js
