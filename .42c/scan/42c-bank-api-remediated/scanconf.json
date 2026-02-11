@@ -183,7 +183,8 @@
                   ],
                   "country": "FR",
                   "postCode": "06000"
-                }
+                },
+                "accountType": "current"
               }
             }
           }
@@ -711,6 +712,9 @@
             {
               "fuzzing": true,
               "$ref": "#/operations/DeleteAccount/request"
+            },
+            {
+              "$ref": "#/operations/AccountRegister/request"
             }
           ],
           "fuzzing": true
