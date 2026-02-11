@@ -171,7 +171,7 @@ jobs:
         run: |
           ACCESS_TOKEN=$(curl -s -X POST "${{ env.API_URL }}/auth/login" \
             -H "Content-Type: application/json" \
-            -d '{"email": "janedoe@email.com", "password": "11111"}' | jq -r '.access')
+            -d '{"email": "janedoe@email.com", "pan": "11111"}' | jq -r '.access')
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
           echo "Access token fetched successfully"
 
