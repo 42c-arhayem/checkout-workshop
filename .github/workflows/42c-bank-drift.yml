@@ -27,6 +27,7 @@ jobs:
   # ──────────────────────────────────────────────
   resolve-api:
     name: Resolve API UUID
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     outputs:
       api_uuid: ${{ steps.resolve.outputs.API_UUID }}
@@ -55,7 +56,7 @@ jobs:
       # ── Option B: Native GitHub Action plugin (uncomment to use instead) ──
       # - name: Run 42Crunch Audit to resolve API UUID (Native Plugin)
       #   if: ${{ github.event.inputs.api_uuid == '' }}
-      #   uses: 42Crunch/api-security-audit-action@v3
+      #   uses: 42Crunch/api-security-audit-action@v4
       #   with:
       #     api-token: ${{ env.X42C_API_TOKEN }}
       #     platform-url: ${{ env.platformUrl }}

@@ -52,7 +52,7 @@ jobs:
 
       # ── Option B: Native GitHub Action plugin (uncomment to use instead) ──
       - name: Run 42Crunch Audit (Native Plugin)
-        uses: 42Crunch/api-security-audit-action@v3
+        uses: 42Crunch/api-security-audit-action@v4
         with:
           api-token: ${{ env.X42C_API_TOKEN }}
           platform-url: ${{ env.platformUrl }}
