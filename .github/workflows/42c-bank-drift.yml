@@ -49,7 +49,7 @@ jobs:
             -e X42C_BRANCH_NAME=main \
             -e X42C_LOG_LEVEL=INFO \
             -e X42C_JSON_REPORT=audit-action-report-${{ github.run_id }}.json \
-            42crunch/docker-api-security-audit:v3
+            42crunch/docker-api-security-audit:latest
 
       - name: Resolve API UUID
         id: resolve
