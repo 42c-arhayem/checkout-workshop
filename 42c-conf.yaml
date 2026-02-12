@@ -1,6 +1,10 @@
 audit:
   branches:
-    main: 
-      discovery:
-        search:
-          - backend/openapi/*.*
+    main:
+      collections:
+        banking-api:
+          dir: backend/openapi
+          collection_name: "OpenBanking API - Demo"
+          search:
+            - '**/*.*'
+  
