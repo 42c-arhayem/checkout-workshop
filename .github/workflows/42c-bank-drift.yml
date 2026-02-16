@@ -37,31 +37,32 @@ jobs:
         uses: actions/checkout@v3
 
     # ── Option A: Docker image (current) ──
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+      # - name: Set up Docker
+      #   uses: docker/setup-buildx-action@v2
 
-      - name: Run 42Crunch Audit to resolve API UUID
-        if: ${{ github.event.inputs.api_uuid == '' }}
-        run: |
-          docker run -v "${{ github.workspace }}:/workspace" \
-            --user 0:0 \
-            -e X42C_REPOSITORY_URL=https://github.com/42c-arhayem/42c-banking \
-            -e X42C_PLATFORM_URL=${{ env.platformUrl }} \
-            -e X42C_API_TOKEN=${{ env.X42C_API_TOKEN }} \
-            -e X42C_BRANCH_NAME=main \
-            -e X42C_LOG_LEVEL=INFO \
-            -e X42C_JSON_REPORT=audit-action-report-${{ github.run_id }}.json \
-            42crunch/docker-api-security-audit:v4
-
-      # ── Option B: Native GitHub Action plugin (uncomment to use instead) ──
-      # - name: Run 42Crunch Audit to resolve API UUID (Native Plugin)
+      # - name: Run 42Crunch Audit to resolve API UUID
       #   if: ${{ github.event.inputs.api_uuid == '' }}
-      #   uses: 42Crunch/api-security-audit-action@v4
-      #   with:
-      #     api-token: ${{ env.X42C_API_TOKEN }}
-      #     platform-url: ${{ env.platformUrl }}
-      #     log-level: INFO
-      #     json-report: audit-action-report-${{ github.run_id }}.json
+      #   run: |
+      #     docker run -v "${{ github.workspace }}:/workspace" \
+      #       --user 0:0 \
+      #       -e X42C_REPOSITORY_URL=https://github.com/42c-arhayem/42c-banking \
+      #       -e X42C_PLATFORM_URL=${{ env.platformUrl }} \
+      #       -e X42C_API_TOKEN=${{ env.X42C_API_TOKEN }} \
+      #       -e X42C_BRANCH_NAME=main \
+      #       -e X42C_LOG_LEVEL=INFO \
+      #       -e X42C_JSON_REPORT=audit-action-report-${{ github.run_id }}.json \
+      #       42crunch/docker-api-security-audit:v4
+
+    # ── Option B: Native GitHub Action plugin (uncomment to use instead) ──
+      - name: Run 42Crunch Audit to resolve API UUID (Native Plugin)
+        if: ${{ github.event.inputs.api_uuid == '' }}
+        uses: 42Crunch/api-security-audit-action@v4
+        with:
+          api-token: ${{ env.X42C_API_TOKEN }}
+          platform-url: ${{ env.platformUrl }}
+          log-level: INFO
+          ignore-failures: true
+          json-report: audit-action-report-${{ github.run_id }}.json
 
       - name: Resolve API UUID
         id: resolve
