@@ -14,6 +14,9 @@
         "pan": "$2a$08$vgtjVLotYDhbCTj0HbZBteuUiL/fD5FL8HQ6EViizORyUSjNO.Edq",
         "balance": 358,
         "currency": "GBP",
+        "options": {
+            "accountType": "personal"
+        },
         "payees": [
             {
                 "name": "Gas company",
@@ -166,6 +169,9 @@
         "pan": "$2a$08$Gzbf4/cpKQ.0eebFqvCyuu5LtXAEbrfWjeTDBOaBddU6mvpAyrNJy",
         "balance":  1000,
         "currency": "EUR",
+        "options": {
+            "accountType": "personal"
+        },
         "payees": [],
         "products": [],
         "transactions": []

@@ -1,0 +1,1279 @@
+{
+	"info": {
+		"_postman_id": "graphql-42c-banking",
+		"name": "42C Banking GraphQL API",
+		"description": "Complete GraphQL API collection for 42c Banking with authentication, account management, payments, and product operations. Includes vulnerability testing examples.\n\nSetup:\n1. Import this collection\n2. Import the environment file\n3. Run 'Register' or 'Login' to get a token\n4. Token is automatically saved to environment\n5. All subsequent requests use the token automatically",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register - Current Account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.register) {",
+									"        pm.environment.set('accountId', jsonData.data.register.accountId);",
+									"        console.log('Account ID saved:', jsonData.data.register.accountId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation Register($input: RegisterInput!) {\n  register(input: $input) {\n    message\n    accountId\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"postalAddress\": {\n      \"addressLine\": [\"123 Main Street\", \"Apartment 4B\"],\n      \"postCode\": \"SW1A 1AA\",\n      \"country\": \"UK\"\n    },\n    \"pan\": \"1234\",\n    \"accountType\": \"current\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Register a new user account with current account type."
+					},
+					"response": []
+				},
+				{
+					"name": "Register - Business Account (Vulnerable)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation Register($input: RegisterInput!) {\n  register(input: $input) {\n    message\n    accountId\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"name\": \"Business Corp\",\n    \"email\": \"business@example.com\",\n    \"postalAddress\": {\n      \"addressLine\": [\"456 Corporate Blvd\"],\n      \"postCode\": \"10001\",\n      \"country\": \"US\"\n    },\n    \"pan\": \"5678\",\n    \"accountType\": \"business\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: Privilege Escalation (OWASP API1:2023)\n\nAllows registering with business account type, granting higher overdraft limit (10000 vs 500)."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.login) {",
+									"        pm.environment.set('authToken', jsonData.data.login.access);",
+									"        console.log('Auth token saved to environment');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation Login($input: LoginInput!) {\n  login(input: $input) {\n    access\n    access_expires\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"email\": \"john.doe@example.com\",\n    \"pan\": \"1234\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Login to get an access token. Token is automatically saved to environment variable."
+					},
+					"response": []
+				},
+				{
+					"name": "Login - DOS Attack (Vulnerable)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation Login($input: LoginInput!) {\n  login(input: $input) {\n    access\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"email\": \"victim@example.com\",\n    \"pan\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: Broken Authentication (OWASP API2:2023)\n\nSending extremely long password overwhelms bcrypt hashing, causing denial of service."
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication operations including registration and login."
+		},
+		{
+			"name": "Account Management",
+			"item": [
+				{
+					"name": "Get Account Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetAccount {\n  getAccount {\n    accountId\n    name\n    email\n    address {\n      addressLine\n      postCode\n      country\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Get authenticated user's account details."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Balance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetBalance {\n  getBalance {\n    accountId\n    currency\n    balance\n    overdraft\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Get current account balance and overdraft limit."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Account Options",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateOptions($options: AccountOptionsInput!) {\n  updateAccountOptions(options: $options) {\n    paperStatements\n    cardActivityAlerts\n    smsNotifications\n    accountType\n  }\n}",
+								"variables": "{\n  \"options\": {\n    \"paperStatements\": true,\n    \"cardActivityAlerts\": false,\n    \"smsNotifications\": true\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Update account notification preferences."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Options - Mass Assignment (Vulnerable)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateOptions($options: AccountOptionsInput!) {\n  updateAccountOptions(options: $options) {\n    paperStatements\n    accountType\n  }\n}",
+								"variables": "{\n  \"options\": {\n    \"paperStatements\": true,\n    \"accountType\": \"business\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: Mass Assignment (OWASP API3:2023)\n\nAllows modifying accountType to escalate privileges and increase overdraft limit."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeleteAccount {\n  deleteAccount {\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Delete the authenticated user's account."
+					},
+					"response": []
+				}
+			],
+			"description": "Account management operations."
+		},
+		{
+			"name": "Payees",
+			"item": [
+				{
+					"name": "Get Payee List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetPayees {\n  getPayeeList {\n    payeeId\n    name\n    payeeType\n    iban\n    accountNumber\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Get list of registered payees for the account."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Contact Payee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.createPayee) {",
+									"        pm.environment.set('payeeId', jsonData.data.createPayee.payeeId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreatePayee($input: CreatePayeeInput!) {\n  createPayee(input: $input) {\n    message\n    payeeId\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"payeeType\": \"contact\",\n    \"name\": \"Jane Smith\",\n    \"iban\": \"GB29NWBK60161331926819\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Add a contact payee with IBAN."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Utility Payee",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreatePayee($input: CreatePayeeInput!) {\n  createPayee(input: $input) {\n    message\n    payeeId\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"payeeType\": \"utility\",\n    \"name\": \"Thames Water\",\n    \"accountNumber\": \"123456789\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Add a utility payee with account number."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Payee",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeletePayee($payeeId: ID!) {\n  deletePayee(payeeId: $payeeId) {\n    message\n  }\n}",
+								"variables": "{\n  \"payeeId\": \"{{payeeId}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Delete a payee by ID. Uses payeeId from environment."
+					},
+					"response": []
+				}
+			],
+			"description": "Payee management operations."
+		},
+		{
+			"name": "Payments & Transactions",
+			"item": [
+				{
+					"name": "Get Transaction List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetTransactions {\n  getTransactionList {\n    txnId\n    txnType\n    name\n    accountNumber\n    iban\n    amount\n    currency\n    createdAt\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: Unrestricted Resource Consumption (OWASP API4:2023)\n\nReturns all transactions without pagination, potentially thousands of records."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transfer Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateTransfer($input: TransferPaymentInput!) {\n  createTransferPayment(input: $input) {\n    message\n    transactionId\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"sourceAccountId\": \"{{accountId}}\",\n    \"name\": \"Jane Smith\",\n    \"iban\": \"GB29NWBK60161331926819\",\n    \"amount\": 100.00,\n    \"currency\": \"GBP\",\n    \"description\": \"Payment for services\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Transfer funds to a contact."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transfer - NoSQL Injection (Vulnerable)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateTransfer($input: TransferPaymentInput!) {\n  createTransferPayment(input: $input) {\n    message\n    transactionId\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"sourceAccountId\": \"VICTIM_ACCOUNT_ID_HERE\",\n    \"name\": \"Attacker\",\n    \"iban\": \"GB82WEST12345698765432\",\n    \"amount\": 500.00,\n    \"currency\": \"GBP\",\n    \"description\": \"Stolen funds\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: NoSQL Injection (OWASP API8:2023)\n\nCan transfer money from another user's account by providing their accountId."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Bill Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateBillPayment($input: BillPaymentInput!) {\n  createBillPayment(input: $input) {\n    message\n    transactionId\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"name\": \"Thames Water\",\n    \"accountNumber\": \"123456789\",\n    \"amount\": 75.00,\n    \"currency\": \"GBP\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Make a bill payment to a utility account."
+					},
+					"response": []
+				},
+				{
+					"name": "Bill Payment - Negative Amount (Vulnerable)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateBillPayment($input: BillPaymentInput!) {\n  createBillPayment(input: $input) {\n    message\n    transactionId\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"name\": \"Thames Water\",\n    \"accountNumber\": \"123456789\",\n    \"amount\": -500.00,\n    \"currency\": \"GBP\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: Input Validation\n\nSending negative amount increases balance instead of decreasing it."
+					},
+					"response": []
+				}
+			],
+			"description": "Payment and transaction operations."
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Create Card Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.createCardApplication) {",
+									"        pm.environment.set('cardReferenceId', jsonData.data.createCardApplication.referenceId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateCard($input: CardApplicationInput!) {\n  createCardApplication(input: $input) {\n    message\n    referenceId\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"delivery\": \"post\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Apply for a credit card with postal delivery."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Card Application",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetCard {\n  getCardApplication {\n    _id\n    name\n    delivery\n    status\n    address {\n      addressLine\n      postCode\n      country\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Get credit card application status."
+					},
+					"response": []
+				},
+				{
+					"name": "Modify Card Application",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation ModifyCard($referenceId: Int!, $input: ModifyCardApplicationInput!) {\n  modifyCardApplication(referenceId: $referenceId, input: $input) {\n    _id\n    delivery\n    status\n  }\n}",
+								"variables": "{\n  \"referenceId\": {{cardReferenceId}},\n  \"input\": {\n    \"delivery\": \"collect\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Modify credit card application delivery method."
+					},
+					"response": []
+				},
+				{
+					"name": "Modify Card - BOLA (Vulnerable)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation ModifyCard($referenceId: Int!, $input: ModifyCardApplicationInput!) {\n  modifyCardApplication(referenceId: $referenceId, input: $input) {\n    _id\n    delivery\n    status\n  }\n}",
+								"variables": "{\n  \"referenceId\": 1001,\n  \"input\": {\n    \"delivery\": \"collect\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: BOLA (OWASP API1:2023)\n\nCan modify another user's card application by providing their referenceId."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Card Application",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeleteCard($referenceId: Int!) {\n  deleteCardApplication(referenceId: $referenceId) {\n    message\n  }\n}",
+								"variables": "{\n  \"referenceId\": {{cardReferenceId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Cancel a credit card application."
+					},
+					"response": []
+				},
+				{
+					"name": "Schedule Mortgage Meeting",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateMeeting($input: CreateMeetingInput!) {\n  createMeeting(input: $input) {\n    message\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"schedule\": \"2024-12-20T14:30\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Schedule a mortgage consultation meeting."
+					},
+					"response": []
+				},
+				{
+					"name": "Schedule Multiple Meetings (Vulnerable)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  slot1: createMeeting(input: { schedule: \"2024-12-20T10:00\" }) { message }\n  slot2: createMeeting(input: { schedule: \"2024-12-20T14:00\" }) { message }\n  slot3: createMeeting(input: { schedule: \"2024-12-21T10:00\" }) { message }\n  slot4: createMeeting(input: { schedule: \"2024-12-21T14:00\" }) { message }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: Business Flow Abuse (OWASP API6:2023)\n\nBook multiple consultation slots to monopolize advisor's calendar."
+					},
+					"response": []
+				}
+			],
+			"description": "Product-related operations (credit cards, meetings)."
+		},
+		{
+			"name": "Files",
+			"item": [
+				{
+					"name": "Create File (Download)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateFile($input: CreateFileInput!) {\n  createFile(input: $input) {\n    message\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"url\": \"https://drive.usercontent.google.com/download?id=1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Download a file from an external URL."
+					},
+					"response": []
+				},
+				{
+					"name": "Create File - SSRF (Vulnerable)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateFile($input: CreateFileInput!) {\n  createFile(input: $input) {\n    message\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"url\": \"http://localhost:8888/admin\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: SSRF (OWASP API7:2023)\n\nAccept arbitrary URL to scan internal network or access cloud metadata."
+					},
+					"response": []
+				},
+				{
+					"name": "Get File",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetFile($input: GetFileInput!) {\n  getFile(input: $input)\n}",
+								"variables": "{\n  \"input\": {\n    \"filename\": \"document.pdf\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Retrieve a downloaded file."
+					},
+					"response": []
+				},
+				{
+					"name": "Get File - Path Traversal (Vulnerable)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetFile($input: GetFileInput!) {\n  getFile(input: $input)\n}",
+								"variables": "{\n  \"input\": {\n    \"filename\": \"../../../../../../../etc/passwd\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "**VULNERABILITY**: Path Traversal (OWASP A01:2021)\n\nAccess arbitrary files on the server using directory traversal."
+					},
+					"response": []
+				}
+			],
+			"description": "File upload and download operations."
+		},
+		{
+			"name": "Dashboard (Combined Query)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query Dashboard {\n  account: getAccount {\n    accountId\n    name\n    email\n  }\n  balance: getBalance {\n    balance\n    currency\n    overdraft\n  }\n  payees: getPayeeList {\n    payeeId\n    name\n    payeeType\n  }\n  transactions: getTransactionList {\n    txnId\n    txnType\n    amount\n    createdAt\n  }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				},
+				"description": "Get all dashboard data in a single request - demonstrates GraphQL's power to fetch multiple resources efficiently."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:4000",
+			"type": "string"
+		}
+	]
+}

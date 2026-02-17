@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  graphql-server:
+    build: .
+    container_name: 42c-banking-graphql
+    ports:
+      - "4000:4000"
+      - "4443:4443"
+    environment:
+      - NODE_ENV=development
+      - GRAPHQL_PORT=4000
+      - MONGODB_URI=mongodb://mongo:27017/42c-banking
+      - TOKEN_USER_ACCESS_SECRET=${TOKEN_USER_ACCESS_SECRET}
+      - TOKEN_USER_ACCESS_EXPIRY=${TOKEN_USER_ACCESS_EXPIRY}
+      - TLS_PASSPHRASE=${TLS_PASSPHRASE}
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - ../app/certs:/app/certs:ro
+    depends_on:
+      - mongo
+    networks:
+      - banking-network
+
+  mongo:
+    image: mongo:6
+    container_name: 42c-banking-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - banking-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  banking-network:
+    driver: bridge

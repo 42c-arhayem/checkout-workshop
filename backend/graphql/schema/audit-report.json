@@ -1,0 +1,620 @@
+{
+  "index": [
+    "Mutation",
+    "Mutation.createBillPayment().PaymentResponse.message: String!",
+    "Mutation.createBillPayment().PaymentResponse.transactionId: String!",
+    "Mutation.createBillPayment(input.BillPaymentInput.accountNumber: String!)",
+    "Mutation.createBillPayment(input.BillPaymentInput.amount: Float!)",
+    "Mutation.createBillPayment(input.BillPaymentInput.currency: String)",
+    "Mutation.createBillPayment(input.BillPaymentInput.name: String!)",
+    "Mutation.createCardApplication().CardApplicationResponse.message: String!",
+    "Mutation.createCardApplication().CardApplicationResponse.referenceId: Int!",
+    "Mutation.createCardApplication(input.CardApplicationInput.delivery: String!)",
+    "Mutation.createFile().FileResponse.message: String!",
+    "Mutation.createFile(input.CreateFileInput.url: String!)",
+    "Mutation.createMeeting().MessageResponse.message: String!",
+    "Mutation.createMeeting(input.CreateMeetingInput.schedule: String!)",
+    "Mutation.createPayee().PayeeResponse.message: String!",
+    "Mutation.createPayee().PayeeResponse.payeeId: ID!",
+    "Mutation.createPayee(input.CreatePayeeInput.accountNumber: String)",
+    "Mutation.createPayee(input.CreatePayeeInput.iban: String)",
+    "Mutation.createPayee(input.CreatePayeeInput.name: String!)",
+    "Mutation.createPayee(input.CreatePayeeInput.payeeType: String!)",
+    "Mutation.createTransferPayment().PaymentResponse.message: String!",
+    "Mutation.createTransferPayment().PaymentResponse.transactionId: String!",
+    "Mutation.createTransferPayment(input.TransferPaymentInput.amount: Float!)",
+    "Mutation.createTransferPayment(input.TransferPaymentInput.currency: String!)",
+    "Mutation.createTransferPayment(input.TransferPaymentInput.description: String)",
+    "Mutation.createTransferPayment(input.TransferPaymentInput.iban: String!)",
+    "Mutation.createTransferPayment(input.TransferPaymentInput.name: String)",
+    "Mutation.createTransferPayment(input.TransferPaymentInput.sourceAccountId: String!)",
+    "Mutation.deleteAccount().MessageResponse.message: String!",
+    "Mutation.deleteCardApplication().MessageResponse.message: String!",
+    "Mutation.deleteCardApplication(referenceId: Int!)",
+    "Mutation.deletePayee().MessageResponse.message: String!",
+    "Mutation.deletePayee(payeeId: ID!)",
+    "Mutation.login().AuthResponse.access: String!",
+    "Mutation.login().AuthResponse.access_expires: Int!",
+    "Mutation.login(input.LoginInput.email: String!)",
+    "Mutation.login(input.LoginInput.pan: String!)",
+    "Mutation.modifyCardApplication().CreditCard._id: Int!",
+    "Mutation.modifyCardApplication().CreditCard.address.Address.addressLine: [String]",
+    "Mutation.modifyCardApplication().CreditCard.address.Address.addressLine[0]: String",
+    "Mutation.modifyCardApplication().CreditCard.address.Address.country: String",
+    "Mutation.modifyCardApplication().CreditCard.address.Address.postCode: String",
+    "Mutation.modifyCardApplication().CreditCard.delivery: String!",
+    "Mutation.modifyCardApplication().CreditCard.name: String!",
+    "Mutation.modifyCardApplication().CreditCard.status: String!",
+    "Mutation.modifyCardApplication(input.ModifyCardApplicationInput.delivery: String)",
+    "Mutation.modifyCardApplication(input.ModifyCardApplicationInput.postalAddress.AddressInput.addressLine: [String])",
+    "Mutation.modifyCardApplication(input.ModifyCardApplicationInput.postalAddress.AddressInput.addressLine[0]: String)",
+    "Mutation.modifyCardApplication(input.ModifyCardApplicationInput.postalAddress.AddressInput.country: String!)",
+    "Mutation.modifyCardApplication(input.ModifyCardApplicationInput.postalAddress.AddressInput.postCode: String)",
+    "Mutation.modifyCardApplication(referenceId: Int!)",
+    "Mutation.register().RegisterResponse.accountId: ID!",
+    "Mutation.register().RegisterResponse.message: String!",
+    "Mutation.register(input.RegisterInput.accountType: String!)",
+    "Mutation.register(input.RegisterInput.email: String!)",
+    "Mutation.register(input.RegisterInput.name: String!)",
+    "Mutation.register(input.RegisterInput.pan: String!)",
+    "Mutation.register(input.RegisterInput.postalAddress.AddressInput.addressLine: [String])",
+    "Mutation.register(input.RegisterInput.postalAddress.AddressInput.addressLine[0]: String)",
+    "Mutation.register(input.RegisterInput.postalAddress.AddressInput.country: String!)",
+    "Mutation.register(input.RegisterInput.postalAddress.AddressInput.postCode: String)",
+    "Mutation.updateAccountOptions().AccountOptions.accountType: String",
+    "Query",
+    "Query.getAccount().Account.accountId: ID!",
+    "Query.getAccount().Account.address.Address.addressLine: [String]",
+    "Query.getAccount().Account.address.Address.addressLine[0]: String",
+    "Query.getAccount().Account.address.Address.country: String",
+    "Query.getAccount().Account.address.Address.postCode: String",
+    "Query.getAccount().Account.balance: Float",
+    "Query.getAccount().Account.currency: String",
+    "Query.getAccount().Account.email: String!",
+    "Query.getAccount().Account.name: String!",
+    "Query.getAccount().Account.options.AccountOptions.accountType: String",
+    "Query.getBalance().Balance.accountId: ID!",
+    "Query.getBalance().Balance.balance: Float!",
+    "Query.getBalance().Balance.currency: String!",
+    "Query.getBalance().Balance.overdraft: Float!",
+    "Query.getCardApplication().CreditCard._id: Int!",
+    "Query.getCardApplication().CreditCard.address.Address.addressLine: [String]",
+    "Query.getCardApplication().CreditCard.address.Address.addressLine[0]: String",
+    "Query.getCardApplication().CreditCard.address.Address.country: String",
+    "Query.getCardApplication().CreditCard.address.Address.postCode: String",
+    "Query.getCardApplication().CreditCard.delivery: String!",
+    "Query.getCardApplication().CreditCard.name: String!",
+    "Query.getCardApplication().CreditCard.status: String!",
+    "Query.getFile(): String!",
+    "Query.getFile(input.GetFileInput.filename: String!)",
+    "Query.getPayeeList(): [Payee!]!",
+    "Query.getPayeeList()[0].Payee.accountNumber: String",
+    "Query.getPayeeList()[0].Payee.iban: String",
+    "Query.getPayeeList()[0].Payee.name: String!",
+    "Query.getPayeeList()[0].Payee.payeeId: ID!",
+    "Query.getPayeeList()[0].Payee.payeeType: String!",
+    "Query.getTransactionList(): [Transaction!]!",
+    "Query.getTransactionList()[0].Transaction.accountNumber: String",
+    "Query.getTransactionList()[0].Transaction.amount: Float",
+    "Query.getTransactionList()[0].Transaction.createdAt: String",
+    "Query.getTransactionList()[0].Transaction.currency: String",
+    "Query.getTransactionList()[0].Transaction.iban: String",
+    "Query.getTransactionList()[0].Transaction.name: String!",
+    "Query.getTransactionList()[0].Transaction.txnId: String!",
+    "Query.getTransactionList()[0].Transaction.txnType: String!"
+  ],
+  "issueCounter": 102,
+  "warningCounter": 0,
+  "valid": true,
+  "score": 26.97,
+  "issues": {
+    "graphql-output-cost-directive-needed": {
+      "counter": 2,
+      "description": "Output is missing '@cost' directive",
+      "occurrences": [
+        {
+          "location": 62,
+          "specificDescription": "",
+          "score": -0.31
+        },
+        {
+          "location": 0,
+          "specificDescription": "",
+          "score": -0.31
+        }
+      ],
+      "tooManyImpacted": false
+    },
+    "graphql-custom-scalar-output-id-needed": {
+      "counter": 5,
+      "description": "Built-in ID type used in output",
+      "occurrences": [
+        {
+          "location": 63,
+          "specificDescription": "",
+          "score": -0.22
+        },
+        {
+          "location": 73,
+          "specificDescription": "",
+          "score": -0.39
+        },
+        {
+          "location": 91,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 51,
+          "specificDescription": "",
+          "score": -0.47
+        },
+        {
+          "location": 15,
+          "specificDescription": "",
+          "score": -0.78
+        }
+      ],
+      "tooManyImpacted": false
+    },
+    "graphql-custom-scalar-output-string-needed": {
+      "counter": 46,
+      "description": "Built-in String type used in output",
+      "occurrences": [
+        {
+          "location": 71,
+          "specificDescription": "",
+          "score": -0.22
+        },
+        {
+          "location": 70,
+          "specificDescription": "",
+          "score": -0.22
+        },
+        {
+          "location": 65,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 67,
+          "specificDescription": "",
+          "score": -0.07
+        },
+        {
+          "location": 66,
+          "specificDescription": "",
+          "score": -0.07
+        },
+        {
+          "location": 69,
+          "specificDescription": "",
+          "score": -0.13
+        },
+        {
+          "location": 72,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 75,
+          "specificDescription": "",
+          "score": -0.39
+        },
+        {
+          "location": 90,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 88,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 89,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 92,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 100,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 101,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 99,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 94,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 98,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 97,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 96,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 83,
+          "specificDescription": "",
+          "score": -0.31
+        },
+        {
+          "location": 82,
+          "specificDescription": "",
+          "score": -0.31
+        },
+        {
+          "location": 79,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 81,
+          "specificDescription": "",
+          "score": -0.1
+        },
+        {
+          "location": 80,
+          "specificDescription": "",
+          "score": -0.1
+        },
+        {
+          "location": 84,
+          "specificDescription": "",
+          "score": -0.31
+        },
+        {
+          "location": 85,
+          "specificDescription": "",
+          "score": -1.57
+        },
+        {
+          "location": 52,
+          "specificDescription": "",
+          "score": -0.78
+        },
+        {
+          "location": 33,
+          "specificDescription": "",
+          "score": -0.78
+        },
+        {
+          "location": 28,
+          "specificDescription": "",
+          "score": -1.57
+        },
+        {
+          "location": 61,
+          "specificDescription": "",
+          "score": -0.39
+        }
+      ],
+      "tooManyImpacted": true
+    },
+    "graphql-list-output-directive-needed": {
+      "counter": 5,
+      "description": "List in output is missing '@list' directive",
+      "occurrences": [
+        {
+          "location": 64,
+          "specificDescription": "",
+          "score": -0.07
+        },
+        {
+          "location": 87,
+          "specificDescription": "",
+          "score": -1.57
+        },
+        {
+          "location": 93,
+          "specificDescription": "",
+          "score": -1.57
+        },
+        {
+          "location": 78,
+          "specificDescription": "",
+          "score": -0.1
+        },
+        {
+          "location": 38,
+          "specificDescription": "",
+          "score": -0.1
+        }
+      ],
+      "tooManyImpacted": false
+    },
+    "graphql-custom-scalar-output-float-needed": {
+      "counter": 4,
+      "description": "Built-in Float type used in output",
+      "occurrences": [
+        {
+          "location": 68,
+          "specificDescription": "",
+          "score": -0.22
+        },
+        {
+          "location": 74,
+          "specificDescription": "",
+          "score": -0.39
+        },
+        {
+          "location": 76,
+          "specificDescription": "",
+          "score": -0.39
+        },
+        {
+          "location": 95,
+          "specificDescription": "",
+          "score": 0
+        }
+      ],
+      "tooManyImpacted": false
+    },
+    "graphql-custom-scalar-output-int-needed": {
+      "counter": 4,
+      "description": "Built-in Int type used in output",
+      "occurrences": [
+        {
+          "location": 77,
+          "specificDescription": "",
+          "score": -0.31
+        },
+        {
+          "location": 34,
+          "specificDescription": "",
+          "score": -0.78
+        },
+        {
+          "location": 8,
+          "specificDescription": "",
+          "score": -0.78
+        },
+        {
+          "location": 37,
+          "specificDescription": "",
+          "score": -0.31
+        }
+      ],
+      "tooManyImpacted": false
+    },
+    "graphql-custom-scalar-input-string-needed": {
+      "counter": 29,
+      "description": "Built-in String type used in input",
+      "occurrences": [
+        {
+          "location": 86,
+          "specificDescription": "",
+          "score": -3.68
+        },
+        {
+          "location": 55,
+          "specificDescription": "",
+          "score": -0.73
+        },
+        {
+          "location": 54,
+          "specificDescription": "",
+          "score": -0.73
+        },
+        {
+          "location": 58,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 60,
+          "specificDescription": "",
+          "score": -0.24
+        },
+        {
+          "location": 59,
+          "specificDescription": "",
+          "score": -0.24
+        },
+        {
+          "location": 56,
+          "specificDescription": "",
+          "score": -0.73
+        },
+        {
+          "location": 53,
+          "specificDescription": "",
+          "score": -0.73
+        },
+        {
+          "location": 35,
+          "specificDescription": "",
+          "score": -1.84
+        },
+        {
+          "location": 36,
+          "specificDescription": "",
+          "score": -1.84
+        },
+        {
+          "location": 19,
+          "specificDescription": "",
+          "score": -0.92
+        },
+        {
+          "location": 18,
+          "specificDescription": "",
+          "score": -0.92
+        },
+        {
+          "location": 16,
+          "specificDescription": "",
+          "score": -0.92
+        },
+        {
+          "location": 17,
+          "specificDescription": "",
+          "score": -0.92
+        },
+        {
+          "location": 27,
+          "specificDescription": "",
+          "score": -0.61
+        },
+        {
+          "location": 26,
+          "specificDescription": "",
+          "score": -0.61
+        },
+        {
+          "location": 25,
+          "specificDescription": "",
+          "score": -0.61
+        },
+        {
+          "location": 23,
+          "specificDescription": "",
+          "score": -0.61
+        },
+        {
+          "location": 24,
+          "specificDescription": "",
+          "score": -0.61
+        },
+        {
+          "location": 6,
+          "specificDescription": "",
+          "score": -0.92
+        },
+        {
+          "location": 3,
+          "specificDescription": "",
+          "score": -0.92
+        },
+        {
+          "location": 5,
+          "specificDescription": "",
+          "score": -0.92
+        },
+        {
+          "location": 9,
+          "specificDescription": "",
+          "score": -3.68
+        },
+        {
+          "location": 45,
+          "specificDescription": "",
+          "score": -0.92
+        },
+        {
+          "location": 47,
+          "specificDescription": "",
+          "score": 0
+        },
+        {
+          "location": 49,
+          "specificDescription": "",
+          "score": -0.3
+        },
+        {
+          "location": 48,
+          "specificDescription": "",
+          "score": -0.3
+        },
+        {
+          "location": 13,
+          "specificDescription": "",
+          "score": -3.68
+        },
+        {
+          "location": 11,
+          "specificDescription": "",
+          "score": -3.68
+        }
+      ],
+      "tooManyImpacted": false
+    },
+    "graphql-list-input-directive-needed": {
+      "counter": 2,
+      "description": "List in input is missing '@list' directive",
+      "occurrences": [
+        {
+          "location": 57,
+          "specificDescription": "",
+          "score": -0.24
+        },
+        {
+          "location": 46,
+          "specificDescription": "",
+          "score": -0.3
+        }
+      ],
+      "tooManyImpacted": false
+    },
+    "graphql-custom-scalar-input-id-needed": {
+      "counter": 1,
+      "description": "Built-in ID type used in input",
+      "occurrences": [
+        {
+          "location": 32,
+          "specificDescription": "",
+          "score": -3.68
+        }
+      ],
+      "tooManyImpacted": false
+    },
+    "graphql-custom-scalar-input-float-needed": {
+      "counter": 2,
+      "description": "Built-in Float type used in input",
+      "occurrences": [
+        {
+          "location": 22,
+          "specificDescription": "",
+          "score": -0.61
+        },
+        {
+          "location": 4,
+          "specificDescription": "",
+          "score": -0.92
+        }
+      ],
+      "tooManyImpacted": false
+    },
+    "graphql-custom-scalar-input-int-needed": {
+      "counter": 2,
+      "description": "Built-in Int type used in input",
+      "occurrences": [
+        {
+          "location": 50,
+          "specificDescription": "",
+          "score": -1.84
+        },
+        {
+          "location": 30,
+          "specificDescription": "",
+          "score": -3.68
+        }
+      ],
+      "tooManyImpacted": false
+    }
+  },
+  "maxImpactedIssue": 30
+}

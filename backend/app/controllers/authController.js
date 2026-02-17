@@ -21,7 +21,7 @@ const accountRegistration = async (req, res) => {
     // BUG: OWASP A01 (Broken Access Control)
     // Description: Allows user to register with privileged account type.
     // Solution: 
-    // const allowedAccountTypes = ['current', 'savings'];
+    // const allowedAccountTypes = ['personal'];
     // if (!allowedAccountTypes.includes(accountType))
     // {
     //     return res.status(400).json({ "message": "invalid input" });

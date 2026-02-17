@@ -1,0 +1,221 @@
+# 42c Banking GraphQL Schema
+# This file contains the complete GraphQL schema in SDL (Schema Definition Language) format
+
+# Type Definitions
+
+type Address {
+  addressLine: [String]
+  postCode: String
+  country: String
+}
+
+input AddressInput {
+  addressLine: [String]
+  postCode: String
+  country: String!
+}
+
+type AccountOptions {
+  paperStatements: Boolean
+  cardActivityAlerts: Boolean
+  smsNotifications: Boolean
+  accountType: String
+}
+
+input AccountOptionsInput {
+  paperStatements: Boolean
+  cardActivityAlerts: Boolean
+  smsNotifications: Boolean
+}
+
+type Account {
+  accountId: ID!
+  name: String!
+  email: String!
+  address: Address
+  balance: Float
+  currency: String
+  options: AccountOptions
+}
+
+type Payee {
+  payeeId: ID!
+  name: String!
+  accountNumber: String
+  iban: String
+  payeeType: String!
+}
+
+type Transaction {
+  txnId: String!
+  txnType: String!
+  name: String!
+  accountNumber: String
+  iban: String
+  amount: Float
+  currency: String
+  createdAt: String
+}
+
+type Product {
+  type: String!
+  referenceId: Int!
+}
+
+type CreditCard {
+  _id: Int!
+  name: String!
+  delivery: String!
+  address: Address
+  status: String!
+}
+
+type Balance {
+  accountId: ID!
+  currency: String!
+  balance: Float!
+  overdraft: Float!
+}
+
+type AuthResponse {
+  access: String!
+  access_expires: Int!
+}
+
+type RegisterResponse {
+  message: String!
+  accountId: ID!
+}
+
+type MessageResponse {
+  message: String!
+}
+
+type PayeeResponse {
+  message: String!
+  payeeId: ID!
+}
+
+type PaymentResponse {
+  message: String!
+  transactionId: String!
+}
+
+type CardApplicationResponse {
+  message: String!
+  referenceId: Int!
+}
+
+type FileResponse {
+  message: String!
+}
+
+# Input Types
+
+input RegisterInput {
+  name: String!
+  email: String!
+  postalAddress: AddressInput!
+  pan: String!
+  accountType: String!
+}
+
+input LoginInput {
+  email: String!
+  pan: String!
+}
+
+input CreatePayeeInput {
+  payeeType: String!
+  name: String!
+  accountNumber: String
+  iban: String
+}
+
+input TransferPaymentInput {
+  sourceAccountId: String!
+  name: String
+  iban: String!
+  amount: Float!
+  currency: String!
+  description: String
+}
+
+input BillPaymentInput {
+  name: String!
+  accountNumber: String!
+  amount: Float!
+  currency: String
+}
+
+input CardApplicationInput {
+  delivery: String!
+}
+
+input ModifyCardApplicationInput {
+  delivery: String
+  postalAddress: AddressInput
+}
+
+input CreateMeetingInput {
+  schedule: String!
+}
+
+input CreateFileInput {
+  url: String!
+}
+
+input GetFileInput {
+  filename: String!
+}
+
+# Queries
+
+type Query {
+  # Account queries
+  getAccount: Account!
+  getBalance: Balance!
+  
+  # Payee queries
+  getPayeeList: [Payee!]!
+  
+  # Transaction queries
+  getTransactionList: [Transaction!]!
+  
+  # Product queries
+  getCardApplication: CreditCard!
+  
+  # File query
+  getFile(input: GetFileInput!): String!
+}
+
+# Mutations
+
+type Mutation {
+  # Auth mutations
+  register(input: RegisterInput!): RegisterResponse!
+  login(input: LoginInput!): AuthResponse!
+  
+  # Account mutations
+  deleteAccount: MessageResponse!
+  updateAccountOptions(options: AccountOptionsInput!): AccountOptions!
+  
+  # Payee mutations
+  createPayee(input: CreatePayeeInput!): PayeeResponse!
+  deletePayee(payeeId: ID!): MessageResponse!
+  
+  # Payment mutations
+  createTransferPayment(input: TransferPaymentInput!): PaymentResponse!
+  createBillPayment(input: BillPaymentInput!): PaymentResponse!
+  
+  # Product mutations
+  createCardApplication(input: CardApplicationInput!): CardApplicationResponse!
+  modifyCardApplication(referenceId: Int!, input: ModifyCardApplicationInput!): CreditCard!
+  deleteCardApplication(referenceId: Int!): MessageResponse!
+  
+  # Meeting mutation
+  createMeeting(input: CreateMeetingInput!): MessageResponse!
+  
+  # File mutation
+  createFile(input: CreateFileInput!): FileResponse!
+}

@@ -68,9 +68,15 @@ const updateAccountOptions = async (req, res) => {
         (options.smsNotifications && typeof options.smsNotifications !== 'boolean')) {
         return res.status(400).json({ "message": "invalid input" });
     }
+    
+    if (options.accountType && typeof options.accountType !== 'string') {
+        return res.status(400).json({ "message": "invalid input" });
+    }
 
     try {
-        const doc = await AccountModel.findOneAndUpdate(req.account._id, { options }, { returnOriginal: false });
+        // Merge with existing options to preserve all fields
+        const updatedOptions = { ...req.account.options.toObject(), ...options };
+        const doc = await AccountModel.findOneAndUpdate(req.account._id, { options: updatedOptions }, { returnOriginal: false });
         if (!doc) {
             return res.status(500).json({ "message": "unexpected error" })
         }

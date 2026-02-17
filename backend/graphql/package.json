@@ -1,0 +1,27 @@
+{
+  "name": "42c-bank-graphql",
+  "version": "1.0.0",
+  "description": "GraphQL API for 42c Banking Application",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "Banking Team",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^3.13.0",
+    "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "graphql": "^16.8.1",
+    "jsonwebtoken": "^9.0.2",
+    "lodash-es": "^4.17.21",
+    "mongoose": "^8.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

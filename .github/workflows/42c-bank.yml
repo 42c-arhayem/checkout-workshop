@@ -80,6 +80,18 @@ jobs:
           echo "Bank API AliasId: $aliasId"
           echo "API_ALIAS_ID=$aliasId" >> $GITHUB_OUTPUT
 
+      - name: Save API UUID for Drift Scan
+        run: |
+          echo "${{ steps.Check_Audit.outputs.API_UUID }}" > api-uuid.txt
+          echo "Saved API UUID: $(cat api-uuid.txt)"
+
+      - name: Upload API UUID Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: api-uuid
+          path: api-uuid.txt
+          retention-days: 7
+
   # ──────────────────────────────────────────────
   # Job 2 - 42Crunch Conformance Scan
   # ──────────────────────────────────────────────

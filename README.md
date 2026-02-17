@@ -34,7 +34,32 @@ If you have any request, please [create an issue](https://github.com/anthony-42c
 - File Upload
   - Upload a document for identification purposes
 
-## Get started ## 
+## GraphQL API Implementation ##
+
+In addition to the REST API, a complete GraphQL implementation is available in the `backend/graphql/` directory. The GraphQL API provides the same functionalities with the benefits of flexible querying, strong typing, and a single endpoint.
+
+**Features:**
+- All REST API functionalities available as GraphQL queries and mutations
+- Built-in API documentation through GraphQL introspection
+- Interactive GraphQL Playground for testing
+- Comprehensive vulnerability testing guide with exploitation examples
+- Docker support for easy deployment
+
+**Quick Start:**
+```bash
+cd backend/graphql
+npm install
+npm run dev
+```
+
+Access GraphQL Playground at: `http://localhost:4000/graphql`
+
+📖 Documentation:
+- [README.md](backend/graphql/README.md) - Complete API documentation
+- [VULNERABILITIES.md](backend/graphql/VULNERABILITIES.md) - Security testing guide
+- [SAMPLE_QUERIES.md](backend/graphql/SAMPLE_QUERIES.md) - Example queries
+
+## Get started (REST API) ## 
 
 1. Clone this repository to your local machine
 2. Ensure your container software (e.g. Docker Desktop) is up and running

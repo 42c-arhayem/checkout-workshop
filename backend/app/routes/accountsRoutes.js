@@ -25,19 +25,19 @@ import {
 const router  = express.Router();
 
 router.route('/')
-    .head(handleMethodNotAllowed)
+    // .head(handleMethodNotAllowed)
     .get(authenticateToken, getAccounts)
     .delete(authenticateToken, deleteAccount)
     .put(authenticateToken, updateAccountOptions)
     .all(handleMethodNotAllowed)
 
 router.route('/balances')
-    .head(handleMethodNotAllowed)
+    // .head(handleMethodNotAllowed)
     .get(authenticateToken, getBalance)
     .all(handleMethodNotAllowed)
 
 router.route('/payees')
-    .head(handleMethodNotAllowed)
+    // .head(handleMethodNotAllowed)
     .get(authenticateToken, getPayeeList)
     .post(authenticateToken, createPayee)
     .all(handleMethodNotAllowed)
@@ -60,7 +60,7 @@ router.route('/transactions')
     .all(handleMethodNotAllowed)
 
 router.route('/products/cards')
-    .head(handleMethodNotAllowed)
+    // .head(handleMethodNotAllowed)
     .get(authenticateToken, getCardApplication)
     .post(authenticateToken, createCardApplication)
     .all(handleMethodNotAllowed)
