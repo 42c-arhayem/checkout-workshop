@@ -86,7 +86,7 @@ jobs:
           echo "Saved API UUID: $(cat api-uuid.txt)"
 
       - name: Upload API UUID Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: api-uuid
           path: api-uuid.txt
