@@ -36,28 +36,50 @@ If you have any request, please [create an issue](https://github.com/anthony-42c
 
 ## GraphQL API Implementation ##
 
-In addition to the REST API, a complete GraphQL implementation is available in the `backend/graphql/` directory. The GraphQL API provides the same functionalities with the benefits of flexible querying, strong typing, and a single endpoint.
+In addition to the REST API, a **complete GraphQL implementation** is available with **two schema versions** for different use cases:
 
-**Features:**
-- All REST API functionalities available as GraphQL queries and mutations
-- Built-in API documentation through GraphQL introspection
-- Interactive GraphQL Playground for testing
-- Comprehensive vulnerability testing guide with exploitation examples
-- Docker support for easy deployment
+**🔴 Vulnerable Schema** (26.97% security score)
+- Purpose: Security testing, education, vulnerability demonstrations
+- Use with: 42Crunch API Security testing, OWASP training
+
+**🟢 Secured Schema** (90%+ security score)
+- Purpose: Production deployment
+- Features: 10 custom scalars, 4 security directives, all OWASP vulnerabilities fixed
 
 **Quick Start:**
 ```bash
 cd backend/graphql
 npm install
+
+# Run vulnerable schema (default - for testing)
 npm run dev
+
+# Run secured schema (for production)
+GRAPHQL_SCHEMA=secured npm run dev
 ```
 
 Access GraphQL Playground at: `http://localhost:4000/graphql`
 
-📖 Documentation:
+**📖 Documentation:**
+- [QUICKSTART.md](backend/graphql/QUICKSTART.md) - Get started in 5 minutes
 - [README.md](backend/graphql/README.md) - Complete API documentation
-- [VULNERABILITIES.md](backend/graphql/VULNERABILITIES.md) - Security testing guide
+- [SECURITY_AUDIT_REPORT.md](backend/graphql/SECURITY_AUDIT_REPORT.md) - Security audit (723 lines)
+- [AUDIT_QUICK_REFERENCE.md](backend/graphql/AUDIT_QUICK_REFERENCE.md) - Quick reference (339 lines)
 - [SAMPLE_QUERIES.md](backend/graphql/SAMPLE_QUERIES.md) - Example queries
+- Run `./backend/graphql/audit_report.sh` for interactive security demo
+
+**Key Features:**
+- ✅ All REST API functionalities as GraphQL queries/mutations
+- ✅ Two complete schema versions (vulnerable & production-ready)
+- ✅ Environment variable for easy schema switching
+- ✅ Built-in API documentation via GraphQL introspection
+- ✅ Interactive GraphQL Playground for testing
+- ✅ 10 custom scalar types with validation (Email, IBAN, Amount, Currency, etc.)
+- ✅ Security directives (@stringValue, @numberValue, @list, @cost)
+- ✅ Query complexity controls and collection limits
+- ✅ Comprehensive security documentation
+- ✅ Postman collection with 30+ pre-configured requests
+- ✅ Docker support for easy deployment
 
 ## Get started (REST API) ## 
 

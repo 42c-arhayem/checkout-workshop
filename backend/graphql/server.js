@@ -15,8 +15,15 @@ connectDB();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Load GraphQL schema
-const typeDefs = readFileSync(join(__dirname, 'schema', 'schema.graphql'), 'utf-8');
+// Load GraphQL schema (choose version via GRAPHQL_SCHEMA environment variable)
+// Options: 'vulnerable' (default) or 'secured'
+const schemaVersion = process.env.GRAPHQL_SCHEMA || 'vulnerable';
+const schemaFile = schemaVersion === 'secured' ? 'schema-secured.graphql' : 'schema.graphql';
+const typeDefs = readFileSync(join(__dirname, 'schema', schemaFile), 'utf-8');
+
+console.log(`\n🚀 Loading GraphQL schema: ${schemaFile}`);
+console.log(`   Version: ${schemaVersion === 'secured' ? '🛡️  SECURED (90%+ score)' : '⚠️  VULNERABLE (26.97% score - for testing)'}`);
+console.log(`   To switch: Set GRAPHQL_SCHEMA=secured or GRAPHQL_SCHEMA=vulnerable\n`);
 
 const privateKey = readFileSync(join(__dirname, "..", "app", "certs", "key.pem"), 'utf8');
 const certificate = readFileSync(join(__dirname, "..", "app", "certs", "cert.pem"), 'utf8');
