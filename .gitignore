@@ -2,3 +2,4 @@ node_modules
 .dockerignore
 .DS_Store
 .env
+backend/docker/.env
