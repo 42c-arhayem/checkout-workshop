@@ -1,6 +1,6 @@
 audit:
   branches:
-    main: 
+    workshop: 
       discovery:
         search:
           - backend/openapi/*.*
