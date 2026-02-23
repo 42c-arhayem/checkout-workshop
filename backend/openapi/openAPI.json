@@ -791,13 +791,16 @@
                 "type": "object",
                 "properties": {
                     "paperStatements": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "example": false
                     },
                     "cardActivityAlerts": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "example": true
                     },
                     "smsNotifications": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "example": true
                     }
                 },
                 "additionalProperties": false
@@ -898,7 +901,8 @@
                     "SGD",
                     "TWD",
                     "USD"
-                ]
+                ],
+                "example": "USD"
             },
             "DeliveryType": {
                 "type": "string",
@@ -968,7 +972,8 @@
             },
             "UtilityAccountId": {
                 "type": "string",
-                "pattern": "^[A-Z0-9]{8,12}$"
+                "pattern": "^[A-Z0-9]{8,12}$",
+                "example": "BT2221801"
             },
             "UtilityPayee": {
                 "allOf": [
@@ -998,7 +1003,8 @@
                 "enum": [
                     "electricity bill",
                     "gas bill"
-                ]
+                ],
+                "example": "electricity bill"
             },
             "TransactionId": {
                 "description": "A unique and immutable identifier used to identify a payment transaction.",
