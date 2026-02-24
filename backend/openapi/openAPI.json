@@ -918,7 +918,7 @@
             "Email": {
                 "type": "string",
                 "format": "email-secured",
-                "example": "jbernad@email.com",
+                "example": "jbernard@email.com",
                 "pattern": "^\\w+(?:[\\-.]\\w+)*@[0-9A-Za-z]+(?:[\\-.][0-9A-Za-z]+)*\\.(?:[A-Za-z][0-9A-Za-z]+|[0-9]+[A-Za-z][0-9A-Za-z]*)$",
                 "minLength": 6,
                 "maxLength": 320,
